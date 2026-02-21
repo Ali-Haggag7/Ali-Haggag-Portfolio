@@ -23,6 +23,7 @@ import blogImg from "@/public/blog-pro.jpeg";
 import geminiImg from "@/public/gemini-clone-1.jpeg";
 import portfolioImg from "@/public/portfolio-1.jpeg";
 import realTimeChatImg from "@/public/chat-firebase-1.jpeg";
+import Image from "next/image";
 
 const skills = [
   "https://cdn.simpleicons.org/react/61DAFB",
@@ -47,7 +48,7 @@ const features = [
     href: "https://github.com/Ali-Haggag7/Flurry-Super-App",
     cta: "View Source",
     demoHref: "https://flurry-app.vercel.app/",
-    background: <img src={flurryImg.src} alt="Flurry App" className="h-full w-full object-cover object-top" />,
+    background: <Image src={flurryImg} alt="Flurry App" className="h-full w-full object-cover object-top" placeholder="blur" priority />,
     className: "col-span-1 md:col-span-2",
   },
   {
@@ -56,7 +57,7 @@ const features = [
     description: "Secure MERN CMS with Role-Based Access Control and Enterprise Security.",
     href: "https://github.com/Ali-Haggag7/Blog-Pro-Platform",
     cta: "View Source",
-    background: <img src={blogImg.src} alt="Blog Pro Platform" className="h-full w-full object-cover object-top" />,
+    background: <Image src={blogImg} alt="Blog Pro Platform" className="h-full w-full object-cover object-top" placeholder="blur" priority />,
     className: "col-span-1",
   },
   {
@@ -75,7 +76,7 @@ const features = [
     href: "https://github.com/Ali-Haggag7/Realtime-Chat-Engine",
     cta: "View Source",
     demoHref: "https://realtime-chat-engine.vercel.app/",
-    background: <img src={realTimeChatImg.src} alt="Realtime Chat Engine" className="h-full w-full object-cover object-center" />,
+    background: <Image src={realTimeChatImg} alt="Realtime Chat Engine" className="h-full w-full object-cover object-center" placeholder="blur" loading="eager" />,
     className: "col-span-1 md:col-span-2",
   },
   {
@@ -85,7 +86,7 @@ const features = [
     href: "https://github.com/Ali-Haggag7/Gemini-AI-Clone",
     cta: "View Source",
     demoHref: "https://gemini-clone-ali.vercel.app/",
-    background: <img src={geminiImg.src} alt="Gemini AI Clone" className="h-full w-full object-cover object-top" />,
+    background: <Image src={geminiImg} alt="Gemini AI Clone" className="h-full w-full object-cover object-top" placeholder="blur" loading="eager" />,
     className: "col-span-1 md:col-span-2",
   },
   {
@@ -95,7 +96,7 @@ const features = [
     href: "https://github.com/Ali-Haggag7/React-Portfolio-Template",
     cta: "View Source",
     demoHref: "https://react-portfolio-template-ali.vercel.app/",
-    background: <img src={portfolioImg.src} alt="React Portfolio Template" className="h-full w-full object-cover object-center" />,
+    background: <Image src={portfolioImg} alt="React Portfolio Template" className="h-full w-full object-cover object-center" placeholder="blur" loading="eager" />,
     className: "col-span-1",
   },
 ];

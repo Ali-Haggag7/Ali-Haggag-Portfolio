@@ -1,5 +1,8 @@
+"use client";
+
 import { cn } from "@/lib/utils";
 import { GraduationCap, Layout, Database, Rocket } from "lucide-react";
+import { motion } from "framer-motion";
 
 // Masterclass Fix: Added group-focus to all hoverBorders so they activate on tap
 const timelineData = [
@@ -69,9 +72,12 @@ export default function Timeline() {
                     <div className="absolute left-8 top-0 h-full w-[2px] -ml-[1px] bg-gradient-to-b from-blue-500 via-purple-500 to-transparent md:left-1/2 opacity-40 rounded-full"></div>
 
                     {timelineData.map((item, index) => (
-                        <div
+                        <motion.div
                             key={index}
-                            // Masterclass Mobile Fix: Make the whole row tappable
+                            initial={{ opacity: 0, y: 50 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.5, delay: 0.1 }}
+                            viewport={{ once: true, margin: "0px 0px 250px 0px", amount: 0 }}
                             tabIndex={0}
                             className={cn(
                                 "group relative mb-16 flex items-center md:justify-between w-full focus:outline-none",
@@ -81,7 +87,6 @@ export default function Timeline() {
                             {/* The Icon Container */}
                             <div className={cn(
                                 "absolute left-8 -translate-x-1/2 flex h-12 w-12 items-center justify-center rounded-full border-2 z-10 transition-all duration-500 md:left-1/2",
-                                // Scaling up the icon when the specific card is hovered OR tapped
                                 "group-hover:scale-125 group-focus:scale-125 group-hover:shadow-xl group-focus:shadow-xl",
                                 "bg-background border-border shadow-md",
                                 "dark:bg-neutral-950 dark:border-neutral-800",
@@ -97,9 +102,7 @@ export default function Timeline() {
                             {/* The Content Card */}
                             <div className={cn(
                                 "ml-20 md:ml-0 w-full md:w-[45%] rounded-2xl p-6 transition-all duration-500",
-                                // UI/UX upgrades: Glassmorphism
                                 "bg-card/60 backdrop-blur-md border border-border shadow-sm cursor-default",
-                                // Elevate on hover OR tap
                                 "group-hover:-translate-y-2 group-focus:-translate-y-2 group-hover:shadow-xl group-focus:shadow-xl dark:group-hover:shadow-black/50 dark:group-focus:shadow-black/50",
                                 item.hoverBorder
                             )}>
@@ -118,7 +121,7 @@ export default function Timeline() {
                                     {item.description}
                                 </p>
                             </div>
-                        </div>
+                        </motion.div>
                     ))}
                 </div>
             </div>

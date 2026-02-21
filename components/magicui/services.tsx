@@ -2,6 +2,7 @@
 
 import { cn } from "@/lib/utils";
 import { Globe, Terminal, Database, Layout, Smartphone, Sparkles } from "lucide-react";
+import { motion } from "framer-motion";
 
 const services = [
     {
@@ -56,19 +57,19 @@ export default function Services() {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {services.map((service, index) => (
-                        <div
+                        <motion.div
                             key={index}
-                            // Masterclass Mobile Fix: Make the card tappable on mobile devices
+                            initial={{ opacity: 0, y: 40 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.5, delay: index * 0.1 }}
+                            viewport={{ once: true, margin: "0px 0px 200px 0px", amount: 0 }}
                             tabIndex={0}
                             className={cn(
                                 "group relative overflow-hidden rounded-2xl p-[1px] transition-all duration-500",
-                                // Elevate the whole card on hover AND focus (mobile tap)
-                                // Prevent default focus outline, use our custom styling instead
                                 "hover:shadow-2xl hover:-translate-y-2 focus:shadow-2xl focus:-translate-y-2 dark:hover:shadow-blue-900/20 dark:focus:shadow-blue-900/20 cursor-default focus:outline-none"
                             )}
                         >
                             {/* Animated Gradient Border Wrapper */}
-                            {/* This sits behind the card content and reveals a gradient border on hover/focus */}
                             <div className="absolute inset-0 bg-border group-hover:bg-gradient-to-br group-focus:bg-gradient-to-br group-hover:from-blue-500 group-focus:from-blue-500 group-hover:to-cyan-500 group-focus:to-cyan-500 transition-colors duration-500"></div>
 
                             {/* Main Card Content */}
@@ -79,7 +80,6 @@ export default function Services() {
                                     "mb-6 inline-flex h-14 w-14 items-center justify-center rounded-xl",
                                     "bg-blue-500/10 text-blue-600 dark:bg-blue-500/20 dark:text-blue-400",
                                     "transition-all duration-500",
-                                    // Hover and Focus states for the icon container
                                     "group-hover:bg-gradient-to-br group-focus:bg-gradient-to-br group-hover:from-blue-500 group-focus:from-blue-500 group-hover:to-cyan-500 group-focus:to-cyan-500 group-hover:text-white group-focus:text-white",
                                     "group-hover:scale-110 group-focus:scale-110 group-hover:shadow-lg group-focus:shadow-lg group-hover:shadow-blue-500/30 group-focus:shadow-blue-500/30 group-hover:-rotate-3 group-focus:-rotate-3"
                                 )}>
@@ -98,7 +98,7 @@ export default function Services() {
                                 {/* Expanding Accent Line at the bottom on hover/focus */}
                                 <div className="absolute bottom-0 left-0 h-1 w-0 bg-gradient-to-r from-blue-500 to-cyan-500 transition-all duration-500 group-hover:w-full group-focus:w-full"></div>
                             </div>
-                        </div>
+                        </motion.div>
                     ))}
                 </div>
             </div>
