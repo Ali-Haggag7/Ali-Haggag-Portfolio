@@ -16,11 +16,16 @@
 
   <br />
 
-  <img src="/https://ali-haggag-portfolio.vercel.app/" alt="Project Preview" width="100%" style="border-radius: 10px;" />
+  <img src="/main-preview.png" alt="Project Preview" width="100%" style="border-radius: 10px;" />
 
 </div>
 
 <br />
+
+## 🚀 Live Demo
+[Click here to visit my portfolio](https://ali-haggag-portfolio.vercel.app/)
+
+---
 
 ## 🔥 Key Features
 
