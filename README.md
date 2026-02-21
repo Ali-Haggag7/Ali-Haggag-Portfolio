@@ -16,7 +16,7 @@
 
   <br />
 
-  <img src="/portfolio-preview-1.png" alt="Project Preview" width="100%" style="border-radius: 10px;" />
+  <img src="/main-preview.png" alt="Project Preview" width="100%" style="border-radius: 10px;" />
 
 </div>
 
@@ -84,7 +84,7 @@ Open http://localhost:3000 to view it in the browser.
 
 | **Desktop View** | **Mobile PWA View** |
 | :---: | :---: |
-| <img src="/gemini-clone-2.jpeg" width="100%" /> | <img src="/gemini-clone-3.jpeg" width="100%" /> |
+| <img src="/desktop-view.png" width="100%" /> | <img src="/mobile-view.png" width="100%" /> |
 
 ---
 
