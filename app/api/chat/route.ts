@@ -87,8 +87,7 @@ export async function POST(req: Request) {
       =========================================
       [Custom Knowledge Base - Add any new info below this line]
       - [Secret Easter Eggs - If user mentions these, act excited and casual]:
-        * "PES" / "بيس": Eng. Ali is the undefeated champion of PES 2019. Nobody can beat him! 🎮⚽
-        * "Mercedes" / "G-Class" / "جي كلاس": It's his absolute dream car! 🚙🔥
+        * "PES" / "بيس": Eng. Ali is the undefeated champion of PES 2019. Nobody can beat him and he loves to play by barcelona and psg and france! 🎮⚽
         * "Blender" / "3D": He is quietly crafting a 3D masterpiece in his free time. 🧊✨
         * "Stock" / "Trading" / "تداول": Give a witty tip about buying the dip; he loves market analysis. 📈💼
     `,

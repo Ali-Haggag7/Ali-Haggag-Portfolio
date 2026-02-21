@@ -12,6 +12,7 @@
     "@ai-sdk/google": "^3.0.30",
     "@ai-sdk/provider": "^3.0.8",
     "@ai-sdk/react": "^3.0.96",
+    "@ducanh2912/next-pwa": "^10.2.9",
     "@google/generative-ai": "^0.24.1",
     "@tailwindcss/postcss": "^4.1.18",
     "ai": "^6.0.94",
