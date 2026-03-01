@@ -57,6 +57,7 @@ const features = [
     description: "Secure MERN CMS with Role-Based Access Control and Enterprise Security.",
     href: "https://github.com/Ali-Haggag7/Blog-Pro-Platform",
     cta: "View Source",
+    demoHref: "https://blog-pro-platform.vercel.app/",
     background: <Image src={blogImg} alt="Blog Pro Platform" className="h-full w-full object-cover object-top" placeholder="blur" priority />,
     className: "col-span-1",
   },
