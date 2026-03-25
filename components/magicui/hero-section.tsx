@@ -18,6 +18,7 @@ export default function HeroSection() {
 
     const terminalContainerRef = useRef<HTMLDivElement>(null);
 
+    // Auto-scroll to bottom on new output or step change
     useEffect(() => {
         if (terminalContainerRef.current) {
             terminalContainerRef.current.scrollTop = terminalContainerRef.current.scrollHeight;
@@ -56,17 +57,18 @@ export default function HeroSection() {
         setIsMinimized(false);
 
         const timers = [
-            setTimeout(() => { setStep(1); playKeystroke(); }, 600),
-            setTimeout(() => { setStep(2); playKeystroke(); }, 1400),
-            setTimeout(() => { setStep(3); playKeystroke(); }, 2200),
-            setTimeout(() => { setStep(4); playKeystroke(); }, 3000),
-            setTimeout(() => { setStep(5); playKeystroke(); }, 3800),
-            setTimeout(() => { setStep(6); playKeystroke(); }, 4600),
-            setTimeout(() => { setStep(7); playKeystroke(); }, 5200),
+            setTimeout(() => { setStep(1); playKeystroke(); }, 100),
+            setTimeout(() => { setStep(2); playKeystroke(); }, 300),
+            setTimeout(() => { setStep(3); playKeystroke(); }, 1000),
+            setTimeout(() => { setStep(4); playKeystroke(); }, 1500),
+            setTimeout(() => { setStep(5); playKeystroke(); }, 2200),
+            setTimeout(() => { setStep(6); playKeystroke(); }, 2800),
+            setTimeout(() => { setStep(7); playKeystroke(); }, 3300),
         ];
         return timers;
     };
 
+    // Start boot sequence on mount
     useEffect(() => {
         const timers = startBootSequence();
         return () => timers.forEach(clearTimeout);

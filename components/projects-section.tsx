@@ -18,7 +18,7 @@ const features = [
         href: "https://github.com/Ali-Haggag7/CS-Arena",
         cta: "View Source",
         demoHref: "https://csarena.tech",
-        background: <Image src={csArenaImg} alt="CS Arena" className="h-full w-full object-cover object-top" placeholder="blur" />,
+        background: <Image src={csArenaImg} alt="CS Arena" className="h-full w-full object-cover object-top" placeholder="blur" sizes="(max-width: 768px) 100vw, 66vw" />,
         videoSrc: "/videos/cs-arena-demo.mp4",
         className: "col-span-1 md:col-span-2",
         autopsy: {
@@ -35,7 +35,7 @@ const features = [
         href: "https://github.com/Ali-Haggag7/Flurry-Super-App",
         cta: "View Source",
         demoHref: "https://flurry-app.vercel.app/",
-        background: <Image src={flurryImg} alt="Flurry App" className="h-full w-full object-cover object-top" placeholder="blur" />,
+        background: <Image src={flurryImg} alt="Flurry App" className="h-full w-full object-cover object-top" placeholder="blur" sizes="(max-width: 768px) 100vw, 33vw" />,
         videoSrc: "/videos/flurry-demo.mp4",
         className: "col-span-1",
         autopsy: {
@@ -68,7 +68,7 @@ const features = [
         href: "https://github.com/Ali-Haggag7/Blog-Pro-Platform",
         cta: "View Source",
         demoHref: "https://blog-pro-platform.vercel.app/",
-        background: <Image src={blogImg} alt="Blog Pro" className="h-full w-full object-cover object-top" placeholder="blur" />,
+        background: <Image src={blogImg} alt="Blog Pro" className="h-full w-full object-cover object-top" placeholder="blur" sizes="(max-width: 768px) 100vw, 66vw" />,
         videoSrc: "/videos/blog-cms-demo.mp4",
         className: "col-span-1 md:col-span-2",
         autopsy: {
@@ -101,7 +101,7 @@ const features = [
         href: "https://github.com/Ali-Haggag7/Gemini-AI-Clone",
         cta: "View Source",
         demoHref: "https://gemini-clone-ali.vercel.app/",
-        background: <Image src={geminiImg} alt="Gemini AI Clone" className="h-full w-full object-cover object-top" placeholder="blur" />,
+        background: <Image src={geminiImg} alt="Gemini AI Clone" className="h-full w-full object-cover object-top" placeholder="blur" sizes="(max-width: 768px) 100vw, 33vw" />,
         videoSrc: "/videos/gemini-clone-demo.mp4",
         className: "col-span-1",
         autopsy: {
