@@ -18,7 +18,8 @@ export default function Particles() {
         const canvas = canvasRef.current;
         if (!canvas) return;
 
-        const ctx = canvas.getContext("2d");
+        // Tweak 1: Optimize context rendering
+        const ctx = canvas.getContext("2d", { alpha: true });
         if (!ctx) return;
 
         let width = (canvas.width = window.innerWidth);
@@ -27,12 +28,12 @@ export default function Particles() {
         const currentTheme = theme === "system" ? resolvedTheme : theme;
         const isLight = currentTheme === "light";
 
-        // Adjusted particle color for better visibility on white background
         const particleColor = isLight ? "rgba(0, 0, 0, 0.4)" : "rgba(255, 255, 255, 0.4)";
         const lineColor = isLight ? "rgba(0, 0, 0, 0.08)" : "rgba(255, 255, 255, 0.08)";
 
         const particles: Particle[] = [];
-        const particleCount = 60;
+        // Tweak 2: Responsive particle count (save mobile CPU)
+        const particleCount = window.innerWidth < 768 ? 30 : 60;
 
         class Particle {
             x: number;
@@ -78,12 +79,16 @@ export default function Particles() {
                 particle.update();
                 particle.draw();
 
-                for (let j = index; j < particles.length; j++) {
+                // Tweak 3: index + 1 to avoid duplicate/self drawing
+                for (let j = index + 1; j < particles.length; j++) {
                     const dx = particle.x - particles[j].x;
                     const dy = particle.y - particles[j].y;
-                    const distance = Math.sqrt(dx * dx + dy * dy);
 
-                    if (distance < 100) {
+                    // Tweak 4: Avoid heavy Math.sqrt() calculation
+                    const distanceSq = dx * dx + dy * dy;
+
+                    // 100 * 100 = 10000
+                    if (distanceSq < 10000) {
                         ctx.beginPath();
                         ctx.strokeStyle = lineColor;
                         ctx.lineWidth = 0.5;
@@ -116,7 +121,8 @@ export default function Particles() {
     return (
         <canvas
             ref={canvasRef}
-            className="fixed inset-0 -z-10 h-full w-full pointer-events-none"
+            // Tweak 5: Force GPU acceleration for the canvas
+            className="fixed inset-0 -z-10 h-full w-full pointer-events-none transform-gpu will-change-transform"
         />
     );
 }
