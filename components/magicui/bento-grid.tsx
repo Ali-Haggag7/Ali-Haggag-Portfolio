@@ -1,10 +1,10 @@
 "use client";
 
-import { ReactNode, useState, useRef } from "react";
+import { ReactNode, useState, useRef, useEffect } from "react";
 import { Github, ExternalLink, Activity, Target, Zap, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useInView } from "framer-motion";
 
 export const BentoGrid = ({
     children,
@@ -60,20 +60,43 @@ export const BentoCard = ({
 }) => {
     const [isHovered, setIsHovered] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
+
+    // References for Intersection Observer (Mobile video auto-play)
+    const cardRef = useRef<HTMLButtonElement>(null);
     const videoRef = useRef<HTMLVideoElement>(null);
+    const isInView = useInView(cardRef, { margin: "-20% 0px -20% 0px", once: false });
+
+    // Effect to handle mobile auto-play based on scroll
+    useEffect(() => {
+        // Only trigger this logic on smaller screens (mobile/tablet) where hover isn't natural
+        if (window.matchMedia("(max-width: 768px)").matches) {
+            if (isInView && videoRef.current) {
+                videoRef.current.play().catch(() => { });
+                setIsHovered(true);
+            } else if (!isInView && videoRef.current) {
+                videoRef.current.pause();
+                videoRef.current.currentTime = 0;
+                setIsHovered(false);
+            }
+        }
+    }, [isInView]);
 
     const handleMouseEnter = () => {
-        setIsHovered(true);
-        if (videoRef.current) {
-            videoRef.current.play().catch(() => { });
+        if (window.matchMedia("(min-width: 769px)").matches) {
+            setIsHovered(true);
+            if (videoRef.current) {
+                videoRef.current.play().catch(() => { });
+            }
         }
     };
 
     const handleMouseLeave = () => {
-        setIsHovered(false);
-        if (videoRef.current) {
-            videoRef.current.pause();
-            videoRef.current.currentTime = 0;
+        if (window.matchMedia("(min-width: 769px)").matches) {
+            setIsHovered(false);
+            if (videoRef.current) {
+                videoRef.current.pause();
+                videoRef.current.currentTime = 0;
+            }
         }
     };
 
@@ -81,6 +104,7 @@ export const BentoCard = ({
         <>
             {/* The Grid Card */}
             <motion.button
+                ref={cardRef}
                 layoutId={`card-${id}`}
                 onClick={() => setIsOpen(true)}
                 onMouseEnter={handleMouseEnter}
@@ -89,15 +113,15 @@ export const BentoCard = ({
                 onBlur={handleMouseLeave}
                 aria-label={`View details for ${name}`}
                 className={cn(
-                    "group relative flex flex-col justify-end overflow-hidden rounded-2xl min-h-[22rem] w-full text-left",
-                    "border border-border/50 dark:border-white/10 shadow-sm transition-all duration-300",
+                    "group relative flex flex-col justify-end overflow-hidden rounded-2xl min-h-[22rem] w-full text-left transform-gpu will-change-transform",
+                    "border border-border/50 dark:border-white/10 shadow-sm transition-[box-shadow,border-color] duration-300",
                     "focus:outline-none focus:ring-2 focus:ring-blue-500/50 cursor-pointer",
                     className
                 )}
             >
-                <motion.div layoutId={`background-${id}`} className="absolute inset-0 z-0 h-full w-full overflow-hidden bg-black">
+                <motion.div layoutId={`background-${id}`} className="absolute inset-0 z-0 h-full w-full overflow-hidden bg-black transform-gpu">
                     <div className={cn(
-                        "h-full w-full transition-all duration-700 opacity-90",
+                        "h-full w-full transition-[transform,opacity] duration-700 opacity-90 will-change-[transform,opacity]",
                         isHovered && videoSrc ? "scale-105 opacity-0" : "scale-100 group-hover:scale-110"
                     )}>
                         {background}
@@ -112,16 +136,18 @@ export const BentoCard = ({
                             playsInline
                             loop
                             className={cn(
-                                "absolute inset-0 h-full w-full object-cover transition-opacity duration-700",
+                                "absolute inset-0 h-full w-full object-cover transition-opacity duration-700 will-change-opacity",
                                 isHovered ? "opacity-100" : "opacity-0"
                             )}
-                        />
+                        >
+                            <track kind="captions" srcLang="en" label="English" default={false} />
+                        </video>
                     )}
                 </motion.div>
 
-                <div className="absolute inset-0 z-10 bg-gradient-to-t from-black/95 via-black/70 to-transparent pointer-events-none" />
+                <div className="absolute inset-0 z-10 bg-gradient-to-t from-black/95 via-black/70 to-transparent pointer-events-none transform-gpu" />
 
-                <motion.div layoutId={`content-${id}`} className="relative z-20 flex flex-col gap-2 p-6 mt-auto">
+                <motion.div layoutId={`content-${id}`} className="relative z-20 flex flex-col gap-2 p-6 mt-auto transform-gpu">
                     <div className="mb-2 inline-flex h-10 w-10 items-center justify-center rounded-lg bg-white/10 backdrop-blur-md border border-white/20">
                         <Icon className="h-5 w-5 text-white" aria-hidden="true" />
                     </div>
@@ -131,7 +157,7 @@ export const BentoCard = ({
                     <motion.p layoutId={`desc-${id}`} className="text-sm text-white/70 font-medium max-w-lg leading-relaxed">
                         {description}
                     </motion.p>
-                    <div className="mt-2 text-xs font-bold text-blue-400 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <div className="mt-2 text-xs font-bold text-blue-400 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                         Click to view Autopsy <Activity className="w-3 h-3" />
                     </div>
                 </motion.div>
@@ -146,7 +172,8 @@ export const BentoCard = ({
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
                             onClick={() => setIsOpen(false)}
-                            className="absolute inset-0 bg-background/80 backdrop-blur-xl"
+                            style={{ willChange: "opacity" }}
+                            className="absolute inset-0 bg-background/80 backdrop-blur-sm"
                             aria-hidden="true"
                         />
 
@@ -155,7 +182,8 @@ export const BentoCard = ({
                             role="dialog"
                             aria-modal="true"
                             aria-labelledby={`modal-title-${id}`}
-                            className="relative w-full max-w-4xl max-h-[90vh] overflow-y-auto bg-card rounded-3xl shadow-2xl border border-border/50 flex flex-col z-10 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:'none']"
+                            style={{ willChange: "transform, opacity" }}
+                            className="relative w-full max-w-4xl max-h-[90vh] overflow-y-auto bg-card rounded-3xl shadow-2xl border border-border/50 flex flex-col z-10 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:'none'] transform-gpu"
                         >
                             <button
                                 type="button"
@@ -166,7 +194,7 @@ export const BentoCard = ({
                                 <X className="w-5 h-5" aria-hidden="true" />
                             </button>
 
-                            <motion.div layoutId={`background-${id}`} className="relative w-full h-64 md:h-80 shrink-0 bg-black overflow-hidden">
+                            <motion.div layoutId={`background-${id}`} className="relative w-full h-64 md:h-80 shrink-0 bg-black overflow-hidden transform-gpu">
                                 {videoSrc ? (
                                     <video autoPlay muted playsInline loop className="w-full h-full object-cover opacity-80">
                                         <source src={videoSrc} type="video/mp4" />
@@ -175,9 +203,9 @@ export const BentoCard = ({
                                 ) : (
                                     <div className="w-full h-full opacity-80">{background}</div>
                                 )}
-                                <div className="absolute inset-0 bg-gradient-to-t from-card via-card/50 to-transparent" />
+                                <div className="absolute inset-0 bg-gradient-to-t from-card via-card/50 to-transparent transform-gpu" />
 
-                                <motion.div layoutId={`content-${id}`} className="absolute bottom-0 left-0 p-6 md:p-8 w-full">
+                                <motion.div layoutId={`content-${id}`} className="absolute bottom-0 left-0 p-6 md:p-8 w-full transform-gpu">
                                     <motion.h3 id={`modal-title-${id}`} layoutId={`title-${id}`} className="text-3xl md:text-5xl font-extrabold text-foreground mb-2">
                                         {name}
                                     </motion.h3>

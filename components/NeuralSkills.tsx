@@ -118,7 +118,6 @@ export default function NeuralSkills() {
             const container = document.getElementById('battle-scars');
             if (container) {
                 container.scrollIntoView({ behavior: 'smooth' });
-                // Optional: expand the specific scar if you have a global state for it
             }
         }, 300);
     };
@@ -134,7 +133,6 @@ export default function NeuralSkills() {
         }
     };
 
-    // Split array for two Marquee rows to make it look dense and neural
     const firstRow = skillsData.slice(0, Math.ceil(skillsData.length / 2));
     const secondRow = skillsData.slice(Math.ceil(skillsData.length / 2));
 
@@ -170,15 +168,15 @@ export default function NeuralSkills() {
                             key={index}
                             onClick={() => setSelectedSkill(skill)}
                             aria-label={`View details for ${skill.name}`}
-                            className="group/skill relative mx-4 flex h-24 w-24 items-center justify-center rounded-2xl border border-border/50 bg-card/30 backdrop-blur-md transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 hover:scale-110 hover:border-blue-500/50 hover:bg-card hover:shadow-[0_0_30px_-5px_rgba(59,130,246,0.2)] dark:hover:shadow-[0_0_30px_-5px_rgba(59,130,246,0.15)] cursor-pointer"
+                            className="group/skill relative mx-4 flex h-24 w-24 items-center justify-center rounded-2xl border border-border/50 bg-card/30 backdrop-blur-md transition-[transform,background-color,box-shadow,border-color] duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 hover:scale-110 hover:border-blue-500/50 hover:bg-card hover:shadow-[0_0_30px_-5px_rgba(59,130,246,0.2)] dark:hover:shadow-[0_0_30px_-5px_rgba(59,130,246,0.15)] cursor-pointer transform-gpu will-change-transform"
                         >
                             <img
                                 src={skill.icon}
                                 alt={`${skill.name} icon`}
-                                className="h-12 w-12 opacity-50 transition-all duration-500 group-hover/skill:opacity-100 group-focus/skill:opacity-100 grayscale group-hover/skill:grayscale-0 group-focus/skill:grayscale-0 dark:invert dark:group-hover/skill:invert-0 dark:group-focus/skill:invert-0"
+                                className="h-12 w-12 opacity-50 transition-[opacity,filter] duration-500 group-hover/skill:opacity-100 group-focus/skill:opacity-100 grayscale group-hover/skill:grayscale-0 group-focus/skill:grayscale-0 dark:invert dark:group-hover/skill:invert-0 dark:group-focus/skill:invert-0 will-change-[opacity,filter]"
                             />
                             {skill.scarId && (
-                                <span className="absolute -top-2 -right-2 w-4 h-4 bg-red-500 rounded-full animate-pulse border-2 border-background" aria-label="Has battle scar"></span>
+                                <span className="absolute -top-2 -right-2 w-4 h-4 bg-red-500 rounded-full animate-pulse border-2 border-background transform-gpu" aria-label="Has battle scar"></span>
                             )}
                         </button>
                     ))}
@@ -191,22 +189,22 @@ export default function NeuralSkills() {
                             key={index}
                             onClick={() => setSelectedSkill(skill)}
                             aria-label={`View details for ${skill.name}`}
-                            className="group/skill relative mx-4 flex h-24 w-24 items-center justify-center rounded-2xl border border-border/50 bg-card/30 backdrop-blur-md transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 hover:scale-110 hover:border-blue-500/50 hover:bg-card hover:shadow-[0_0_30px_-5px_rgba(59,130,246,0.2)] dark:hover:shadow-[0_0_30px_-5px_rgba(59,130,246,0.15)] cursor-pointer"
+                            className="group/skill relative mx-4 flex h-24 w-24 items-center justify-center rounded-2xl border border-border/50 bg-card/30 backdrop-blur-md transition-[transform,background-color,box-shadow,border-color] duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 hover:scale-110 hover:border-blue-500/50 hover:bg-card hover:shadow-[0_0_30px_-5px_rgba(59,130,246,0.2)] dark:hover:shadow-[0_0_30px_-5px_rgba(59,130,246,0.15)] cursor-pointer transform-gpu will-change-transform"
                         >
                             <img
                                 src={skill.icon}
                                 alt={`${skill.name} icon`}
-                                className="h-12 w-12 opacity-50 transition-all duration-500 group-hover/skill:opacity-100 group-focus/skill:opacity-100 grayscale group-hover/skill:grayscale-0 group-focus/skill:grayscale-0 dark:invert dark:group-hover/skill:invert-0 dark:group-focus/skill:invert-0"
+                                className="h-12 w-12 opacity-50 transition-[opacity,filter] duration-500 group-hover/skill:opacity-100 group-focus/skill:opacity-100 grayscale group-hover/skill:grayscale-0 group-focus/skill:grayscale-0 dark:invert dark:group-hover/skill:invert-0 dark:group-focus/skill:invert-0 will-change-[opacity,filter]"
                             />
                             {skill.scarId && (
-                                <span className="absolute -top-2 -right-2 w-4 h-4 bg-red-500 rounded-full animate-pulse border-2 border-background" aria-label="Has battle scar"></span>
+                                <span className="absolute -top-2 -right-2 w-4 h-4 bg-red-500 rounded-full animate-pulse border-2 border-background transform-gpu" aria-label="Has battle scar"></span>
                             )}
                         </button>
                     ))}
                 </Marquee>
 
-                <div className="pointer-events-none absolute inset-y-0 left-0 w-1/4 bg-gradient-to-r from-background via-background/80 to-transparent"></div>
-                <div className="pointer-events-none absolute inset-y-0 right-0 w-1/4 bg-gradient-to-l from-background via-background/80 to-transparent"></div>
+                <div className="pointer-events-none absolute inset-y-0 left-0 w-1/4 bg-gradient-to-r from-background via-background/80 to-transparent transform-gpu"></div>
+                <div className="pointer-events-none absolute inset-y-0 right-0 w-1/4 bg-gradient-to-l from-background via-background/80 to-transparent transform-gpu"></div>
             </div>
 
             <AnimatePresence>
@@ -217,6 +215,7 @@ export default function NeuralSkills() {
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
                             onClick={() => setSelectedSkill(null)}
+                            style={{ willChange: "opacity" }}
                             className="absolute inset-0 bg-background/80 backdrop-blur-sm"
                             aria-hidden="true"
                         />
@@ -224,10 +223,12 @@ export default function NeuralSkills() {
                             role="dialog"
                             aria-modal="true"
                             aria-labelledby="skill-modal-title"
-                            initial={{ opacity: 0, scale: 0.9, y: 20 }}
+                            initial={{ opacity: 0, scale: 0.95, y: 15 }}
                             animate={{ opacity: 1, scale: 1, y: 0 }}
-                            exit={{ opacity: 0, scale: 0.9, y: 20 }}
-                            className="relative w-full max-w-lg bg-card border border-border/50 rounded-3xl shadow-2xl overflow-hidden z-10 p-6 md:p-8"
+                            exit={{ opacity: 0, scale: 0.95, y: 15 }}
+                            transition={{ type: "spring", damping: 25, stiffness: 300 }}
+                            style={{ willChange: "transform, opacity" }}
+                            className="relative w-full max-w-lg bg-card border border-border/50 rounded-3xl shadow-2xl overflow-hidden z-10 p-6 md:p-8 transform-gpu"
                         >
                             <button
                                 type="button"
@@ -240,7 +241,7 @@ export default function NeuralSkills() {
 
                             <div className="flex items-center gap-4 mb-6">
                                 <div className="flex items-center justify-center w-16 h-16 rounded-2xl bg-muted border border-border">
-                                    <img src={selectedSkill.icon} alt="" className="w-8 h-8 dark:invert" aria-hidden="true" />
+                                    <img src={selectedSkill.icon} alt="" className="w-8 h-8 dark:invert transform-gpu" aria-hidden="true" />
                                 </div>
                                 <div>
                                     <h3 id="skill-modal-title" className="text-2xl font-bold text-foreground">{selectedSkill.name}</h3>
@@ -286,10 +287,10 @@ export default function NeuralSkills() {
                                             className="w-full flex items-center justify-between p-4 bg-red-500/10 hover:bg-red-500/20 border border-red-500/20 text-red-600 dark:text-red-500 rounded-xl transition-colors focus:outline-none focus:ring-2 focus:ring-red-500 group cursor-pointer"
                                         >
                                             <div className="flex items-center gap-3">
-                                                <AlertTriangle className="w-5 h-5 group-hover:scale-110 transition-transform" aria-hidden="true" />
+                                                <AlertTriangle className="w-5 h-5 group-hover:scale-110 transition-transform transform-gpu will-change-transform" aria-hidden="true" />
                                                 <span className="font-bold text-sm">View Linked Battle Scar</span>
                                             </div>
-                                            <Activity className="w-4 h-4 opacity-50 group-hover:opacity-100" aria-hidden="true" />
+                                            <Activity className="w-4 h-4 opacity-50 group-hover:opacity-100 transition-opacity" aria-hidden="true" />
                                         </button>
                                     </div>
                                 )}
