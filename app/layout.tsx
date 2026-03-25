@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { ThemeProvider } from "@/providers/theme-provider";
-import Chatbot from "@/components/magicui/Chatbot";
-import CustomEffects from "@/components/magicui/custom-effects";
+import Chatbot from "@/components/layout/Chatbot";
+import CustomEffects from "@/components/ui/custom-effects";
 import PwaRegister from './PwaRegister';
 import "./globals.css";
 

@@ -1,15 +1,32 @@
-"use client";
-
 import { MessageSquare, Network, Code2, ShieldAlert, BarChart3, Bot } from "lucide-react";
-import { BentoGrid, BentoCard } from "./magicui/bento-grid";
-import Image from "next/image";
-
 import flurryImg from "@/public/images/flurry.png";
 import blogImg from "@/public/images/blog-pro.png";
 import geminiImg from "@/public/images/gemini-clone-1.jpeg";
 import csArenaImg from "@/public/images/cs-arena.png";
 
-const features = [
+export type Autopsy = {
+    challenge: string;
+    architecture: string;
+    impact: string;
+};
+
+export type ProjectFeature = {
+    id: string;
+    name: string;
+    description: string;
+    href?: string;
+    cta?: string;
+    demoHref?: string;
+    videoSrc?: string;
+    className: string;
+    Icon: any;
+    imageSrc?: any;
+    autopsy?: Autopsy;
+    isGradientBg?: boolean;
+    gradientClass?: string;
+};
+
+export const projectsData: ProjectFeature[] = [
     {
         id: "cs-arena",
         Icon: Code2,
@@ -18,8 +35,7 @@ const features = [
         href: "https://github.com/Ali-Haggag7/CS-Arena",
         cta: "View Source",
         demoHref: "https://csarena.tech",
-        // 🚀 التريكة هنا: priority={true} عشان تحمل فوراً
-        background: <Image src={csArenaImg} alt="CS Arena" className="h-full w-full object-cover object-top" placeholder="blur" priority={true} sizes="(max-width: 768px) 100vw, 66vw" />,
+        imageSrc: csArenaImg,
         videoSrc: "/videos/cs-arena-demo.mp4",
         className: "col-span-1 md:col-span-2",
         autopsy: {
@@ -36,7 +52,7 @@ const features = [
         href: "https://github.com/Ali-Haggag7/Flurry-Super-App",
         cta: "View Source",
         demoHref: "https://flurry-app.vercel.app/",
-        background: <Image src={flurryImg} alt="Flurry App" className="h-full w-full object-cover object-top" placeholder="blur" priority={true} sizes="(max-width: 768px) 100vw, 33vw" />,
+        imageSrc: flurryImg,
         videoSrc: "/videos/flurry-demo.mp4",
         className: "col-span-1",
         autopsy: {
@@ -52,7 +68,8 @@ const features = [
         description: "Robust CRM Backend API with Domain-Driven Design & strict validation.",
         href: "https://github.com/Ali-Haggag7/cybership-carrier-service",
         cta: "View Source",
-        background: <div className="h-full w-full bg-gradient-to-br from-blue-900 to-slate-900"></div>,
+        isGradientBg: true,
+        gradientClass: "from-blue-900 to-slate-900",
         videoSrc: "/videos/cybership-demo.mp4",
         className: "col-span-1",
         autopsy: {
@@ -69,7 +86,7 @@ const features = [
         href: "https://github.com/Ali-Haggag7/Blog-Pro-Platform",
         cta: "View Source",
         demoHref: "https://blog-pro-platform.vercel.app/",
-        background: <Image src={blogImg} alt="Blog Pro" className="h-full w-full object-cover object-top" placeholder="blur" priority={true} sizes="(max-width: 768px) 100vw, 66vw" />,
+        imageSrc: blogImg,
         videoSrc: "/videos/blog-cms-demo.mp4",
         className: "col-span-1 md:col-span-2",
         autopsy: {
@@ -85,7 +102,8 @@ const features = [
         description: "Robust CRM Backend API with MVC Architecture & JWT Authentication.",
         href: "https://github.com/Ali-Haggag7/Admin-Pro-Dashboard",
         cta: "View Source",
-        background: <div className="h-full w-full bg-gradient-to-br from-indigo-950 to-slate-900"></div>,
+        isGradientBg: true,
+        gradientClass: "from-indigo-950 to-slate-900",
         videoSrc: "/videos/admin-dashboard-demo.mp4",
         className: "col-span-1 md:col-span-2",
         autopsy: {
@@ -102,7 +120,7 @@ const features = [
         href: "https://github.com/Ali-Haggag7/Gemini-AI-Clone",
         cta: "View Source",
         demoHref: "https://gemini-clone-ali.vercel.app/",
-        background: <Image src={geminiImg} alt="Gemini AI Clone" className="h-full w-full object-cover object-top" placeholder="blur" priority={true} sizes="(max-width: 768px) 100vw, 33vw" />,
+        imageSrc: geminiImg,
         videoSrc: "/videos/gemini-clone-demo.mp4",
         className: "col-span-1",
         autopsy: {
@@ -112,15 +130,3 @@ const features = [
         }
     }
 ];
-
-export default function ProjectsSection() {
-    return (
-        <section aria-label="Projects Portfolio" id="projects" className="relative flex w-full max-w-5xl flex-col items-center justify-center mt-8 scroll-mt-24 mx-auto">
-            <BentoGrid className="lg:grid-rows-3 p-4 md:p-8">
-                {features.map((feature) => (
-                    <BentoCard key={feature.name} {...feature} />
-                ))}
-            </BentoGrid>
-        </section>
-    );
-}

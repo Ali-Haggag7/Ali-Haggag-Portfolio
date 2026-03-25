@@ -1,10 +1,11 @@
 "use client";
+
 import createGlobe from "cobe";
 import { useEffect, useRef, useState } from "react";
 import { useTheme } from "next-themes";
 import { cn } from "@/lib/utils";
 
-export default function Globe({ className }: { className?: string }) {
+export function Globe({ className }: { className?: string }) {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const [width, setWidth] = useState(0);
 
@@ -45,7 +46,6 @@ export default function Globe({ className }: { className?: string }) {
             height: width * 2,
             phi: 0,
             theta: 0.2,
-
             dark: isLight ? 0 : 1,
             diffuse: 1.2,
             mapSamples: width < 600 ? 12000 : 25000,
@@ -53,7 +53,6 @@ export default function Globe({ className }: { className?: string }) {
             baseColor: isLight ? [0.95, 0.95, 0.95] : [0.05, 0.05, 0.05],
             markerColor: isLight ? [0.1, 0.5, 0.9] : [0.1, 0.8, 1],
             glowColor: isLight ? [0.9, 0.9, 0.9] : [0.1, 0.2, 0.4],
-
             markers: [
                 { location: [26.1642, 32.7267], size: 0.12 },
                 { location: [30.0444, 31.2357], size: 0.09 },
