@@ -1,17 +1,20 @@
 "use client";
 
+import { memo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronDown, Activity, CheckCircle2, Zap } from "lucide-react";
 import { cn } from "@/lib/utils";
+import type { Scar } from "./scars.data";
 
 interface ScarCardProps {
-    scar: any;
+    scar: Scar;
     index: number;
     isExpanded: boolean;
     onToggle: (id: string) => void;
 }
 
-export function ScarCard({ scar, index, isExpanded, onToggle }: ScarCardProps) {
+// memo - prevents all cards re-rendering when one is toggled
+export const ScarCard = memo(function ScarCard({ scar, index, isExpanded, onToggle }: ScarCardProps) {
     const Icon = scar.icon;
 
     return (
@@ -43,9 +46,7 @@ export function ScarCard({ scar, index, isExpanded, onToggle }: ScarCardProps) {
                     </div>
                     <div>
                         <p className="text-sm font-mono text-muted-foreground mb-1">{scar.project}</p>
-                        <h3 className="text-lg md:text-xl font-bold text-foreground">
-                            {scar.title}
-                        </h3>
+                        <h3 className="text-lg md:text-xl font-bold text-foreground">{scar.title}</h3>
                     </div>
                 </div>
                 <div className={cn(
@@ -68,13 +69,12 @@ export function ScarCard({ scar, index, isExpanded, onToggle }: ScarCardProps) {
                     >
                         <div className="px-6 pb-6 pt-2">
                             <div className="flex flex-wrap gap-2 mb-6 ml-0 md:ml-18">
-                                {scar.badges.map((badge: string) => (
+                                {scar.badges.map((badge) => (
                                     <span key={badge} className="px-3 py-1 text-xs font-mono font-medium bg-muted text-muted-foreground rounded-full border border-border/50">
                                         {badge}
                                     </span>
                                 ))}
                             </div>
-
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 ml-0 md:ml-18">
                                 <div className="space-y-3">
                                     <h4 className="flex items-center gap-2 text-sm font-bold text-red-600 dark:text-red-500 uppercase tracking-wider">
@@ -101,4 +101,4 @@ export function ScarCard({ scar, index, isExpanded, onToggle }: ScarCardProps) {
             </AnimatePresence>
         </motion.div>
     );
-}
+});

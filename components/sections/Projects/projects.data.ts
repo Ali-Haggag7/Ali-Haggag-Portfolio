@@ -1,4 +1,4 @@
-import { MessageSquare, Network, Code2, ShieldAlert, BarChart3, Bot } from "lucide-react";
+import { MessageSquare, Network, Code2, ShieldAlert, BarChart3, Bot, type LucideIcon } from "lucide-react";
 import flurryImg from "@/public/images/flurry.png";
 import blogImg from "@/public/images/blog-pro.png";
 import geminiImg from "@/public/images/gemini-clone-1.jpeg";
@@ -19,7 +19,8 @@ export type ProjectFeature = {
     demoHref?: string;
     videoSrc?: string;
     className: string;
-    Icon: any;
+    // Proper type instead of any - enables TypeScript optimizations
+    Icon: LucideIcon;
     imageSrc?: any;
     autopsy?: Autopsy;
     isGradientBg?: boolean;

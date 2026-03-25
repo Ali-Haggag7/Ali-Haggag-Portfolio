@@ -1,8 +1,21 @@
-import { Swords, WifiOff, Network, Filter, ShieldAlert } from "lucide-react";
+import { Swords, WifiOff, Network, Filter, ShieldAlert, type LucideIcon } from "lucide-react";
+
+export type Scar = {
+    id: string;
+    category: string;
+    // Proper type instead of any on scar.icon in ScarCard
+    icon: LucideIcon;
+    title: string;
+    project: string;
+    badges: string[];
+    problem: string;
+    solution: string;
+    impact: string;
+};
 
 export const scarCategories = ["All", "Real-Time", "Architecture", "Offline & PWA", "Security"];
 
-export const scarsData = [
+export const scarsData: Scar[] = [
     {
         id: "webrtc-latency",
         category: "Real-Time",

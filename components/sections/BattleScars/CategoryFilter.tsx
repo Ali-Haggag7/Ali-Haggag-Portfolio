@@ -1,7 +1,7 @@
 "use client";
 
+import { memo } from "react";
 import { cn } from "@/lib/utils";
-import { motion } from "framer-motion";
 
 interface CategoryFilterProps {
     categories: string[];
@@ -9,13 +9,16 @@ interface CategoryFilterProps {
     onSelect: (category: string) => void;
 }
 
-export function CategoryFilter({ categories, activeCategory, onSelect }: CategoryFilterProps) {
+// memo - only re-renders when activeCategory or categories change
+export const CategoryFilter = memo(function CategoryFilter({ categories, activeCategory, onSelect }: CategoryFilterProps) {
     return (
         <div className="flex flex-wrap items-center justify-center gap-3 mb-12">
             {categories.map((category) => (
                 <button
                     key={category}
+                    type="button"
                     onClick={() => onSelect(category)}
+                    aria-pressed={activeCategory === category}
                     className={cn(
                         "px-5 py-2 rounded-full text-sm font-bold transition-all duration-300 transform-gpu will-change-transform",
                         activeCategory === category
@@ -28,4 +31,4 @@ export function CategoryFilter({ categories, activeCategory, onSelect }: Categor
             ))}
         </div>
     );
-}
+});

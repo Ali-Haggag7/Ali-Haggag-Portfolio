@@ -1,55 +1,67 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback, memo } from "react";
 import { Activity } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { motion, useInView } from "framer-motion";
 import Image from "next/image";
 import { ProjectFeature } from "./projects.data";
 
-export const BentoCard = ({
+// ✅ memo prevents re-render of all cards when modal opens/closes
+export const BentoCard = memo(function BentoCard({
     feature,
-    onClick
+    onClick,
+    priority = false,
 }: {
     feature: ProjectFeature;
     onClick: () => void;
-}) => {
+    priority?: boolean;
+}) {
     const [isHovered, setIsHovered] = useState(false);
     const cardRef = useRef<HTMLButtonElement>(null);
     const videoRef = useRef<HTMLVideoElement>(null);
+
+    // ✅ Compute isMobile once on mount - avoids calling matchMedia on every event
+    const isMobileRef = useRef(false);
+    useEffect(() => {
+        const mql = window.matchMedia("(max-width: 768px)");
+        isMobileRef.current = mql.matches;
+        const handler = (e: MediaQueryListEvent) => { isMobileRef.current = e.matches; };
+        mql.addEventListener("change", handler);
+        return () => mql.removeEventListener("change", handler);
+    }, []);
+
     const isInView = useInView(cardRef, { margin: "-20% 0px -20% 0px", once: false });
 
     useEffect(() => {
-        if (window.matchMedia("(max-width: 768px)").matches) {
-            if (isInView && videoRef.current) {
-                videoRef.current.play().catch(() => { });
-                setIsHovered(true);
-            } else if (!isInView && videoRef.current) {
-                videoRef.current.pause();
-                videoRef.current.currentTime = 0;
-                setIsHovered(false);
-            }
+        if (!isMobileRef.current) return;
+        const video = videoRef.current;
+        if (!video) return;
+        if (isInView) {
+            video.play().catch(() => { });
+            setIsHovered(true);
+        } else {
+            video.pause();
+            video.currentTime = 0;
+            setIsHovered(false);
         }
     }, [isInView]);
 
-    const handleMouseEnter = () => {
-        if (window.matchMedia("(min-width: 769px)").matches) {
-            setIsHovered(true);
-            if (videoRef.current) {
-                videoRef.current.play().catch(() => { });
-            }
-        }
-    };
+    // ✅ useCallback - stable references so memo works correctly
+    const handleMouseEnter = useCallback(() => {
+        if (isMobileRef.current) return;
+        setIsHovered(true);
+        videoRef.current?.play().catch(() => { });
+    }, []);
 
-    const handleMouseLeave = () => {
-        if (window.matchMedia("(min-width: 769px)").matches) {
-            setIsHovered(false);
-            if (videoRef.current) {
-                videoRef.current.pause();
-                videoRef.current.currentTime = 0;
-            }
+    const handleMouseLeave = useCallback(() => {
+        if (isMobileRef.current) return;
+        setIsHovered(false);
+        if (videoRef.current) {
+            videoRef.current.pause();
+            videoRef.current.currentTime = 0;
         }
-    };
+    }, []);
 
     const { id, name, description, className, Icon, videoSrc, imageSrc, isGradientBg, gradientClass } = feature;
     const isColSpan2 = className.includes("md:col-span-2");
@@ -71,20 +83,20 @@ export const BentoCard = ({
                 className
             )}
         >
-            <motion.div layoutId={`background-${id}`} className="absolute inset-0 z-0 h-full w-full overflow-hidden bg-black transform-gpu">
+            {/* layoutId removed from here - was conflicting with CSS scale hover causing jitter */}
+            <div className="absolute inset-0 z-0 h-full w-full overflow-hidden bg-black transform-gpu">
                 <div className={cn(
                     "h-full w-full transition-[transform,opacity] duration-700 opacity-90 will-change-[transform,opacity]",
-                    isHovered && videoSrc ? "scale-105 opacity-0" : "scale-100 group-hover:scale-110"
                 )}>
                     {isGradientBg ? (
-                        <div className={cn("h-full w-full bg-gradient-to-br", gradientClass)}></div>
+                        <div className={cn("h-full w-full bg-gradient-to-br", gradientClass)} />
                     ) : imageSrc ? (
                         <Image
                             src={imageSrc}
                             alt={name}
                             className="h-full w-full object-cover object-top"
                             placeholder="blur"
-                            priority={true}
+                            priority={priority}
                             sizes={isColSpan2 ? "(max-width: 768px) 100vw, 66vw" : "(max-width: 768px) 100vw, 33vw"}
                         />
                     ) : null}
@@ -97,6 +109,7 @@ export const BentoCard = ({
                         muted
                         playsInline
                         loop
+                        preload="none"
                         className={cn(
                             "absolute inset-0 h-full w-full object-cover transition-opacity duration-700 will-change-opacity",
                             isHovered ? "opacity-100" : "opacity-0"
@@ -105,7 +118,7 @@ export const BentoCard = ({
                         <track kind="captions" srcLang="en" label="English" default={false} />
                     </video>
                 )}
-            </motion.div>
+            </div>
 
             <div className="absolute inset-0 z-10 bg-gradient-to-t from-black/95 via-black/70 to-transparent pointer-events-none transform-gpu" />
 
@@ -125,4 +138,4 @@ export const BentoCard = ({
             </motion.div>
         </motion.button>
     );
-};
+});
