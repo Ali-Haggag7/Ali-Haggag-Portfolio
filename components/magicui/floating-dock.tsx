@@ -15,7 +15,6 @@ import {
     Home,
     Terminal,
     Briefcase,
-    User,
     Mail,
     Github,
     Linkedin,
@@ -56,10 +55,11 @@ export const FloatingDock = ({
     mobileClassName?: string;
 }) => {
     return (
-        <>
+        // Masterclass Fix: Wrapped the entire component here to keep page.tsx perfectly clean!
+        <div className="fixed z-50 bottom-4 right-4 md:bottom-8 md:left-1/2 md:right-auto md:-translate-x-1/2">
             <FloatingDockDesktop className={desktopClassName} />
             <FloatingDockMobile className={mobileClassName} />
-        </>
+        </div>
     );
 };
 
@@ -73,34 +73,41 @@ const FloatingDockMobile = ({ className }: { className?: string }) => {
                         layoutId="nav"
                         className="absolute bottom-full mb-4 inset-x-0 flex flex-col gap-3 items-center"
                     >
-                        {items.map((item, idx) => (
-                            <motion.div
-                                key={item.title}
-                                initial={{ opacity: 0, y: 15, scale: 0.9 }}
-                                animate={{ opacity: 1, y: 0, scale: 1 }}
-                                exit={{ opacity: 0, y: 15, scale: 0.9, transition: { delay: idx * 0.05 } }}
-                                transition={{ delay: (items.length - 1 - idx) * 0.05, type: "spring", stiffness: 200, damping: 20 }}
-                            >
-                                <Link
-                                    href={item.href}
+                        {items.map((item, idx) => {
+                            const isExternal = !item.href.startsWith("#");
+                            return (
+                                <motion.div
                                     key={item.title}
-                                    // Smooth scroll + Auto close menu on mobile
-                                    onClick={(e) => handleSmoothScroll(e, item.href, () => setOpen(false))}
-                                    className="h-12 w-12 rounded-full bg-background/80 backdrop-blur-md border border-border shadow-lg flex items-center justify-center transition-all active:scale-90"
-                                    style={{
-                                        boxShadow: `0 4px 20px -5px ${item.glowColor}40`
-                                    }}
+                                    initial={{ opacity: 0, y: 15, scale: 0.9 }}
+                                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                                    exit={{ opacity: 0, y: 15, scale: 0.9, transition: { delay: idx * 0.05 } }}
+                                    transition={{ delay: (items.length - 1 - idx) * 0.05, type: "spring", stiffness: 200, damping: 20 }}
                                 >
-                                    <div className="h-5 w-5">{item.icon}</div>
-                                </Link>
-                            </motion.div>
-                        ))}
+                                    <Link
+                                        href={item.href}
+                                        key={item.title}
+                                        target={isExternal ? "_blank" : undefined}
+                                        rel={isExternal ? "noopener noreferrer" : undefined}
+                                        onClick={(e) => {
+                                            if (!isExternal) handleSmoothScroll(e, item.href, () => setOpen(false));
+                                        }}
+                                        className="h-12 w-12 rounded-full bg-background/90 backdrop-blur-xl border border-border shadow-lg flex items-center justify-center transition-all active:scale-90"
+                                        style={{
+                                            boxShadow: `0 4px 20px -5px ${item.glowColor}40`
+                                        }}
+                                    >
+                                        <div className="h-5 w-5">{item.icon}</div>
+                                    </Link>
+                                </motion.div>
+                            )
+                        })}
                     </motion.div>
                 )}
             </AnimatePresence>
             <button
+                type="button"
                 onClick={() => setOpen(!open)}
-                className="h-14 w-14 rounded-full bg-foreground text-background shadow-2xl flex items-center justify-center transition-transform active:scale-90"
+                className="h-14 w-14 rounded-full bg-foreground text-background shadow-2xl flex items-center justify-center transition-transform active:scale-90 focus:outline-none focus:ring-4 focus:ring-blue-500/30"
             >
                 <motion.div
                     animate={{ rotate: open ? 45 : 0 }}
@@ -129,7 +136,7 @@ const FloatingDockDesktop = ({ className }: { className?: string }) => {
             onMouseMove={(e) => mouseX.set(e.clientX)}
             onMouseLeave={() => mouseX.set(Infinity)}
             className={cn(
-                "mx-auto hidden md:flex h-[72px] gap-4 items-end rounded-full bg-background/40 backdrop-blur-xl border border-border/50 px-6 pb-3 shadow-[0_20px_40px_-10px_rgba(0,0,0,0.1)] dark:shadow-[0_20px_40px_-10px_rgba(0,0,0,0.4)]",
+                "mx-auto hidden md:flex h-[72px] gap-4 items-end rounded-full bg-background/50 backdrop-blur-2xl saturate-150 border border-border/50 px-6 pb-3 shadow-[0_20px_40px_-10px_rgba(0,0,0,0.1)] dark:shadow-[0_20px_40px_-10px_rgba(0,0,0,0.4)]",
                 className
             )}
         >
@@ -169,11 +176,16 @@ function IconContainer({
     let iconScale = useTransform(distance, [-150, 0, 150], [1, 1.4, 1]);
 
     const [hovered, setHovered] = useState(false);
+    const isExternal = !href.startsWith("#");
 
     return (
         <Link
             href={href}
-            onClick={(e) => handleSmoothScroll(e, href)}
+            target={isExternal ? "_blank" : undefined}
+            rel={isExternal ? "noopener noreferrer" : undefined}
+            onClick={(e) => {
+                if (!isExternal) handleSmoothScroll(e, href);
+            }}
         >
             <motion.div
                 ref={ref}
@@ -190,7 +202,7 @@ function IconContainer({
                     "aspect-square rounded-full flex items-center justify-center relative transition-[background-color,border-color,box-shadow] duration-300",
                     hovered
                         ? "bg-[var(--glow-bg)] border-[var(--glow-border)] shadow-[var(--glow-shadow)]"
-                        : "bg-card/80 border-border shadow-sm"
+                        : "bg-card/90 border-border shadow-sm"
                 )}
             >
                 <AnimatePresence>
@@ -223,8 +235,7 @@ const items = [
     { title: "Home", icon: <Home className="h-full w-full group-hover:text-foreground" />, href: "#", glowColor: "#888888" },
     { title: "Projects", icon: <Terminal className="h-full w-full group-hover:text-blue-500 text-blue-500/80" />, href: "#projects", glowColor: "#3B82F6" },
     { title: "Journey", icon: <Briefcase className="h-full w-full group-hover:text-green-500 text-green-500/80" />, href: "#timeline", glowColor: "#22C55E" },
-    { title: "Services", icon: <Layers className="h-full w-full group-hover:text-yellow-500 text-yellow-500/80" />, href: "#about", glowColor: "#EAB308" },
-    // Changed "Contact" href to point to "#contact" or whatever ID you gave to your footer/contact section
+    { title: "Services", icon: <Layers className="h-full w-full group-hover:text-yellow-500 text-yellow-500/80" />, href: "#services", glowColor: "#EAB308" },
     { title: "Contact", icon: <Mail className="h-full w-full group-hover:text-red-500 text-red-500/80" />, href: "#contact", glowColor: "#EF4444" },
     { title: "GitHub", icon: <Github className="h-full w-full group-hover:text-foreground" />, href: "https://github.com/Ali-Haggag7", glowColor: "#888888" },
     { title: "LinkedIn", icon: <Linkedin className="h-full w-full group-hover:text-[#0A66C2] text-[#0A66C2]/80" />, href: "https://www.linkedin.com/in/ali-haggag7/", glowColor: "#0A66C2" },

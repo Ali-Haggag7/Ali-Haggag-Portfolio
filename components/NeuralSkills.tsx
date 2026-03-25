@@ -4,7 +4,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Activity, Link as LinkIcon, AlertTriangle, Lightbulb, CheckCircle2, FlaskConical } from "lucide-react";
 import { cn } from "@/lib/utils";
-import Marquee from "./magicui/marquee"; // Ensure this path matches your Marquee component
+import Marquee from "./magicui/marquee";
 
 type Skill = {
     name: string;
@@ -17,91 +17,91 @@ type Skill = {
 const skillsData: Skill[] = [
     {
         name: "Next.js 14+",
-        icon: "https://cdn.simpleicons.org/nextdotjs/default",
+        icon: "/skills/nextjs.svg",
         status: "Battle-Tested",
         projects: ["CS Arena", "Blog Pro"],
         scarId: "cascading-filters-race"
     },
     {
         name: "TypeScript",
-        icon: "https://cdn.simpleicons.org/typescript/3178C6",
+        icon: "/skills/typescript.svg",
         status: "Battle-Tested",
         projects: ["Cybership API", "CS Arena", "Flurry v2.0"],
         scarId: "ddd-boundaries"
     },
     {
         name: "WebRTC",
-        icon: "https://cdn.simpleicons.org/webrtc/303030",
+        icon: "/skills/webrtc.svg",
         status: "Battle-Tested",
         projects: ["Flurry v2.0"],
         scarId: "webrtc-latency"
     },
     {
         name: "Socket.io",
-        icon: "https://cdn.simpleicons.org/socketdotio/default",
+        icon: "/skills/socketio.svg",
         status: "Battle-Tested",
         projects: ["Flurry v2.0"],
         scarId: "webrtc-latency"
     },
     {
         name: "MongoDB",
-        icon: "https://cdn.simpleicons.org/mongodb/47A248",
+        icon: "/skills/mongodb.svg",
         status: "Production Ready",
         projects: ["Admin Dashboard", "Blog Pro", "Flurry v2.0"],
         scarId: null
     },
     {
         name: "Node.js",
-        icon: "https://cdn.simpleicons.org/nodedotjs/339933",
+        icon: "/skills/nodejs.svg",
         status: "Production Ready",
         projects: ["Cybership API", "Admin Dashboard", "Blog Pro"],
         scarId: null
     },
     {
         name: "NestJS",
-        icon: "https://cdn.simpleicons.org/nestjs/E0234E",
+        icon: "/skills/nestjs.svg",
         status: "Production Ready",
         projects: ["Cybership API"],
         scarId: null
     },
     {
         name: "GraphQL",
-        icon: "https://cdn.simpleicons.org/graphql/E10098",
+        icon: "/skills/graphql.svg",
         status: "R&D / Exploring",
         projects: [],
         scarId: null
     },
     {
         name: "Zod",
-        icon: "https://cdn.simpleicons.org/zod/3E67B1",
+        icon: "/skills/zod.svg",
         status: "Battle-Tested",
         projects: ["Cybership API", "CS Arena"],
         scarId: "ddd-boundaries"
     },
     {
         name: "React",
-        icon: "https://cdn.simpleicons.org/react/61DAFB",
+        icon: "/skills/react.svg",
         status: "Production Ready",
         projects: ["CS Arena", "Flurry v2.0", "Blog Pro"],
         scarId: null
     },
     {
         name: "Tailwind CSS",
-        icon: "https://cdn.simpleicons.org/tailwindcss/06B6D4",
+        icon: "/skills/tailwindcss.svg",
         status: "Production Ready",
         projects: ["CS Arena", "Flurry v2.0", "Gemini Clone"],
         scarId: null
     },
     {
         name: "Firebase",
-        icon: "https://cdn.simpleicons.org/firebase/FFCA28",
+        icon: "/skills/firebase.svg",
         status: "Production Ready",
         projects: ["Realtime Chat Engine"],
         scarId: null
     },
     {
         name: "Gemini AI",
-        icon: "https://cdn.simpleicons.org/google/4285F4",
+        icon: "/skills/google.svg",
         status: "Battle-Tested",
         projects: ["Gemini Clone", "Flurry v2.0"],
         scarId: "gemini-clone"
