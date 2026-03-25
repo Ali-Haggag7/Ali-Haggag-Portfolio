@@ -21,27 +21,20 @@ import {
     Layers,
 } from "lucide-react";
 
-// Masterclass Smooth Scroll Function
+// Smooth Scroll Function
 const handleSmoothScroll = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>, href: string, onAfterClick?: () => void) => {
-    // Only intercept if it's an internal hash link
     if (href.startsWith("#")) {
         e.preventDefault();
-
         const targetId = href.replace("#", "");
-
-        // If it's just "#" (Home), scroll to the very top
         if (targetId === "") {
             window.scrollTo({ top: 0, behavior: "smooth" });
         } else {
-            // Find the section and scroll to it smoothly
             const elem = document.getElementById(targetId);
             if (elem) {
                 elem.scrollIntoView({ behavior: "smooth" });
             }
         }
     }
-
-    // Execute any additional actions (like closing mobile menu)
     if (onAfterClick) {
         onAfterClick();
     }
@@ -55,8 +48,7 @@ export const FloatingDock = ({
     mobileClassName?: string;
 }) => {
     return (
-        // Masterclass Fix: Wrapped the entire component here to keep page.tsx perfectly clean!
-        <div className="fixed z-50 bottom-4 right-4 md:bottom-8 md:left-1/2 md:right-auto md:-translate-x-1/2">
+        <div className="fixed z-50 bottom-4 right-4 md:bottom-8 md:left-1/2 md:right-auto md:-translate-x-1/2 transform-gpu">
             <FloatingDockDesktop className={desktopClassName} />
             <FloatingDockMobile className={mobileClassName} />
         </div>
@@ -70,8 +62,7 @@ const FloatingDockMobile = ({ className }: { className?: string }) => {
             <AnimatePresence>
                 {open && (
                     <motion.div
-                        layoutId="nav"
-                        className="absolute bottom-full mb-4 inset-x-0 flex flex-col gap-3 items-center"
+                        className="absolute bottom-full mb-4 inset-x-0 flex flex-col gap-3 items-center transform-gpu will-change-transform"
                     >
                         {items.map((item, idx) => {
                             const isExternal = !item.href.startsWith("#");
@@ -82,6 +73,7 @@ const FloatingDockMobile = ({ className }: { className?: string }) => {
                                     animate={{ opacity: 1, y: 0, scale: 1 }}
                                     exit={{ opacity: 0, y: 15, scale: 0.9, transition: { delay: idx * 0.05 } }}
                                     transition={{ delay: (items.length - 1 - idx) * 0.05, type: "spring", stiffness: 200, damping: 20 }}
+                                    className="transform-gpu will-change-[transform,opacity]"
                                 >
                                     <Link
                                         href={item.href}
@@ -91,7 +83,7 @@ const FloatingDockMobile = ({ className }: { className?: string }) => {
                                         onClick={(e) => {
                                             if (!isExternal) handleSmoothScroll(e, item.href, () => setOpen(false));
                                         }}
-                                        className="h-12 w-12 rounded-full bg-background/90 backdrop-blur-xl border border-border shadow-lg flex items-center justify-center transition-all active:scale-90"
+                                        className="h-12 w-12 rounded-full bg-background/90 backdrop-blur-xl border border-border shadow-lg flex items-center justify-center transition-transform active:scale-90 transform-gpu will-change-transform"
                                         style={{
                                             boxShadow: `0 4px 20px -5px ${item.glowColor}40`
                                         }}
@@ -109,20 +101,20 @@ const FloatingDockMobile = ({ className }: { className?: string }) => {
                 aria-label={open ? "Close mobile menu" : "Open mobile menu"}
                 aria-expanded={open}
                 onClick={() => setOpen(!open)}
-                className="h-14 w-14 rounded-full bg-foreground text-background shadow-2xl flex items-center justify-center transition-transform active:scale-90 focus:outline-none focus:ring-4 focus:ring-blue-500/30"
+                className="h-14 w-14 rounded-full bg-foreground text-background shadow-2xl flex items-center justify-center transition-transform active:scale-90 focus:outline-none focus:ring-4 focus:ring-blue-500/30 transform-gpu will-change-transform"
             >
                 <motion.div
                     animate={{ rotate: open ? 45 : 0 }}
                     transition={{ type: "spring", stiffness: 300, damping: 20 }}
-                    className="flex flex-col gap-1 items-center justify-center"
+                    className="flex flex-col gap-1 items-center justify-center transform-gpu will-change-transform"
                 >
                     {open ? (
-                        <div className="h-6 w-6 text-xl leading-none flex items-center justify-center -translate-y-0.5">×</div>
+                        <div className="h-6 w-6 text-xl leading-none flex items-center justify-center -translate-y-0.5 transform-gpu">×</div>
                     ) : (
                         <>
-                            <div className="h-0.5 w-5 bg-current rounded-full" />
-                            <div className="h-0.5 w-5 bg-current rounded-full" />
-                            <div className="h-0.5 w-5 bg-current rounded-full" />
+                            <div className="h-0.5 w-5 bg-current rounded-full transform-gpu" />
+                            <div className="h-0.5 w-5 bg-current rounded-full transform-gpu" />
+                            <div className="h-0.5 w-5 bg-current rounded-full transform-gpu" />
                         </>
                     )}
                 </motion.div>
@@ -138,7 +130,7 @@ const FloatingDockDesktop = ({ className }: { className?: string }) => {
             onMouseMove={(e) => mouseX.set(e.clientX)}
             onMouseLeave={() => mouseX.set(Infinity)}
             className={cn(
-                "mx-auto hidden md:flex h-[72px] gap-4 items-end rounded-full bg-background/50 backdrop-blur-2xl saturate-150 border border-border/50 px-6 pb-3 shadow-[0_20px_40px_-10px_rgba(0,0,0,0.1)] dark:shadow-[0_20px_40px_-10px_rgba(0,0,0,0.4)]",
+                "mx-auto hidden md:flex h-[72px] gap-4 items-end rounded-full bg-background/50 backdrop-blur-2xl saturate-150 border border-border/50 px-6 pb-3 shadow-[0_20px_40px_-10px_rgba(0,0,0,0.1)] dark:shadow-[0_20px_40px_-10px_rgba(0,0,0,0.4)] transform-gpu",
                 className
             )}
         >
@@ -201,7 +193,7 @@ function IconContainer({
                 onMouseEnter={() => setHovered(true)}
                 onMouseLeave={() => setHovered(false)}
                 className={cn(
-                    "aspect-square rounded-full flex items-center justify-center relative transition-[background-color,border-color,box-shadow] duration-300",
+                    "aspect-square rounded-full flex items-center justify-center relative transition-[background-color,border-color,box-shadow] duration-300 transform-gpu will-change-[width,height,transform]",
                     hovered
                         ? "bg-[var(--glow-bg)] border-[var(--glow-border)] shadow-[var(--glow-shadow)]"
                         : "bg-card/90 border-border shadow-sm"
@@ -214,7 +206,7 @@ function IconContainer({
                             animate={{ opacity: 1, y: 0, x: "-50%", scale: 1 }}
                             exit={{ opacity: 0, y: 5, x: "-50%", scale: 0.8 }}
                             transition={{ type: "spring", stiffness: 300, damping: 20 }}
-                            className="px-3 py-1.5 whitespace-pre rounded-lg bg-foreground text-background border-border border absolute left-1/2 -translate-x-1/2 -top-12 w-fit text-sm font-semibold shadow-xl z-50 flex items-center gap-2"
+                            className="px-3 py-1.5 whitespace-pre rounded-lg bg-foreground text-background border-border border absolute left-1/2 -translate-x-1/2 -top-12 w-fit text-sm font-semibold shadow-xl z-50 flex items-center gap-2 transform-gpu will-change-[transform,opacity]"
                         >
                             <span className="w-2 h-2 rounded-full" style={{ backgroundColor: glowColor }}></span>
                             {title}
@@ -224,7 +216,7 @@ function IconContainer({
 
                 <motion.div
                     style={{ scale: iconScale }}
-                    className="flex items-center justify-center text-muted-foreground transition-colors duration-300"
+                    className="flex items-center justify-center text-muted-foreground transition-colors duration-300 transform-gpu will-change-transform"
                 >
                     {icon}
                 </motion.div>

@@ -73,7 +73,7 @@ export default function BattleScars() {
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
-                    className="inline-flex items-center justify-center gap-2 mb-4"
+                    className="inline-flex items-center justify-center gap-2 mb-4 transform-gpu"
                 >
                     <span className="h-px w-8 bg-red-500/50 block" aria-hidden="true"></span>
                     <span className="text-red-600 dark:text-red-500 font-mono text-sm uppercase tracking-widest font-bold flex items-center gap-2">
@@ -88,7 +88,7 @@ export default function BattleScars() {
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ delay: 0.1 }}
-                    className="text-3xl md:text-5xl font-extrabold text-foreground tracking-tight mb-4"
+                    className="text-3xl md:text-5xl font-extrabold text-foreground tracking-tight mb-4 transform-gpu"
                 >
                     Battle Scars
                 </motion.h2>
@@ -97,7 +97,7 @@ export default function BattleScars() {
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ delay: 0.2 }}
-                    className="text-muted-foreground text-lg max-w-2xl mx-auto"
+                    className="text-muted-foreground text-lg max-w-2xl mx-auto transform-gpu"
                 >
                     Real engineering isn't just writing code. It's about the architectural decisions made when systems fail, latency spikes, and requirements evolve.
                 </motion.p>
@@ -116,7 +116,7 @@ export default function BattleScars() {
                             viewport={{ once: true }}
                             transition={{ delay: index * 0.1 }}
                             className={cn(
-                                "group rounded-2xl border transition-all duration-300 overflow-hidden",
+                                "group rounded-2xl border transition-[background-color,border-color,box-shadow] duration-300 overflow-hidden transform-gpu",
                                 isExpanded
                                     ? "bg-card border-blue-500/50 shadow-[0_0_30px_-10px_rgba(59,130,246,0.2)]"
                                     : "bg-background border-border hover:border-muted-foreground/30 hover:bg-muted/10"
@@ -144,7 +144,7 @@ export default function BattleScars() {
                                     </div>
                                 </div>
                                 <div className={cn(
-                                    "flex items-center justify-center w-8 h-8 rounded-full transition-transform duration-300 shrink-0 bg-muted/50",
+                                    "flex items-center justify-center w-8 h-8 rounded-full transition-transform duration-300 shrink-0 bg-muted/50 transform-gpu will-change-transform",
                                     isExpanded ? "rotate-180 bg-blue-500/10 text-blue-600 dark:text-blue-500" : "text-muted-foreground"
                                 )}>
                                     <ChevronDown className="w-5 h-5" aria-hidden="true" />
@@ -161,6 +161,8 @@ export default function BattleScars() {
                                         animate={{ height: "auto", opacity: 1 }}
                                         exit={{ height: 0, opacity: 0 }}
                                         transition={{ duration: 0.3, ease: "easeInOut" }}
+                                        style={{ willChange: "height, opacity" }}
+                                        className="transform-gpu"
                                     >
                                         <div className="px-6 pb-6 pt-2">
                                             <div className="flex flex-wrap gap-2 mb-6 ml-0 md:ml-18">
