@@ -6,8 +6,7 @@ import { cn } from "@/lib/utils";
 import { Skill, getStatusConfig, handleJumpToScar } from "./skills.data";
 
 export function SkillModal({ skill, onClose }: { skill: Skill; onClose: () => void }) {
-    const StatusIcon = getStatusConfig(skill.status).icon;
-    const { bg, color } = getStatusConfig(skill.status);
+    const { icon: StatusIcon, bg, color } = getStatusConfig(skill.status);
 
     return (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 pointer-events-auto">
@@ -40,7 +39,14 @@ export function SkillModal({ skill, onClose }: { skill: Skill; onClose: () => vo
                 </button>
                 <div className="flex items-center gap-4 mb-6">
                     <div className="flex items-center justify-center w-16 h-16 rounded-2xl bg-muted border border-border">
-                        <img src={skill.icon} alt="" className="w-8 h-8 dark:invert transform-gpu" aria-hidden="true" />
+                        <img
+                            src={skill.icon}
+                            alt=""
+                            className="w-8 h-8 dark:invert transform-gpu"
+                            aria-hidden="true"
+                            loading="lazy"
+                            decoding="async"
+                        />
                     </div>
                     <div>
                         <h3 className="text-2xl font-bold text-foreground">{skill.name}</h3>
@@ -58,7 +64,9 @@ export function SkillModal({ skill, onClose }: { skill: Skill; onClose: () => vo
                         {skill.projects.length > 0 ? (
                             <div className="flex flex-wrap gap-2">
                                 {skill.projects.map((project, idx) => (
-                                    <span key={idx} className="px-3 py-1.5 bg-secondary text-secondary-foreground text-sm rounded-lg font-medium">{project}</span>
+                                    <span key={idx} className="px-3 py-1.5 bg-secondary text-secondary-foreground text-sm rounded-lg font-medium">
+                                        {project}
+                                    </span>
                                 ))}
                             </div>
                         ) : (

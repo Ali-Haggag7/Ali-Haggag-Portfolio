@@ -1,60 +1,97 @@
 "use client";
 
 import { Terminal, Volume2, VolumeX } from "lucide-react";
+import { useCallback, memo } from "react";
 import { cn } from "@/lib/utils";
+import type { HistoryItem } from "./useTerminal";
 
-export function TerminalWindow({ terminal }: { terminal: any }) {
-    const handleCommand = (e: React.KeyboardEvent<HTMLInputElement>) => {
-        if (e.key === 'Enter') {
-            const cmd = terminal.userInput.trim().toLowerCase();
-            let output: React.ReactNode = "";
+export type TerminalState = {
+    step: number;
+    isMuted: boolean;
+    setIsMuted: (v: boolean) => void;
+    userInput: string;
+    setUserInput: (v: string) => void;
+    history: HistoryItem[];
+    setHistory: React.Dispatch<React.SetStateAction<HistoryItem[]>>;
+    isClosed: boolean;
+    setIsClosed: (v: boolean) => void;
+    isFullScreen: boolean;
+    setIsFullScreen: (v: boolean) => void;
+    isMinimized: boolean;
+    setIsMinimized: (v: boolean) => void;
+    terminalContainerRef: React.RefObject<HTMLDivElement | null>;
+    playKeystroke: () => void;
+    startBootSequence: () => void;
+};
 
-            switch (cmd) {
-                case "help":
-                    output = (
-                        <div className="text-gray-400 text-left">
-                            Available commands: <br />
-                            <span className="text-yellow-300">whoami</span>   - Display identity <br />
-                            <span className="text-yellow-300">projects</span> - List current missions <br />
-                            <span className="text-yellow-300">skills</span>   - Show technical arsenal <br />
-                            <span className="text-yellow-300">clear</span>    - Clear terminal
-                        </div>
-                    );
-                    break;
-                case "whoami":
-                    output = <span className="text-blue-400 text-left block break-words">Ali Haggag | Full-Stack Software Engineer & Real-time Architect</span>;
-                    break;
-                case "projects":
-                    output = (
-                        <div className="text-gray-300 text-left break-words">
-                            <span className="text-purple-400">1. CS-Arena:</span> Developer Ecosystem (Next.js 16) <br />
-                            <span className="text-purple-400">2. Flurry v2.0:</span> Real-time Social Super App (WebRTC/Socket.io) <br />
-                            <span className="text-purple-400">3. Cybership:</span> Integration API (DDD/TypeScript)
-                        </div>
-                    );
-                    break;
-                case "skills":
-                    output = <span className="text-emerald-400 text-left block break-words">Next.js, TypeScript, WebRTC, Socket.io, Node.js, Prisma, GraphQL, PWA</span>;
-                    break;
-                case "sudo":
-                    output = <span className="text-red-600 dark:text-red-500 glitch-text text-left block break-words" data-text="Nice try, recruiter. Access Denied.">Nice try, recruiter. Access Denied.</span>;
-                    break;
-                case "clear":
-                    terminal.setHistory([]);
-                    terminal.setUserInput("");
-                    return;
-                case "":
-                    output = "";
-                    break;
-                default:
-                    output = <span className="text-red-500 text-left block break-words">Command not found: {cmd}. Type 'help' for available commands.</span>;
-            }
+export const TerminalWindow = memo(function TerminalWindow({ terminal }: { terminal: TerminalState }) {
 
-            terminal.setHistory((prev: any) => [...prev, { id: Date.now(), command: terminal.userInput, output }]);
-            terminal.setUserInput("");
-            terminal.playKeystroke();
+    const handleCommand = useCallback((e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (e.key !== "Enter") return;
+        const cmd = terminal.userInput.trim().toLowerCase();
+        let output: React.ReactNode = "";
+
+        switch (cmd) {
+            case "help":
+                output = (
+                    <div className="text-gray-400 text-left">
+                        Available commands: <br />
+                        <span className="text-yellow-300">whoami</span>   - Display identity <br />
+                        <span className="text-yellow-300">projects</span> - List current missions <br />
+                        <span className="text-yellow-300">skills</span>   - Show technical arsenal <br />
+                        <span className="text-yellow-300">clear</span>    - Clear terminal
+                    </div>
+                );
+                break;
+            case "whoami":
+                output = <span className="text-blue-400 text-left block break-words">Ali Haggag | Full-Stack Software Engineer & Real-time Architect</span>;
+                break;
+            case "projects":
+                output = (
+                    <div className="text-gray-300 text-left break-words">
+                        <span className="text-purple-400">1. CS-Arena:</span> Developer Ecosystem (Next.js 16) <br />
+                        <span className="text-purple-400">2. Flurry v2.0:</span> Real-time Social Super App (WebRTC/Socket.io) <br />
+                        <span className="text-purple-400">3. Cybership:</span> Integration API (DDD/TypeScript)
+                    </div>
+                );
+                break;
+            case "skills":
+                output = <span className="text-emerald-400 text-left block break-words">Next.js, TypeScript, WebRTC, Socket.io, Node.js, Prisma, GraphQL, PWA</span>;
+                break;
+            case "sudo":
+                output = (
+                    <span className="text-red-600 dark:text-red-500 glitch-text text-left block break-words" data-text="Nice try, recruiter. Access Denied.">
+                        Nice try, recruiter. Access Denied.
+                    </span>
+                );
+                break;
+            case "clear":
+                terminal.setHistory([]);
+                terminal.setUserInput("");
+                return;
+            case "":
+                output = "";
+                break;
+            default:
+                output = <span className="text-red-500 text-left block break-words">Command not found: {cmd}. Type &apos;help&apos; for available commands.</span>;
         }
-    };
+
+        terminal.setHistory((prev) => [...prev, { id: Date.now(), command: terminal.userInput, output }]);
+        terminal.setUserInput("");
+        terminal.playKeystroke();
+    }, [terminal]);
+
+    const handleClose = useCallback(() => terminal.setIsClosed(true), [terminal]);
+    const handleMinimize = useCallback(() => terminal.setIsMinimized(!terminal.isMinimized), [terminal]);
+    const handleFullScreen = useCallback(() => {
+        terminal.setIsFullScreen(!terminal.isFullScreen);
+        terminal.setIsMinimized(false);
+    }, [terminal]);
+    const handleMute = useCallback(() => terminal.setIsMuted(!terminal.isMuted), [terminal]);
+    const handleInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+        terminal.setUserInput(e.target.value);
+        terminal.playKeystroke();
+    }, [terminal]);
 
     const wrapperClasses = terminal.isFullScreen
         ? "fixed inset-0 z-50 w-full h-full rounded-none bg-[#0D1117] flex flex-col text-left transform-gpu"
@@ -71,17 +108,17 @@ export function TerminalWindow({ terminal }: { terminal: any }) {
         <article className={wrapperClasses}>
             <header className="flex items-center justify-between px-4 py-3 bg-[#161B22] border-b border-gray-800">
                 <div className="flex gap-1">
-                    <button type="button" aria-label="Close Terminal" onClick={() => terminal.setIsClosed(true)} className="relative flex items-center justify-center p-2 hover:bg-white/5 rounded-md group outline-none transform-gpu">
+                    <button type="button" aria-label="Close Terminal" onClick={handleClose} className="relative flex items-center justify-center p-2 hover:bg-white/5 rounded-md group outline-none transform-gpu">
                         <div className="w-3 h-3 rounded-full bg-red-500/80 group-hover:bg-red-400 transition-colors flex items-center justify-center group-focus:ring-2 group-focus:ring-red-400">
                             <span className="opacity-0 group-hover:opacity-100 text-[8px] font-bold text-black" aria-hidden="true">x</span>
                         </div>
                     </button>
-                    <button type="button" aria-label="Minimize Terminal" onClick={() => terminal.setIsMinimized(!terminal.isMinimized)} className="relative flex items-center justify-center p-2 hover:bg-white/5 rounded-md group outline-none transform-gpu">
+                    <button type="button" aria-label="Minimize Terminal" onClick={handleMinimize} className="relative flex items-center justify-center p-2 hover:bg-white/5 rounded-md group outline-none transform-gpu">
                         <div className="w-3 h-3 rounded-full bg-yellow-500/80 group-hover:bg-yellow-400 transition-colors flex items-center justify-center group-focus:ring-2 group-focus:ring-yellow-400">
                             <span className="opacity-0 group-hover:opacity-100 text-[8px] font-bold text-black" aria-hidden="true">-</span>
                         </div>
                     </button>
-                    <button type="button" aria-label="Maximize Terminal" onClick={() => { terminal.setIsFullScreen(!terminal.isFullScreen); terminal.setIsMinimized(false); }} className="relative flex items-center justify-center p-2 hover:bg-white/5 rounded-md group outline-none transform-gpu">
+                    <button type="button" aria-label="Maximize Terminal" onClick={handleFullScreen} className="relative flex items-center justify-center p-2 hover:bg-white/5 rounded-md group outline-none transform-gpu">
                         <div className="w-3 h-3 rounded-full bg-green-500/80 group-hover:bg-green-400 transition-colors flex items-center justify-center group-focus:ring-2 group-focus:ring-green-400">
                             <span className="opacity-0 group-hover:opacity-100 text-[8px] font-bold text-black" aria-hidden="true">+</span>
                         </div>
@@ -90,7 +127,7 @@ export function TerminalWindow({ terminal }: { terminal: any }) {
                 <div className="flex items-center gap-2 text-gray-400 text-xs font-sans select-none" aria-hidden="true">
                     <Terminal className="w-4 h-4" /> ali-os — bash
                 </div>
-                <button type="button" aria-label={terminal.isMuted ? "Unmute Terminal" : "Mute Terminal"} onClick={() => terminal.setIsMuted(!terminal.isMuted)} className="text-gray-400 hover:text-white transition-colors border-none outline-none focus:ring-2 focus:ring-gray-400 rounded-sm transform-gpu">
+                <button type="button" aria-label={terminal.isMuted ? "Unmute Terminal" : "Mute Terminal"} onClick={handleMute} className="text-gray-400 hover:text-white transition-colors border-none outline-none focus:ring-2 focus:ring-gray-400 rounded-sm transform-gpu">
                     {terminal.isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
                 </button>
             </header>
@@ -135,7 +172,7 @@ export function TerminalWindow({ terminal }: { terminal: any }) {
                         <span className="text-gray-400 text-xs">--- Database Connection Verified ---</span>
                     </div>
                 )}
-                {terminal.history.map((item: any) => (
+                {terminal.history.map((item) => (
                     <div key={item.id} className="mt-4 w-full text-left">
                         <div className="flex items-start gap-2">
                             <span className="text-green-500 dark:text-green-400 font-bold shrink-0">guest@ali-haggag:~$</span>
@@ -156,18 +193,18 @@ export function TerminalWindow({ terminal }: { terminal: any }) {
                             id="terminal-input"
                             type="text"
                             value={terminal.userInput}
-                            onChange={(e) => {
-                                terminal.setUserInput(e.target.value);
-                                terminal.playKeystroke();
-                            }}
+                            onChange={handleInputChange}
                             onKeyDown={handleCommand}
                             className="flex-1 bg-transparent border-none outline-none text-white font-mono placeholder:text-gray-600"
                             placeholder="Type 'help' to see available commands..."
                             spellCheck="false"
+                            autoComplete="off"
+                            autoCorrect="off"
+                            autoCapitalize="off"
                         />
                     </div>
                 )}
             </div>
         </article>
     );
-}
+});
