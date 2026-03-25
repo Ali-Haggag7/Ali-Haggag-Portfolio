@@ -106,6 +106,8 @@ const FloatingDockMobile = ({ className }: { className?: string }) => {
             </AnimatePresence>
             <button
                 type="button"
+                aria-label={open ? "Close mobile menu" : "Open mobile menu"}
+                aria-expanded={open}
                 onClick={() => setOpen(!open)}
                 className="h-14 w-14 rounded-full bg-foreground text-background shadow-2xl flex items-center justify-center transition-transform active:scale-90 focus:outline-none focus:ring-4 focus:ring-blue-500/30"
             >

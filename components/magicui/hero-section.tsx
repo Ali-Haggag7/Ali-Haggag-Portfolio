@@ -170,15 +170,26 @@ export default function HeroSection() {
             <article className={terminalWrapperClasses}>
 
                 <header className="flex items-center justify-between px-4 py-3 bg-[#161B22] border-b border-gray-800">
-                    <div className="flex gap-2">
-                        <button type="button" aria-label="Close Terminal" onClick={() => setIsClosed(true)} className="w-3 h-3 rounded-full bg-red-500/80 hover:bg-red-400 transition-colors cursor-pointer group relative flex items-center justify-center border-none outline-none focus:ring-2 focus:ring-red-400">
-                            <span className="opacity-0 group-hover:opacity-100 text-[8px] font-bold text-black" aria-hidden="true">x</span>
+                    <div className="flex gap-1">
+                        {/* Close Button */}
+                        <button type="button" aria-label="Close Terminal" onClick={() => setIsClosed(true)} className="relative flex items-center justify-center p-2 hover:bg-white/5 rounded-md group outline-none">
+                            <div className="w-3 h-3 rounded-full bg-red-500/80 group-hover:bg-red-400 transition-colors flex items-center justify-center group-focus:ring-2 group-focus:ring-red-400">
+                                <span className="opacity-0 group-hover:opacity-100 text-[8px] font-bold text-black" aria-hidden="true">x</span>
+                            </div>
                         </button>
-                        <button type="button" aria-label="Minimize Terminal" onClick={() => setIsMinimized(!isMinimized)} className="w-3 h-3 rounded-full bg-yellow-500/80 hover:bg-yellow-400 transition-colors cursor-pointer group relative flex items-center justify-center border-none outline-none focus:ring-2 focus:ring-yellow-400">
-                            <span className="opacity-0 group-hover:opacity-100 text-[8px] font-bold text-black" aria-hidden="true">-</span>
+
+                        {/* Minimize Button */}
+                        <button type="button" aria-label="Minimize Terminal" onClick={() => setIsMinimized(!isMinimized)} className="relative flex items-center justify-center p-2 hover:bg-white/5 rounded-md group outline-none">
+                            <div className="w-3 h-3 rounded-full bg-yellow-500/80 group-hover:bg-yellow-400 transition-colors flex items-center justify-center group-focus:ring-2 group-focus:ring-yellow-400">
+                                <span className="opacity-0 group-hover:opacity-100 text-[8px] font-bold text-black" aria-hidden="true">-</span>
+                            </div>
                         </button>
-                        <button type="button" aria-label="Maximize Terminal" onClick={() => { setIsFullScreen(!isFullScreen); setIsMinimized(false); }} className="w-3 h-3 rounded-full bg-green-500/80 hover:bg-green-400 transition-colors cursor-pointer group relative flex items-center justify-center border-none outline-none focus:ring-2 focus:ring-green-400">
-                            <span className="opacity-0 group-hover:opacity-100 text-[8px] font-bold text-black" aria-hidden="true">+</span>
+
+                        {/* Maximize Button */}
+                        <button type="button" aria-label="Maximize Terminal" onClick={() => { setIsFullScreen(!isFullScreen); setIsMinimized(false); }} className="relative flex items-center justify-center p-2 hover:bg-white/5 rounded-md group outline-none">
+                            <div className="w-3 h-3 rounded-full bg-green-500/80 group-hover:bg-green-400 transition-colors flex items-center justify-center group-focus:ring-2 group-focus:ring-green-400">
+                                <span className="opacity-0 group-hover:opacity-100 text-[8px] font-bold text-black" aria-hidden="true">+</span>
+                            </div>
                         </button>
                     </div>
                     <div className="flex items-center gap-2 text-gray-400 text-xs font-sans select-none" aria-hidden="true">

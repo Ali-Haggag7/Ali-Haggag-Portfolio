@@ -168,7 +168,10 @@ export const BentoCard = ({
 
                             <motion.div layoutId={`background-${id}`} className="relative w-full h-64 md:h-80 shrink-0 bg-black overflow-hidden">
                                 {videoSrc ? (
-                                    <video src={videoSrc} autoPlay muted playsInline loop className="w-full h-full object-cover opacity-80" />
+                                    <video autoPlay muted playsInline loop className="w-full h-full object-cover opacity-80">
+                                        <source src={videoSrc} type="video/mp4" />
+                                        <track kind="captions" srcLang="en" label="English" default={false} />
+                                    </video>
                                 ) : (
                                     <div className="w-full h-full opacity-80">{background}</div>
                                 )}

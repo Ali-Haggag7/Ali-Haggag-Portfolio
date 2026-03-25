@@ -318,7 +318,6 @@ export default function Chatbot() {
 
             <button
                 type="button"
-                aria-hidden="true"
                 aria-label={isOpen ? "Close AI Assistant" : "Open AI Assistant"}
                 aria-expanded={isOpen}
                 onClick={() => setIsOpen(!isOpen)}
