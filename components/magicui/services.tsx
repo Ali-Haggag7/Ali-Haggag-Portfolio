@@ -1,9 +1,9 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import { cn } from "@/lib/utils";
 import { Globe, Terminal, Database, Layout, Smartphone, Sparkles } from "lucide-react";
-import { motion } from "framer-motion";
+import { motion, useMotionValue, useMotionTemplate } from "framer-motion";
 
 const services = [
     {
@@ -40,29 +40,17 @@ const services = [
 
 function ServiceCard({ service, index }: { service: typeof services[0]; index: number }) {
     const divRef = useRef<HTMLDivElement>(null);
-    const [isFocused, setIsFocused] = useState(false);
-    const [position, setPosition] = useState({ x: 0, y: 0 });
-    const [opacity, setOpacity] = useState(0);
+
+    // GPU Hack: Tracking mouse without React re-renders!
+    const mouseX = useMotionValue(0);
+    const mouseY = useMotionValue(0);
 
     const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
         if (!divRef.current) return;
-        const div = divRef.current;
-        const rect = div.getBoundingClientRect();
-        setPosition({ x: e.clientX - rect.left, y: e.clientY - rect.top });
+        const rect = divRef.current.getBoundingClientRect();
+        mouseX.set(e.clientX - rect.left);
+        mouseY.set(e.clientY - rect.top);
     };
-
-    const handleFocus = () => {
-        setIsFocused(true);
-        setOpacity(1);
-    };
-
-    const handleBlur = () => {
-        setIsFocused(false);
-        setOpacity(0);
-    };
-
-    const handleMouseEnter = () => setOpacity(1);
-    const handleMouseLeave = () => setOpacity(0);
 
     return (
         <motion.div
@@ -72,22 +60,18 @@ function ServiceCard({ service, index }: { service: typeof services[0]; index: n
             transition={{ duration: 0.5, delay: index * 0.1 }}
             viewport={{ once: true, margin: "0px 0px -50px 0px" }}
             onMouseMove={handleMouseMove}
-            onMouseEnter={handleMouseEnter}
-            onMouseLeave={handleMouseLeave}
-            onFocus={handleFocus}
-            onBlur={handleBlur}
             tabIndex={0}
+            // Removed transition-all, added hardware acceleration
             className={cn(
-                "group relative overflow-hidden rounded-3xl border border-border/50 bg-card/50 backdrop-blur-sm p-8 transition-all duration-500 focus:outline-none cursor-default",
+                "group relative overflow-hidden rounded-3xl border border-border/50 bg-card/50 backdrop-blur-sm p-8 transition-[transform,box-shadow,border-color] duration-500 focus:outline-none cursor-default transform-gpu will-change-transform",
                 "hover:-translate-y-2 focus:-translate-y-2 hover:shadow-2xl focus:shadow-2xl hover:border-blue-500/30 focus:border-blue-500/30 dark:hover:shadow-blue-900/20 dark:focus:shadow-blue-900/20"
             )}
         >
-            {/* Spotlight Interactive Glow */}
-            <div
-                className="pointer-events-none absolute -inset-px opacity-0 transition-opacity duration-500"
+            {/* Spotlight Interactive Glow (Zero Re-renders) */}
+            <motion.div
+                className="pointer-events-none absolute -inset-px opacity-0 transition-opacity duration-500 group-hover:opacity-100 group-focus:opacity-100"
                 style={{
-                    opacity,
-                    background: `radial-gradient(600px circle at ${position.x}px ${position.y}px, rgba(59,130,246,0.15), transparent 40%)`,
+                    background: useMotionTemplate`radial-gradient(600px circle at ${mouseX}px ${mouseY}px, rgba(59,130,246,0.15), transparent 40%)`,
                 }}
             />
 
@@ -96,11 +80,11 @@ function ServiceCard({ service, index }: { service: typeof services[0]; index: n
                 <div className={cn(
                     "mb-6 inline-flex h-14 w-14 items-center justify-center rounded-2xl",
                     "bg-muted text-muted-foreground border border-border",
-                    "transition-all duration-500",
+                    "transition-[transform,background-color,border-color,color,box-shadow] duration-500 transform-gpu will-change-transform",
                     "group-hover:bg-gradient-to-br group-hover:from-blue-600 group-hover:to-cyan-500 group-hover:text-white",
                     "group-hover:scale-110 group-hover:shadow-lg group-hover:shadow-blue-500/40 group-hover:-rotate-6 group-hover:border-transparent"
                 )}>
-                    <service.icon className="h-7 w-7 transition-transform duration-500" aria-hidden="true" />
+                    <service.icon className="h-7 w-7 transition-transform duration-500 transform-gpu will-change-transform" aria-hidden="true" />
                 </div>
 
                 {/* Title */}
@@ -114,8 +98,8 @@ function ServiceCard({ service, index }: { service: typeof services[0]; index: n
                 </p>
 
             </div>
-            {/* **Animated Bottom Line - نقلناه هنا ولزقناه في القاع بالمللي** */}
-            <div className="absolute bottom-0 left-0 h-1.5 w-0 bg-gradient-to-r from-blue-500 to-cyan-400 transition-all duration-500 group-hover:w-full z-20"></div>
+            {/* Animated Bottom Line - Using scale-x instead of width for GPU rendering! */}
+            <div className="absolute bottom-0 left-0 h-1.5 w-full origin-left scale-x-0 bg-gradient-to-r from-blue-500 to-cyan-400 transition-transform duration-500 group-hover:scale-x-100 group-focus:scale-x-100 z-20 transform-gpu will-change-transform"></div>
         </motion.div>
     );
 }
@@ -124,7 +108,7 @@ export default function Services() {
     return (
         <section id="services" className="py-24 relative overflow-hidden bg-background scroll-mt-10">
             {/* Ambient Background Glow */}
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-blue-500/5 dark:bg-blue-500/10 blur-[120px] rounded-full pointer-events-none -z-10"></div>
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-blue-500/5 dark:bg-blue-500/10 blur-[120px] rounded-full pointer-events-none -z-10 transform-gpu"></div>
 
             <div className="container mx-auto px-4 relative z-10">
                 <div className="text-center mb-16 max-w-3xl mx-auto">
@@ -132,6 +116,7 @@ export default function Services() {
                         initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
+                        className="transform-gpu will-change-[opacity,transform]"
                     >
                         <h2 className="text-4xl md:text-5xl font-extrabold text-foreground tracking-tighter mb-4">
                             What I <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-cyan-500">Offer</span>
