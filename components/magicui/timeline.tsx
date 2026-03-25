@@ -3,7 +3,7 @@
 import { useRef } from "react";
 import { cn } from "@/lib/utils";
 import { GraduationCap, Layout, Database, Rocket } from "lucide-react";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useScroll, useTransform, useSpring } from "framer-motion";
 
 const timelineData = [
     {
@@ -56,7 +56,13 @@ export default function Timeline() {
         offset: ["start center", "end end"]
     });
 
-    const height = useTransform(scrollYProgress, [0, 1], ["0%", "100%"]);
+    const smoothProgress = useSpring(scrollYProgress, {
+        stiffness: 100,
+        damping: 30,
+        restDelta: 0.001
+    });
+
+    const height = useTransform(smoothProgress, [0, 1], ["0%", "100%"]);
 
     return (
         <section ref={containerRef} className="relative w-full py-24 overflow-hidden" id="timeline">

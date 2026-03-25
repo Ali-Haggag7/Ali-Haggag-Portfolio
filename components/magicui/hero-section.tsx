@@ -263,7 +263,6 @@ export default function HeroSection() {
                                 className="flex-1 bg-transparent border-none outline-none text-white font-mono placeholder:text-gray-600"
                                 placeholder="Type 'help' to see available commands..."
                                 spellCheck="false"
-                                autoFocus={!isFullScreen}
                             />
                         </div>
                     )}

@@ -4,10 +4,10 @@ import { MessageSquare, Network, Code2, ShieldAlert, BarChart3, Bot } from "luci
 import { BentoGrid, BentoCard } from "./magicui/bento-grid";
 import Image from "next/image";
 
-import flurryImg from "@/public/flurry.png";
-import blogImg from "@/public/blog-pro.png";
-import geminiImg from "@/public/gemini-clone-1.jpeg";
-import csArenaImg from "@/public/cs-arena.png";
+import flurryImg from "@/public/images/flurry.png";
+import blogImg from "@/public/images/blog-pro.png";
+import geminiImg from "@/public/images/gemini-clone-1.jpeg";
+import csArenaImg from "@/public/images/cs-arena.png";
 
 const features = [
     {
