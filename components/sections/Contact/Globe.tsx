@@ -8,7 +8,6 @@ import { cn } from "@/lib/utils";
 export function Globe({ className }: { className?: string }) {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const [width, setWidth] = useState(0);
-
     const { resolvedTheme } = useTheme();
 
     const pointerInteracting = useRef<number | null>(null);
@@ -48,7 +47,7 @@ export function Globe({ className }: { className?: string }) {
             theta: 0.2,
             dark: isLight ? 0 : 1,
             diffuse: 1.2,
-            mapSamples: width < 600 ? 12000 : 25000,
+            mapSamples: width < 600 ? 8000 : 12000,
             mapBrightness: isLight ? 2.5 : 6,
             baseColor: isLight ? [0.95, 0.95, 0.95] : [0.05, 0.05, 0.05],
             markerColor: isLight ? [0.1, 0.5, 0.9] : [0.1, 0.8, 1],
@@ -77,7 +76,7 @@ export function Globe({ className }: { className?: string }) {
         <div className={cn("flex items-center justify-center z-10 w-full", className)}>
             <canvas
                 ref={canvasRef}
-                className="w-full h-auto aspect-square opacity-0 transition-opacity duration-1000 ease-in-out cursor-grab active:cursor-grabbing touch-none transform-gpu will-change-transform"
+                className="w-full h-auto aspect-square opacity-0 transition-opacity duration-1000 ease-in-out cursor-grab active:cursor-grabbing touch-none"
                 onContextMenu={(e) => e.preventDefault()}
                 onPointerDown={(e) => {
                     pointerInteracting.current = e.clientX - pointerInteractionMovement.current * 100;
