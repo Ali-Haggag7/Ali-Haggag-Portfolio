@@ -7,7 +7,7 @@ export default function CustomEffects() {
     const [activeEffect, setActiveEffect] = useState<"matrix" | "party" | "nuke" | null>(null);
     const canvasRef = useRef<HTMLCanvasElement>(null);
 
-    // Keystroke Monitor for Easter Eggs
+    // Keystroke Monitor for Easter Eggs (0% Performance Impact)
     useEffect(() => {
         let typedKeys = "";
         const maxBufferLength = 15;
@@ -63,24 +63,32 @@ export default function CustomEffects() {
 
         for (let x = 0; x < columns; x++) drops[x] = 1;
 
-        const draw = () => {
-            ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-            ctx.fillStyle = "#0F0";
-            ctx.font = `${fontSize}px monospace`;
+        let animationFrameId: number;
+        let lastDrawTime = 0;
 
-            for (let i = 0; i < drops.length; i++) {
-                const text = letters.charAt(Math.floor(Math.random() * letters.length));
-                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+        // PERF: Changed from setInterval to requestAnimationFrame for 60FPS smoothness
+        const draw = (timestamp: number) => {
+            if (timestamp - lastDrawTime > 33) {
+                ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                ctx.fillStyle = "#0F0";
+                ctx.font = `${fontSize}px monospace`;
 
-                if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
-                    drops[i] = 0;
+                for (let i = 0; i < drops.length; i++) {
+                    const text = letters.charAt(Math.floor(Math.random() * letters.length));
+                    ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+                    if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                        drops[i] = 0;
+                    }
+                    drops[i]++;
                 }
-                drops[i]++;
+                lastDrawTime = timestamp;
             }
+            animationFrameId = requestAnimationFrame(draw);
         };
 
-        const interval = setInterval(draw, 33);
+        animationFrameId = requestAnimationFrame(draw);
 
         const handleResize = () => {
             canvas.width = window.innerWidth;
@@ -89,7 +97,7 @@ export default function CustomEffects() {
         window.addEventListener("resize", handleResize);
 
         return () => {
-            clearInterval(interval);
+            cancelAnimationFrame(animationFrameId);
             window.removeEventListener("resize", handleResize);
         };
     }, [activeEffect]);
@@ -141,7 +149,8 @@ export default function CustomEffects() {
                     exit={{ opacity: 0 }}
                     transition={{ duration: 0.2, repeat: Infinity }}
                     aria-hidden="true"
-                    className="fixed inset-0 z-[10000] pointer-events-none bg-red-600/30 mix-blend-multiply backdrop-blur-[2px]"
+                    // PERF: transform-gpu is necessary here because of the rapid x/y shaking
+                    className="fixed inset-0 z-[10000] pointer-events-none bg-red-600/30 mix-blend-multiply backdrop-blur-[2px] transform-gpu will-change-transform"
                 />
             )}
         </AnimatePresence>
