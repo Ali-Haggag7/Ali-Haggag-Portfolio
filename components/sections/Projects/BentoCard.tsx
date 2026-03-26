@@ -3,11 +3,9 @@
 import { useState, useRef, useEffect, useCallback, memo } from "react";
 import { Activity } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { motion, useInView } from "framer-motion";
 import Image from "next/image";
 import { ProjectFeature } from "./projects.data";
 
-// ✅ memo prevents re-render of all cards when modal opens/closes
 export const BentoCard = memo(function BentoCard({
     feature,
     onClick,
@@ -21,7 +19,7 @@ export const BentoCard = memo(function BentoCard({
     const cardRef = useRef<HTMLButtonElement>(null);
     const videoRef = useRef<HTMLVideoElement>(null);
 
-    // ✅ Compute isMobile once on mount - avoids calling matchMedia on every event
+    // Compute isMobile once
     const isMobileRef = useRef(false);
     useEffect(() => {
         const mql = window.matchMedia("(max-width: 768px)");
@@ -31,23 +29,26 @@ export const BentoCard = memo(function BentoCard({
         return () => mql.removeEventListener("change", handler);
     }, []);
 
-    const isInView = useInView(cardRef, { margin: "-20% 0px -20% 0px", once: false });
-
     useEffect(() => {
-        if (!isMobileRef.current) return;
-        const video = videoRef.current;
-        if (!video) return;
-        if (isInView) {
-            video.play().catch(() => { });
-            setIsHovered(true);
-        } else {
-            video.pause();
-            video.currentTime = 0;
-            setIsHovered(false);
-        }
-    }, [isInView]);
+        if (!isMobileRef.current || !videoRef.current || !cardRef.current) return;
 
-    // ✅ useCallback - stable references so memo works correctly
+        const observer = new IntersectionObserver(
+            ([entry]) => {
+                if (entry.isIntersecting) {
+                    setIsHovered(true);
+                    videoRef.current?.play().catch(() => { });
+                } else {
+                    setIsHovered(false);
+                    videoRef.current?.pause();
+                }
+            },
+            { threshold: 0.5 }
+        );
+
+        observer.observe(cardRef.current);
+        return () => observer.disconnect();
+    }, []);
+
     const handleMouseEnter = useCallback(() => {
         if (isMobileRef.current) return;
         setIsHovered(true);
@@ -63,13 +64,13 @@ export const BentoCard = memo(function BentoCard({
         }
     }, []);
 
-    const { id, name, description, className, Icon, videoSrc, imageSrc, isGradientBg, gradientClass } = feature;
+    const { name, description, className, Icon, videoSrc, imageSrc, isGradientBg, gradientClass } = feature;
     const isColSpan2 = className.includes("md:col-span-2");
 
     return (
-        <motion.button
+        <button
+            type="button"
             ref={cardRef}
-            layoutId={`card-${id}`}
             onClick={onClick}
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
@@ -77,16 +78,16 @@ export const BentoCard = memo(function BentoCard({
             onBlur={handleMouseLeave}
             aria-label={`View details for ${name}`}
             className={cn(
-                "group relative flex flex-col justify-end overflow-hidden rounded-2xl min-h-[22rem] w-full text-left transform-gpu will-change-transform",
-                "border border-border/50 dark:border-white/10 shadow-sm transition-[box-shadow,border-color] duration-300",
+                "group relative flex flex-col justify-end overflow-hidden rounded-2xl min-h-[22rem] w-full text-left transform-gpu",
+                "border border-border/50 dark:border-white/10 shadow-sm transition-all duration-300 ease-out",
                 "focus:outline-none focus:ring-2 focus:ring-blue-500/50 cursor-pointer",
+                "hover:shadow-[0_0_30px_-5px_rgba(59,130,246,0.2)] hover:border-blue-500/50 hover:-translate-y-1",
                 className
             )}
         >
-            {/* layoutId removed from here - was conflicting with CSS scale hover causing jitter */}
-            <div className="absolute inset-0 z-0 h-full w-full overflow-hidden bg-black transform-gpu">
+            <div className="absolute inset-0 z-0 h-full w-full overflow-hidden bg-black rounded-2xl">
                 <div className={cn(
-                    "h-full w-full transition-[transform,opacity] duration-700 opacity-90 will-change-[transform,opacity]",
+                    "h-full w-full transition-transform duration-700 ease-out opacity-90 group-hover:scale-105",
                 )}>
                     {isGradientBg ? (
                         <div className={cn("h-full w-full bg-gradient-to-br", gradientClass)} />
@@ -111,7 +112,7 @@ export const BentoCard = memo(function BentoCard({
                         loop
                         preload="none"
                         className={cn(
-                            "absolute inset-0 h-full w-full object-cover transition-opacity duration-700 will-change-opacity",
+                            "absolute inset-0 h-full w-full object-cover transition-opacity duration-500 ease-in-out",
                             isHovered ? "opacity-100" : "opacity-0"
                         )}
                     >
@@ -120,22 +121,22 @@ export const BentoCard = memo(function BentoCard({
                 )}
             </div>
 
-            <div className="absolute inset-0 z-10 bg-gradient-to-t from-black/95 via-black/70 to-transparent pointer-events-none transform-gpu" />
+            <div className="absolute inset-0 z-10 bg-gradient-to-t from-black/95 via-black/70 to-transparent pointer-events-none" />
 
-            <motion.div layoutId={`content-${id}`} className="relative z-20 flex flex-col gap-2 p-6 mt-auto transform-gpu">
-                <div className="mb-2 inline-flex h-10 w-10 items-center justify-center rounded-lg bg-white/10 backdrop-blur-md border border-white/20">
+            <div className="relative z-20 flex flex-col gap-2 p-6 mt-auto">
+                <div className="mb-2 inline-flex h-10 w-10 items-center justify-center rounded-lg bg-white/10 border border-white/20 transition-transform duration-300 group-hover:scale-110">
                     <Icon className="h-5 w-5 text-white" aria-hidden="true" />
                 </div>
-                <motion.h3 layoutId={`title-${id}`} className="text-xl font-bold text-white">
+                <h3 className="text-xl font-bold text-white transition-transform duration-300 group-hover:translate-x-1">
                     {name}
-                </motion.h3>
-                <motion.p layoutId={`desc-${id}`} className="text-sm text-white/70 font-medium max-w-lg leading-relaxed">
+                </h3>
+                <p className="text-sm text-white/70 font-medium max-w-lg leading-relaxed transition-transform duration-300 delay-75 group-hover:translate-x-1">
                     {description}
-                </motion.p>
-                <div className="mt-2 text-xs font-bold text-blue-400 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                </p>
+                <div className="mt-2 text-xs font-bold text-blue-400 flex items-center gap-1 opacity-0 translate-y-2 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300 delay-100">
                     Click to view Autopsy <Activity className="w-3 h-3" />
                 </div>
-            </motion.div>
-        </motion.button>
+            </div>
+        </button>
     );
 });

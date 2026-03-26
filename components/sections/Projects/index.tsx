@@ -9,7 +9,6 @@ import { ProjectModal } from "./ProjectModal";
 export default function ProjectsSection() {
     const [selectedProject, setSelectedProject] = useState<ProjectFeature | null>(null);
 
-    // useCallback - stable references so memo on BentoCard works correctly
     const handleClose = useCallback(() => setSelectedProject(null), []);
     const handleSelect = useCallback((feature: ProjectFeature) => setSelectedProject(feature), []);
 
@@ -25,7 +24,6 @@ export default function ProjectsSection() {
                         key={feature.id}
                         feature={feature}
                         onClick={() => handleSelect(feature)}
-                        // Only first card gets priority loading - rest are lazy
                         priority={index === 0}
                     />
                 ))}

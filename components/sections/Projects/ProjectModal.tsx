@@ -21,30 +21,32 @@ export const ProjectModal = ({
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
+                transition={{ duration: 0.15 }}
                 onClick={onClose}
-                style={{ willChange: "opacity" }}
-                className="absolute inset-0 bg-background/80 backdrop-blur-xl"
+                className="absolute inset-0 bg-background/95"
                 aria-hidden="true"
             />
 
             <motion.article
-                layoutId={`card-${id}`}
                 role="dialog"
                 aria-modal="true"
                 aria-labelledby={`modal-title-${id}`}
-                style={{ willChange: "transform, opacity" }}
+                initial={{ opacity: 0, scale: 0.95, y: 15 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.95, y: 15 }}
+                transition={{ duration: 0.15, ease: "easeOut" }}
                 className="relative w-full max-w-4xl max-h-[90vh] overflow-y-auto bg-card rounded-3xl shadow-2xl border border-border/50 flex flex-col z-10 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:'none'] transform-gpu"
             >
                 <button
                     type="button"
                     aria-label="Close details"
                     onClick={onClose}
-                    className="absolute top-4 right-4 z-50 p-2 rounded-full bg-black/50 text-white hover:bg-black/80 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 backdrop-blur-md"
+                    className="absolute top-4 right-4 z-50 p-2 rounded-full bg-black/50 text-white hover:bg-black/80 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
                     <X className="w-5 h-5" aria-hidden="true" />
                 </button>
 
-                <motion.div layoutId={`background-${id}`} className="relative w-full h-64 md:h-80 shrink-0 bg-black overflow-hidden transform-gpu">
+                <div className="relative w-full h-64 md:h-80 shrink-0 bg-black overflow-hidden">
                     {videoSrc ? (
                         <video autoPlay muted playsInline loop className="w-full h-full object-cover opacity-80">
                             <source src={videoSrc} type="video/mp4" />
@@ -55,17 +57,17 @@ export const ProjectModal = ({
                     ) : imageSrc ? (
                         <Image src={imageSrc} alt={name} className="w-full h-full object-cover opacity-80" placeholder="blur" />
                     ) : null}
-                    <div className="absolute inset-0 bg-gradient-to-t from-card via-card/50 to-transparent transform-gpu" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-card via-card/50 to-transparent" />
 
-                    <motion.div layoutId={`content-${id}`} className="absolute bottom-0 left-0 p-6 md:p-8 w-full transform-gpu">
-                        <motion.h3 id={`modal-title-${id}`} layoutId={`title-${id}`} className="text-3xl md:text-5xl font-extrabold text-foreground mb-2">
+                    <div className="absolute bottom-0 left-0 p-6 md:p-8 w-full">
+                        <h3 id={`modal-title-${id}`} className="text-3xl md:text-5xl font-extrabold text-foreground mb-2">
                             {name}
-                        </motion.h3>
-                        <motion.p layoutId={`desc-${id}`} className="text-lg text-muted-foreground max-w-2xl">
+                        </h3>
+                        <p className="text-lg text-muted-foreground max-w-2xl">
                             {description}
-                        </motion.p>
-                    </motion.div>
-                </motion.div>
+                        </p>
+                    </div>
+                </div>
 
                 <div className="p-6 md:p-8 flex flex-col gap-8">
                     {autopsy && (
