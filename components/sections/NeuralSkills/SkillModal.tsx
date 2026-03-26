@@ -10,25 +10,26 @@ export function SkillModal({ skill, onClose }: { skill: Skill; onClose: () => vo
 
     return (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 pointer-events-auto">
+            {/* PERF: Clean backdrop without heavy blurs */}
             <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                transition={{ duration: 0.15 }}
+                transition={{ duration: 0.2 }}
                 onClick={onClose}
-                className="absolute inset-0 bg-background/90"
+                className="absolute inset-0 bg-background/95"
                 aria-hidden="true"
             />
 
+            {/* PERF: Removed static willChange and transform-gpu. Framer handles it dynamically. */}
             <motion.div
                 role="dialog"
                 aria-modal="true"
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.95 }}
-                transition={{ duration: 0.15, ease: "easeOut" }}
-                style={{ willChange: "transform, opacity" }}
-                className="relative w-full max-w-lg bg-card border border-border/50 rounded-3xl shadow-2xl overflow-hidden z-10 p-6 md:p-8 transform-gpu"
+                initial={{ opacity: 0, scale: 0.95, y: 10 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.95, y: 10 }}
+                transition={{ duration: 0.2, ease: "easeOut" }}
+                className="relative w-full max-w-lg bg-card border border-border/50 rounded-3xl shadow-2xl overflow-hidden z-10 p-6 md:p-8"
             >
                 <button
                     aria-label="Close"
