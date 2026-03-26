@@ -10,8 +10,14 @@ import { NewsletterForm } from "./NewsletterForm";
 export default function Footer() {
     return (
         <footer className="w-full relative bg-background pt-20 pb-8 overflow-hidden">
-            <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-border to-transparent transform-gpu" />
-            <div className="absolute bottom-0 right-0 w-[400px] h-[400px] bg-blue-500/5 blur-[120px] rounded-full pointer-events-none -z-10 transform-gpu" />
+            <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-border to-transparent" />
+
+            {/* PERF: Replaced heavy blur with a clean radial gradient */}
+            <div
+                className="absolute bottom-0 right-0 w-[400px] h-[400px] pointer-events-none -z-10"
+                style={{ background: 'radial-gradient(circle, rgba(59,130,246,0.05) 0%, transparent 70%)' }}
+                aria-hidden="true"
+            />
 
             <div className="container mx-auto px-4 relative z-10">
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-12 lg:gap-8 mb-16">
@@ -20,7 +26,7 @@ export default function Footer() {
                             initial={{ opacity: 0 }}
                             whileInView={{ opacity: 1 }}
                             viewport={{ once: true }}
-                            className="text-3xl font-extrabold text-foreground mb-4 tracking-tighter transform-gpu will-change-opacity"
+                            className="text-3xl font-extrabold text-foreground mb-4 tracking-tighter"
                         >
                             Ali <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-cyan-500">Haggag</span>
                         </motion.h2>
@@ -41,7 +47,7 @@ export default function Footer() {
                                     whileTap={{ scale: 0.95 }}
                                     transition={{ type: "spring", stiffness: 400, damping: 10 }}
                                     className={cn(
-                                        "group p-3 rounded-full bg-card border border-border text-muted-foreground transition-[color,background-color,border-color] duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 transform-gpu will-change-transform",
+                                        "group p-3 rounded-full bg-card border border-border text-muted-foreground transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500",
                                         social.hoverClass
                                     )}
                                 >
@@ -61,8 +67,8 @@ export default function Footer() {
                                         onClick={(e) => handleSmoothScroll(e, link.href)}
                                         className="group flex items-center gap-2 hover:text-blue-500 transition-colors w-fit cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-sm"
                                     >
-                                        <ArrowRight className="w-4 h-4 opacity-0 -translate-x-2 transition-all duration-300 group-hover:opacity-100 group-hover:translate-x-0 group-focus:opacity-100 group-focus:translate-x-0 text-blue-500 transform-gpu will-change-transform" aria-hidden="true" />
-                                        <span className="transition-transform duration-300 group-hover:translate-x-1 group-focus:translate-x-1 transform-gpu will-change-transform">{link.name}</span>
+                                        <ArrowRight className="w-4 h-4 opacity-0 -translate-x-2 transition-all duration-300 group-hover:opacity-100 group-hover:translate-x-0 group-focus:opacity-100 group-focus:translate-x-0 text-blue-500" aria-hidden="true" />
+                                        <span className="transition-transform duration-300 group-hover:translate-x-1 group-focus:translate-x-1">{link.name}</span>
                                     </a>
                                 </li>
                             ))}

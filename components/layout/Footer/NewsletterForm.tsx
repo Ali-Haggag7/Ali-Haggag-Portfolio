@@ -13,6 +13,7 @@ export function NewsletterForm() {
 
         setStatus("loading");
 
+        // Simulate API call
         setTimeout(() => {
             setStatus("success");
             setEmail("");
@@ -21,15 +22,15 @@ export function NewsletterForm() {
     };
 
     return (
-        <div className="relative h-14">
+        <div className="relative h-14 w-full">
             {status === "success" ? (
-                <div className="absolute inset-0 flex items-center gap-2 text-emerald-500 font-medium animate-in fade-in slide-in-from-bottom-2 duration-500 transform-gpu">
+                <div className="absolute inset-0 flex items-center justify-center gap-2 text-emerald-500 font-medium animate-in fade-in duration-300">
                     <CheckCircle2 className="w-5 h-5" aria-hidden="true" />
                     <span>Thanks for subscribing!</span>
                 </div>
             ) : (
                 <form
-                    className="absolute inset-0 flex items-center bg-card/50 backdrop-blur-sm border border-border rounded-xl p-1.5 focus-within:ring-2 focus-within:ring-blue-500/50 focus-within:border-blue-500/50 transition-all duration-300 shadow-sm hover:border-border/80 transform-gpu"
+                    className="absolute inset-0 flex items-center bg-card border border-border rounded-xl p-1.5 focus-within:ring-2 focus-within:ring-blue-500/50 focus-within:border-blue-500/50 transition-colors duration-200 shadow-sm hover:border-border/80"
                     onSubmit={handleSubscribe}
                 >
                     <input
@@ -46,7 +47,7 @@ export function NewsletterForm() {
                         type="submit"
                         disabled={status === "loading"}
                         aria-label="Subscribe"
-                        className="flex items-center justify-center min-w-[44px] h-full bg-foreground text-background rounded-lg hover:bg-blue-600 hover:text-white transition-all duration-300 shadow-sm active:scale-95 disabled:opacity-70 disabled:pointer-events-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-background transform-gpu will-change-transform"
+                        className="flex items-center justify-center min-w-[44px] h-full bg-foreground text-background rounded-lg hover:bg-blue-600 hover:text-white transition-colors duration-200 active:scale-95 disabled:opacity-70 disabled:pointer-events-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-background"
                     >
                         {status === "loading" ? (
                             <Loader2 className="w-4 h-4 animate-spin" aria-hidden="true" />
