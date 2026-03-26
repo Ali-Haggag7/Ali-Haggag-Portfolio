@@ -18,7 +18,6 @@ export default function Particles() {
         const canvas = canvasRef.current;
         if (!canvas) return;
 
-        // Tweak 1: Optimize context rendering
         const ctx = canvas.getContext("2d", { alpha: true });
         if (!ctx) return;
 
@@ -31,9 +30,8 @@ export default function Particles() {
         const particleColor = isLight ? "rgba(0, 0, 0, 0.4)" : "rgba(255, 255, 255, 0.4)";
         const lineColor = isLight ? "rgba(0, 0, 0, 0.08)" : "rgba(255, 255, 255, 0.08)";
 
-        const particles: Particle[] = [];
-        // Tweak 2: Responsive particle count (save mobile CPU)
         const particleCount = window.innerWidth < 768 ? 30 : 60;
+        const particles: Particle[] = [];
 
         class Particle {
             x: number;
@@ -57,14 +55,6 @@ export default function Particles() {
                 if (this.x < 0 || this.x > width) this.vx *= -1;
                 if (this.y < 0 || this.y > height) this.vy *= -1;
             }
-
-            draw() {
-                if (!ctx) return;
-                ctx.fillStyle = particleColor;
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                ctx.fill();
-            }
         }
 
         for (let i = 0; i < particleCount; i++) {
@@ -72,32 +62,44 @@ export default function Particles() {
         }
 
         let animationFrameId: number;
+
         const animate = () => {
             ctx.clearRect(0, 0, width, height);
 
-            particles.forEach((particle, index) => {
-                particle.update();
-                particle.draw();
+            // PERF HACK 1: Update all particles first
+            for (let i = 0; i < particleCount; i++) {
+                particles[i].update();
+            }
 
-                // Tweak 3: index + 1 to avoid duplicate/self drawing
-                for (let j = index + 1; j < particles.length; j++) {
-                    const dx = particle.x - particles[j].x;
-                    const dy = particle.y - particles[j].y;
+            // PERF HACK 2: Batch draw all particles in ONE path
+            ctx.fillStyle = particleColor;
+            ctx.beginPath();
+            for (let i = 0; i < particleCount; i++) {
+                const p = particles[i];
+                ctx.moveTo(p.x + p.size, p.y); // Move to edge to prevent stray lines
+                ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+            }
+            ctx.fill();
 
-                    // Tweak 4: Avoid heavy Math.sqrt() calculation
-                    const distanceSq = dx * dx + dy * dy;
+            // PERF HACK 3: Batch draw all lines in ONE path
+            ctx.strokeStyle = lineColor;
+            ctx.lineWidth = 0.5;
+            ctx.beginPath();
+            for (let i = 0; i < particleCount; i++) {
+                const p1 = particles[i];
+                for (let j = i + 1; j < particleCount; j++) {
+                    const p2 = particles[j];
+                    const dx = p1.x - p2.x;
+                    const dy = p1.y - p2.y;
 
-                    // 100 * 100 = 10000
-                    if (distanceSq < 10000) {
-                        ctx.beginPath();
-                        ctx.strokeStyle = lineColor;
-                        ctx.lineWidth = 0.5;
-                        ctx.moveTo(particle.x, particle.y);
-                        ctx.lineTo(particles[j].x, particles[j].y);
-                        ctx.stroke();
+                    if (dx * dx + dy * dy < 10000) {
+                        ctx.moveTo(p1.x, p1.y);
+                        ctx.lineTo(p2.x, p2.y);
                     }
                 }
-            });
+            }
+            ctx.stroke();
+
             animationFrameId = requestAnimationFrame(animate);
         };
 
@@ -121,8 +123,8 @@ export default function Particles() {
     return (
         <canvas
             ref={canvasRef}
-            // Tweak 5: Force GPU acceleration for the canvas
-            className="fixed inset-0 -z-10 h-full w-full pointer-events-none transform-gpu will-change-transform"
+            // Removed will-change-transform. Using it on a full-screen fixed element consumes too much VRAM
+            className="fixed inset-0 -z-10 h-full w-full pointer-events-none opacity-80"
         />
     );
 }
