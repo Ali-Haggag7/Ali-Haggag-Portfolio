@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useMemo, useCallback } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { AnimatePresence } from "framer-motion";
 import { Activity } from "lucide-react";
 import { scarsData, scarCategories } from "./scars.data";
 import { CategoryFilter } from "./CategoryFilter";
@@ -16,7 +16,6 @@ export default function BattleScars() {
         return scarsData.filter((scar) => scar.category === activeCategory);
     }, [activeCategory]);
 
-    // useCallback - stable refs so memo on CategoryFilter and ScarCard works correctly
     const handleCategoryChange = useCallback((category: string) => {
         setActiveCategory(category);
         setExpandedId(null);
@@ -29,7 +28,6 @@ export default function BattleScars() {
     return (
         <section id="battle-scars" aria-labelledby="battle-scars-title" className="py-24 px-4 md:px-8 w-full max-w-5xl mx-auto">
 
-            {/* CSS animation instead of 3x Framer Motion whileInView - lighter on bundle and runtime */}
             <div className="text-center mb-10 animate-fade-in">
                 <div className="inline-flex items-center justify-center gap-2 mb-4">
                     <span className="h-px w-8 bg-red-500/50 block" aria-hidden="true" />
@@ -55,8 +53,10 @@ export default function BattleScars() {
                 onSelect={handleCategoryChange}
             />
 
-            <motion.div layout className="space-y-4 min-h-[400px]">
-                <AnimatePresence mode="popLayout">
+            {/* PERF: Removed laggy motion.div layout. Just a solid container now. */}
+            <div className="space-y-4 min-h-[400px]">
+                {/* PERF: mode="wait" ensures old items leave cleanly BEFORE new ones enter, killing the bounce! */}
+                <AnimatePresence mode="wait">
                     {filteredScars.map((scar, index) => (
                         <ScarCard
                             key={scar.id}
@@ -67,7 +67,7 @@ export default function BattleScars() {
                         />
                     ))}
                 </AnimatePresence>
-            </motion.div>
+            </div>
         </section>
     );
 }

@@ -9,7 +9,6 @@ interface CategoryFilterProps {
     onSelect: (category: string) => void;
 }
 
-// memo - only re-renders when activeCategory or categories change
 export const CategoryFilter = memo(function CategoryFilter({ categories, activeCategory, onSelect }: CategoryFilterProps) {
     return (
         <div className="flex flex-wrap items-center justify-center gap-3 mb-12">
@@ -20,10 +19,10 @@ export const CategoryFilter = memo(function CategoryFilter({ categories, activeC
                     onClick={() => onSelect(category)}
                     aria-pressed={activeCategory === category}
                     className={cn(
-                        "px-5 py-2 rounded-full text-sm font-bold transition-all duration-300 transform-gpu will-change-transform",
+                        "px-5 py-2 rounded-full text-sm font-bold transition-all duration-200",
                         activeCategory === category
-                            ? "bg-blue-600 text-white shadow-[0_0_20px_-5px_rgba(59,130,246,0.5)] scale-105"
-                            : "bg-muted text-muted-foreground hover:bg-muted/80 hover:text-foreground hover:scale-105 border border-border"
+                            ? "bg-blue-600 text-white shadow-lg shadow-blue-500/30 scale-105 border border-transparent"
+                            : "bg-muted/50 text-muted-foreground hover:bg-muted hover:text-foreground hover:scale-105 border border-border/50"
                     )}
                 >
                     {category}

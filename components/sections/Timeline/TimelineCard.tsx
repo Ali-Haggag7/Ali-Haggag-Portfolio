@@ -6,36 +6,11 @@ import { cn } from "@/lib/utils";
 import { TimelineItem } from "./timeline.data";
 
 const cardVariants: Variants = {
-    hidden: { opacity: 0, y: 40 },
+    hidden: { opacity: 0, y: 30 },
     visible: {
         opacity: 1,
         y: 0,
-        transition: { duration: 0.45, ease: [0.22, 1, 0.36, 1] },
-    },
-};
-
-const dotVariants: Variants = {
-    rest: { scale: 1 },
-    hover: {
-        scale: 1.25,
-        transition: { type: "spring", stiffness: 400, damping: 20 },
-    },
-};
-
-const iconVariants: Variants = {
-    rest: { rotate: 0 },
-    hover: {
-        rotate: 12,
-        transition: { type: "spring", stiffness: 400, damping: 20 },
-    },
-};
-
-const liftVariants: Variants = {
-    rest: { y: 0, boxShadow: "0 1px 3px rgba(0,0,0,0.1)" },
-    hover: {
-        y: -8,
-        boxShadow: "0 20px 40px rgba(0,0,0,0.25)",
-        transition: { duration: 0.3, ease: [0.22, 1, 0.36, 1] },
+        transition: { duration: 0.4, ease: "easeOut" },
     },
 };
 
@@ -53,23 +28,18 @@ export const TimelineCard = memo(function TimelineCard({ item, index }: Timeline
             variants={cardVariants}
             initial="hidden"
             whileInView="visible"
-            viewport={{ once: true, margin: "0px 0px -80px 0px" }}
-            whileHover="hover"
-            whileFocus="hover"
-            tabIndex={0}
+            viewport={{ once: true, margin: "-50px" }}
             className={cn(
                 "group relative mb-16 flex items-center md:justify-between w-full focus:outline-none",
                 isEven ? "md:flex-row-reverse" : "",
             )}
         >
-            <motion.div
-                variants={dotVariants}
-                initial="rest"
-                style={{ willChange: "transform" }}
+            <div
                 className={cn(
-                    "absolute left-8 md:left-1/2 -translate-x-1/2 flex h-12 w-12 items-center justify-center rounded-full border-2 z-10",
+                    "absolute left-8 md:left-1/2 -translate-x-1/2 flex h-12 w-12 items-center justify-center rounded-full border-2 z-10 transition-transform duration-300 ease-out",
                     "bg-background border-border dark:bg-neutral-950 dark:border-neutral-800",
                     item.glowBg,
+                    "group-hover:scale-110"
                 )}
             >
                 {item.isActive && (
@@ -80,29 +50,21 @@ export const TimelineCard = memo(function TimelineCard({ item, index }: Timeline
                         )}
                     />
                 )}
-                <motion.div
-                    variants={iconVariants}
-                    initial="rest"
-                    style={{ willChange: "transform" }}
-                >
-                    <Icon className={cn("h-5 w-5", item.color)} />
-                </motion.div>
-            </motion.div>
+                <Icon className={cn("h-5 w-5 transition-transform duration-300 ease-out group-hover:rotate-12", item.color)} aria-hidden="true" />
+            </div>
 
-            <motion.div
-                variants={liftVariants}
-                initial="rest"
-                style={{ willChange: "transform, box-shadow" }}
+            <div
                 className={cn(
-                    "ml-20 md:ml-0 w-full md:w-[45%] rounded-2xl p-6 cursor-default relative z-10",
+                    "ml-20 md:ml-0 w-full md:w-[45%] rounded-2xl p-6 cursor-default relative z-10 transition-all duration-300 ease-out transform-gpu",
                     "bg-card/80 border border-border shadow-sm",
+                    "hover:-translate-y-2 hover:shadow-xl hover:bg-card",
                     item.hoverBorder,
                 )}
             >
                 <div className="flex items-center justify-between mb-2">
                     <span
                         className={cn(
-                            "text-sm font-mono font-bold tracking-wider px-3 py-1 rounded-full",
+                            "text-sm font-mono font-bold tracking-wider px-3 py-1 rounded-full transition-colors duration-300",
                             "bg-background border border-border dark:border-white/5",
                             item.color,
                         )}
@@ -118,7 +80,7 @@ export const TimelineCard = memo(function TimelineCard({ item, index }: Timeline
                 <p className="mt-3 text-muted-foreground text-base leading-relaxed">
                     {item.description}
                 </p>
-            </motion.div>
+            </div>
         </motion.div>
     );
 });
