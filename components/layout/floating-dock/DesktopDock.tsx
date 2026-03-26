@@ -13,7 +13,7 @@ export const FloatingDockDesktop = ({ className }: { className?: string }) => {
             onMouseMove={(e) => mouseX.set(e.clientX)}
             onMouseLeave={() => mouseX.set(Infinity)}
             className={cn(
-                "mx-auto hidden md:flex h-[72px] gap-4 items-end rounded-full bg-background/50 backdrop-blur-2xl saturate-150 border border-border/50 px-6 pb-3 shadow-[0_20px_40px_-10px_rgba(0,0,0,0.1)] dark:shadow-[0_20px_40px_-10px_rgba(0,0,0,0.4)] transform-gpu",
+                "mx-auto hidden md:flex h-[72px] gap-4 items-end rounded-full bg-background/95 border border-border/50 px-6 pb-3 shadow-2xl dark:shadow-[0_20px_40px_-10px_rgba(0,0,0,0.6)]",
                 className
             )}
         >
@@ -43,29 +43,28 @@ function IconContainer({ mouseX, title, icon, href, glowColor }: { mouseX: Motio
         <Link href={href} target={isExternal ? "_blank" : undefined} rel={isExternal ? "noopener noreferrer" : undefined} onClick={(e) => { if (!isExternal) handleSmoothScroll(e, href); }}>
             <motion.div
                 ref={ref}
-                style={{ width, height, "--glow-bg": `${glowColor}15`, "--glow-border": glowColor, "--glow-shadow": `0 10px 20px -5px ${glowColor}50` } as any}
-                onMouseEnter={() => setHovered(true)}
+                style={{ width, height, "--glow-bg": `${glowColor}15`, "--glow-border": glowColor, "--glow-shadow": `0 10px 20px -5px ${glowColor}50` } as any} onMouseEnter={() => setHovered(true)}
                 onMouseLeave={() => setHovered(false)}
                 className={cn(
-                    "aspect-square rounded-full flex items-center justify-center relative transition-[background-color,border-color,box-shadow] duration-300 transform-gpu will-change-[width,height,transform]",
-                    hovered ? "bg-[var(--glow-bg)] border-[var(--glow-border)] shadow-[var(--glow-shadow)]" : "bg-card/90 border-border shadow-sm"
+                    "aspect-square rounded-full flex items-center justify-center relative transition-colors duration-300",
+                    hovered ? "bg-[var(--glow-bg)] border border-[var(--glow-border)] shadow-[var(--glow-shadow)]" : "bg-card border border-transparent shadow-sm"
                 )}
             >
                 <AnimatePresence>
                     {hovered && (
                         <motion.div
-                            initial={{ opacity: 0, y: 15, x: "-50%", scale: 0.8 }}
+                            initial={{ opacity: 0, y: 10, x: "-50%", scale: 0.9 }}
                             animate={{ opacity: 1, y: 0, x: "-50%", scale: 1 }}
-                            exit={{ opacity: 0, y: 5, x: "-50%", scale: 0.8 }}
+                            exit={{ opacity: 0, y: 10, x: "-50%", scale: 0.9 }}
                             transition={{ type: "spring", stiffness: 300, damping: 20 }}
-                            className="px-3 py-1.5 whitespace-pre rounded-lg bg-foreground text-background border-border border absolute left-1/2 -translate-x-1/2 -top-12 w-fit text-sm font-semibold shadow-xl z-50 flex items-center gap-2 transform-gpu will-change-[transform,opacity]"
+                            className="px-3 py-1.5 whitespace-pre rounded-lg bg-foreground text-background border-border border absolute left-1/2 -top-12 w-fit text-sm font-semibold shadow-xl z-50 flex items-center gap-2"
                         >
                             <span className="w-2 h-2 rounded-full" style={{ backgroundColor: glowColor }}></span>
                             {title}
                         </motion.div>
                     )}
                 </AnimatePresence>
-                <motion.div style={{ scale: iconScale }} className="flex items-center justify-center text-muted-foreground transition-colors duration-300 transform-gpu will-change-transform">
+                <motion.div style={{ scale: iconScale }} className="flex items-center justify-center text-muted-foreground transition-colors duration-300">
                     {icon}
                 </motion.div>
             </motion.div>
