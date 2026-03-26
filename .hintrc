@@ -9,6 +9,14 @@
       {
         "aria-valid-attr-value": "off"
       }
+    ],
+    "compat-api/html": [
+      "default",
+      {
+        "ignore": [
+          "img[loading]"
+        ]
+      }
     ]
   }
 }
