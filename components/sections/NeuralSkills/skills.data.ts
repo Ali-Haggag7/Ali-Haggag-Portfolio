@@ -84,7 +84,7 @@ export const technicalArsenal: SkillCategory[] = [
         title: "Media & Storage",
         skills: [
             { name: "Cloudinary", icon: "/skills/cloudinary.svg", status: "Production Ready", projects: ["Blog Pro"], scarId: null },
-            { name: "ImageKit", icon: "/skills/imagekit.jpeg", status: "Production Ready", projects: ["Flurry v2.0"], scarId: null },
+            { name: "ImageKit", icon: "/skills/imagekit.jpg", status: "Production Ready", projects: ["Flurry v2.0"], scarId: null },
         ]
     },
     {

@@ -1,4 +1,5 @@
 import { MessageSquare, Network, Code2, ShieldAlert, BarChart3, Bot, type LucideIcon } from "lucide-react";
+import type { StaticImageData } from "next/image"; // Added explicit type for Next.js images
 import flurryImg from "@/public/images/flurry.png";
 import blogImg from "@/public/images/blog-pro.png";
 import geminiImg from "@/public/images/gemini-clone-1.jpeg";
@@ -19,9 +20,9 @@ export type ProjectFeature = {
     demoHref?: string;
     videoSrc?: string;
     className: string;
-    // Proper type instead of any - enables TypeScript optimizations
     Icon: LucideIcon;
-    imageSrc?: any;
+    // Strictly typing the image source for better TS optimizations
+    imageSrc?: StaticImageData | string;
     autopsy?: Autopsy;
     isGradientBg?: boolean;
     gradientClass?: string;

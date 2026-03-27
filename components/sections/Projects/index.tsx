@@ -29,9 +29,11 @@ export default function ProjectsSection() {
                 ))}
             </div>
 
-            <AnimatePresence>
+            {/* mode="wait" ensures clean unmounting of the modal before a new one opens */}
+            <AnimatePresence mode="wait">
                 {selectedProject && (
                     <ProjectModal
+                        key="project-modal"
                         feature={selectedProject}
                         onClose={handleClose}
                     />
