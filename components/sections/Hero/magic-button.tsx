@@ -7,7 +7,7 @@ export default function MagicButton({ className }: { className?: string }) {
             href="/Ali_Haggag_CV.pdf"
             download="Ali_Haggag_FullStack_CV.pdf"
             className={cn(
-                "group relative inline-flex h-12 md:h-14 items-center justify-center overflow-hidden rounded-full p-0.5 font-bold focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-background active:scale-95 transition-all duration-300 hover:shadow-[0_0_20px_-5px_rgba(59,130,246,0.5)]",
+                "group relative inline-flex h-12 md:h-14 items-center justify-center overflow-hidden rounded-full p-0.5 font-bold focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-background transition-all duration-300 hover:shadow-[0_0_20px_-5px_rgba(59,130,246,0.5)] hover:scale-105 active:scale-95 transform-gpu",
                 className
             )}
         >

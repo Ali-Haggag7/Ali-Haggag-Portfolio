@@ -25,9 +25,9 @@ export default function HeroSection() {
                     style={{ background: 'radial-gradient(circle, rgba(239,68,68,0.15) 0%, transparent 70%)' }}
                     aria-hidden="true"
                 />
+                {/* PERF: Removed glitch-text class and data-text attribute */}
                 <h2
-                    className="text-3xl md:text-5xl font-bold text-red-700 dark:text-red-500 mb-6 font-mono glitch-text"
-                    data-text="SYSTEM OFFLINE"
+                    className="text-3xl md:text-5xl font-bold text-red-700 dark:text-red-500 mb-6 font-mono"
                 >
                     SYSTEM OFFLINE
                 </h2>
@@ -35,7 +35,7 @@ export default function HeroSection() {
                     type="button"
                     onClick={handleReboot}
                     aria-label="Reboot System"
-                    className="flex items-center gap-2 px-8 py-4 bg-emerald-600 hover:bg-emerald-700 text-white rounded-full font-bold transition-all duration-300 hover:scale-105 active:scale-95 shadow-[0_0_20px_rgba(16,185,129,0.4)]"
+                    className="flex items-center gap-2 px-8 py-4 bg-emerald-600 hover:bg-emerald-700 text-white rounded-full font-bold transition-all duration-300 hover:scale-105 active:scale-95 shadow-[0_0_20px_rgba(16,185,129,0.4)] transform-gpu"
                 >
                     <RotateCcw className="w-5 h-5" aria-hidden="true" />
                     Reboot System
@@ -81,7 +81,7 @@ export default function HeroSection() {
                         target="_blank"
                         rel="noopener noreferrer"
                         aria-label="Visit Ali Haggag's GitHub Profile"
-                        className="group relative flex items-center justify-center gap-2 px-6 py-3 md:px-8 md:py-4 bg-foreground text-background rounded-full font-bold transition-all duration-300 hover:scale-105 hover:shadow-[0_0_20px_-5px_rgba(255,255,255,0.3)] dark:hover:shadow-[0_0_20px_-5px_rgba(255,255,255,0.6)] active:scale-95"
+                        className="group relative flex items-center justify-center gap-2 px-6 py-3 md:px-8 md:py-4 bg-foreground text-background rounded-full font-bold transition-all duration-300 hover:scale-105 hover:shadow-[0_0_20px_-5px_rgba(255,255,255,0.3)] dark:hover:shadow-[0_0_20px_-5px_rgba(255,255,255,0.6)] active:scale-95 transform-gpu"
                     >
                         <Code2 className="w-5 h-5 transition-transform duration-300 group-hover:rotate-12" aria-hidden="true" />
                         GitHub
@@ -91,14 +91,14 @@ export default function HeroSection() {
                         target="_blank"
                         rel="noopener noreferrer"
                         aria-label="Visit Ali Haggag's LinkedIn Profile"
-                        className="group flex items-center justify-center gap-2 px-6 py-3 md:px-8 md:py-4 border-2 border-border bg-card/80 text-foreground rounded-full font-bold transition-all duration-300 hover:bg-blue-500/5 hover:border-blue-500/50 hover:text-blue-500 active:scale-95 shadow-sm"
+                        className="group flex items-center justify-center gap-2 px-6 py-3 md:px-8 md:py-4 border-2 border-border bg-card/80 text-foreground rounded-full font-bold transition-all duration-300 hover:bg-blue-500/5 hover:border-blue-500/50 hover:text-blue-500 active:scale-95 hover:scale-105 shadow-sm transform-gpu"
                     >
                         <ExternalLink className="w-5 h-5 transition-transform duration-300 group-hover:-translate-y-1 group-hover:translate-x-1" aria-hidden="true" />
                         LinkedIn
                     </a>
-                    <div className="active:scale-95 transition-transform duration-300 hover:scale-105">
-                        <MagicButton />
-                    </div>
+
+                    {/* PERF: Removed unnecessary wrapper div, MagicButton handles its own scaling now */}
+                    <MagicButton />
                 </nav>
             )}
         </section>
