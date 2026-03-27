@@ -9,8 +9,19 @@ import { ProjectModal } from "./ProjectModal";
 export default function ProjectsSection() {
     const [selectedProject, setSelectedProject] = useState<ProjectFeature | null>(null);
 
-    const handleClose = useCallback(() => setSelectedProject(null), []);
-    const handleSelect = useCallback((feature: ProjectFeature) => setSelectedProject(feature), []);
+    const handleClose = useCallback(() => {
+        setSelectedProject(null);
+        if (typeof document !== "undefined" && document.activeElement instanceof HTMLElement) {
+            document.activeElement.blur();
+        }
+    }, []);
+
+    const handleSelect = useCallback((feature: ProjectFeature) => {
+        setSelectedProject(feature);
+        if (typeof document !== "undefined" && document.activeElement instanceof HTMLElement) {
+            document.activeElement.blur();
+        }
+    }, []);
 
     return (
         <section
