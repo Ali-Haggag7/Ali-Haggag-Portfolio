@@ -153,7 +153,7 @@ export default memo(function Chatbot() {
     return (
         <section
             aria-label="AI Assistant"
-            className="fixed bottom-4 left-4 md:left-auto md:right-6 md:bottom-6 z-50 flex flex-col items-start md:items-end"
+            className="fixed bottom-4 left-4 md:left-auto md:right-6 md:bottom-6 z-50 flex flex-col items-start md:items-end pointer-events-none"
         >
             {/* ── Chat window ─────────────────────────────────────────────────────
           Always mounted — visibility via opacity/transform/pointerEvents.
@@ -296,7 +296,7 @@ export default memo(function Chatbot() {
                 aria-label={isOpen ? "Close AI Assistant" : "Open AI Assistant"}
                 aria-expanded={isOpen}
                 onClick={toggleOpen}
-                className="group relative flex h-14 w-14 items-center justify-center rounded-full bg-foreground text-background shadow-2xl transition-transform hover:scale-110 active:scale-95 focus:outline-none focus:ring-4 focus:ring-blue-500/50"
+                className="group relative flex h-14 w-14 items-center justify-center rounded-full bg-foreground text-background shadow-2xl transition-transform hover:scale-110 active:scale-95 focus:outline-none focus:ring-4 focus:ring-blue-500/50 pointer-events-auto"
             >
                 {/* Always-mounted layers cross-faded — zero reconciliation on toggle */}
                 <motion.span
