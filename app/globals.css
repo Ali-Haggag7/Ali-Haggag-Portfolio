@@ -266,3 +266,7 @@
     clip-path: inset(22px 0 11px 0);
   }
 }
+
+.modal-open {
+  overflow: hidden;
+}
