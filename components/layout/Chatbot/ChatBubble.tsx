@@ -40,18 +40,14 @@ export const ChatBubble = memo(function ChatBubble({
             aria-label="Open chat with suggested question"
             aria-hidden={!show}
             tabIndex={show ? 0 : -1}
+            initial={{ opacity: 0, y: 10, scale: 0.95 }}
             animate={
                 show
                     ? { opacity: 1, y: 0, scale: 1, pointerEvents: "auto" as const }
                     : { opacity: 0, y: 10, scale: 0.95, pointerEvents: "none" as const }
             }
             transition={BUBBLE_TRANSITION}
-            style={{
-                // GPU layer promoted upfront — no first-animation jank.
-                willChange: "transform, opacity",
-                originX: 0,
-                originY: 1,
-            }}
+            style={{ willChange: "transform, opacity", originX: 0, originY: 1 }}
             className={BUBBLE_CLASS}
             onClick={onClick}
         >

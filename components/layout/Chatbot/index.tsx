@@ -164,6 +164,7 @@ export default memo(function Chatbot() {
                 role="dialog"
                 aria-label="Chat window"
                 aria-hidden={!isOpen}
+                initial={{ opacity: 0, y: 20, scale: 0.95 }}
                 animate={
                     isOpen
                         ? { opacity: 1, y: 0, scale: 1, pointerEvents: "auto" as const }
@@ -239,6 +240,7 @@ export default memo(function Chatbot() {
                 {/* Scroll-to-bottom button — always mounted, Compositor-driven */}
                 <motion.button
                     aria-label="Scroll to bottom"
+                    initial={{ opacity: 0, scale: 0.8, y: 10 }}
                     animate={
                         showScrollBtn
                             ? { opacity: 1, scale: 1, y: 0, pointerEvents: "auto" as const }
@@ -298,6 +300,7 @@ export default memo(function Chatbot() {
             >
                 {/* Always-mounted layers cross-faded — zero reconciliation on toggle */}
                 <motion.span
+                    initial={{ opacity: 0, rotate: -90 }}
                     animate={{ opacity: isOpen ? 1 : 0, rotate: isOpen ? 0 : -90 }}
                     transition={{ duration: 0.2 }}
                     style={{ willChange: "transform, opacity" }}
@@ -307,6 +310,7 @@ export default memo(function Chatbot() {
                     <X className="h-6 w-6" />
                 </motion.span>
                 <motion.span
+                    initial={{ opacity: 1, rotate: 0 }}
                     animate={{ opacity: isOpen ? 0 : 1, rotate: isOpen ? 90 : 0 }}
                     transition={{ duration: 0.2 }}
                     style={{ willChange: "transform, opacity" }}
