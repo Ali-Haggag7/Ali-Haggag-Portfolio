@@ -40,8 +40,8 @@ export const ModeToggle = memo(function ModeToggle() {
                 onClick={toggle}
                 // aria-label reflects current state, not the action — screen readers
                 // announce what IS active, not what clicking will do.
-                aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
-                aria-pressed={isDark}
+                aria-label={!mounted ? "Toggle theme" : isDark ? "Switch to light mode" : "Switch to dark mode"}
+                aria-pressed={mounted ? isDark : undefined}
                 className={BUTTON_CLASS}
                 // willChange declared on the element itself — promotes to GPU layer
                 // before the first interaction instead of lazily on first animation.
@@ -59,8 +59,8 @@ export const ModeToggle = memo(function ModeToggle() {
                 <Sun
                     aria-hidden
                     className={cn(
-                        "absolute h-6 w-6 text-amber-500 transition-all duration-300 ease-out",
-                        // willChange on individual icons so each has its own GPU layer.
+                        "absolute h-6 w-6 text-amber-500 ease-out",
+                        mounted && "transition-all duration-300",
                         !mounted || isDark
                             ? "rotate-90 scale-0 opacity-0"
                             : "rotate-0 scale-100 opacity-100",
@@ -71,7 +71,8 @@ export const ModeToggle = memo(function ModeToggle() {
                 <Moon
                     aria-hidden
                     className={cn(
-                        "absolute h-6 w-6 text-blue-400 transition-all duration-300 ease-out",
+                        "absolute h-6 w-6 text-blue-400 ease-out",
+                        mounted && "transition-all duration-300",
                         !mounted || !isDark
                             ? "-rotate-90 scale-0 opacity-0"
                             : "rotate-0 scale-100 opacity-100",
