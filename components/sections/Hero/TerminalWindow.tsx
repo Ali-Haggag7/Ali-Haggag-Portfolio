@@ -24,70 +24,116 @@ export type TerminalState = {
     startBootSequence: () => void;
 };
 
-export const TerminalWindow = memo(function TerminalWindow({ terminal }: { terminal: TerminalState }) {
+// Extracted so the boot sequence lines never re-render during user input.
+const BootSequence = memo(function BootSequence({ step }: { step: number }) {
+    return (
+        <>
+            {step >= 1 && (
+                <div className="flex items-start gap-2 w-full">
+                    <span className="text-green-500 font-bold shrink-0">root@ali-haggag:~$</span>
+                    <span className="text-white">whoami</span>
+                </div>
+            )}
+            {step >= 2 && (
+                <div className="pl-4 border-l-2 border-blue-500/30 ml-2 w-full break-words">
+                    <span className="text-white font-bold text-lg">Ali Haggag</span><br />
+                    <span className="text-blue-300">Full-Stack Software Engineer | Real-time Systems Architect</span>
+                </div>
+            )}
+            {step >= 3 && (
+                <div className="flex items-start gap-2 mt-4 w-full">
+                    <span className="text-green-500 font-bold shrink-0">root@ali-haggag:~$</span>
+                    <span className="text-white">npm run start:prod</span>
+                </div>
+            )}
+            {step >= 4 && (
+                <div className="text-emerald-300 pl-4 border-l-2 border-emerald-500/30 ml-2 space-y-1 w-full break-words">
+                    <div>{`> alihaggag-portfolio@2.0.0 start:prod`}</div>
+                    <div>{`> node dist/server.js`}</div>
+                    <div className="text-blue-300">[Server] Running on port 3000...</div>
+                    <div className="text-green-400">[MongoDB] Connected successfully to Cluster0</div>
+                </div>
+            )}
+            {step >= 5 && (
+                <div className="flex items-start gap-2 mt-4 w-full">
+                    <span className="text-green-500 font-bold shrink-0">root@ali-haggag:~$</span>
+                    <span className="text-white">ping db.alihaggag.com -c 1</span>
+                </div>
+            )}
+            {step >= 6 && (
+                <div className="text-yellow-300 pl-4 border-l-2 border-yellow-500/30 ml-2 w-full break-words">
+                    PING db.alihaggag.com (104.21.2.22): 56 data bytes<br />
+                    64 bytes from 104.21.2.22: icmp_seq=0 ttl=58 time=<span className="text-emerald-400 font-bold">1.02 ms</span><br />
+                    <span className="text-gray-400 text-xs">--- Database Connection Verified ---</span>
+                </div>
+            )}
+        </>
+    );
+});
 
-    const handleCommand = useCallback((e: React.KeyboardEvent<HTMLInputElement>) => {
-        if (e.key !== "Enter") return;
-        const cmd = terminal.userInput.trim().toLowerCase();
-        let output: React.ReactNode = "";
+export const TerminalWindow = memo(function TerminalWindow({
+    terminal,
+}: {
+    terminal: TerminalState;
+}) {
+    const handleCommand = useCallback(
+        (e: React.KeyboardEvent<HTMLInputElement>) => {
+            if (e.key !== "Enter") return;
+            const cmd = terminal.userInput.trim().toLowerCase();
+            let output: React.ReactNode = "";
 
-        switch (cmd) {
-            case "help":
-                output = (
-                    <div className="text-gray-400 text-left">
-                        Available commands: <br />
-                        <span className="text-yellow-300">whoami</span>   - Display identity <br />
-                        <span className="text-yellow-300">projects</span> - List current missions <br />
-                        <span className="text-yellow-300">skills</span>   - Show technical arsenal <br />
-                        <span className="text-yellow-300">clear</span>    - Clear terminal
-                    </div>
-                );
-                break;
-            case "whoami":
-                output = <span className="text-blue-400 text-left block break-words">Ali Haggag | Full-Stack Software Engineer & Real-time Architect</span>;
-                break;
-            case "projects":
-                output = (
-                    <div className="text-gray-300 text-left break-words">
-                        <span className="text-purple-400">1. CS-Arena:</span> Developer Ecosystem (Next.js 16) <br />
-                        <span className="text-purple-400">2. Flurry v2.0:</span> Real-time Social Super App (WebRTC/Socket.io) <br />
-                        <span className="text-purple-400">3. Cybership:</span> Integration API (DDD/TypeScript)
-                    </div>
-                );
-                break;
-            case "skills":
-                output = <span className="text-emerald-400 text-left block break-words">Next.js, TypeScript, WebRTC, Socket.io, Node.js, Prisma, GraphQL, PWA</span>;
-                break;
-            case "sudo":
-                // PERF: Removed glitch-text class here
-                output = (
-                    <span className="text-red-500 font-bold text-left block break-words">
-                        Nice try, recruiter. Access Denied.
-                    </span>
-                );
-                break;
-            case "clear":
-                terminal.setHistory([]);
-                terminal.setUserInput("");
-                return;
-            case "":
-                output = "";
-                break;
-            default:
-                output = <span className="text-red-500 text-left block break-words">Command not found: {cmd}. Type &apos;help&apos; for available commands.</span>;
-        }
+            switch (cmd) {
+                case "help":
+                    output = (
+                        <div className="text-gray-400">
+                            Available commands:<br />
+                            <span className="text-yellow-300">whoami</span>   — Display identity<br />
+                            <span className="text-yellow-300">projects</span> — List current missions<br />
+                            <span className="text-yellow-300">skills</span>   — Show technical arsenal<br />
+                            <span className="text-yellow-300">clear</span>    — Clear terminal
+                        </div>
+                    );
+                    break;
+                case "whoami":
+                    output = <span className="text-blue-400 block break-words">Ali Haggag | Full-Stack Software Engineer &amp; Real-time Architect</span>;
+                    break;
+                case "projects":
+                    output = (
+                        <div className="text-gray-300 break-words">
+                            <span className="text-purple-400">1. CS-Arena:</span> Developer Ecosystem (Next.js 16)<br />
+                            <span className="text-purple-400">2. Flurry v2.0:</span> Real-time Social Super App (WebRTC/Socket.io)<br />
+                            <span className="text-purple-400">3. Cybership:</span> Integration API (DDD/TypeScript)
+                        </div>
+                    );
+                    break;
+                case "skills":
+                    output = <span className="text-emerald-400 block break-words">Next.js, TypeScript, WebRTC, Socket.io, Node.js, Prisma, GraphQL, PWA</span>;
+                    break;
+                case "sudo":
+                    output = <span className="text-red-500 font-bold block break-words">Nice try, recruiter. Access Denied.</span>;
+                    break;
+                case "clear":
+                    terminal.setHistory([]);
+                    terminal.setUserInput("");
+                    return;
+                case "":
+                    output = "";
+                    break;
+                default:
+                    output = <span className="text-red-500 block break-words">Command not found: {cmd}. Type &apos;help&apos; for available commands.</span>;
+            }
 
-        terminal.setHistory((prev) => [...prev, { id: Date.now(), command: terminal.userInput, output }]);
-        terminal.setUserInput("");
-        terminal.playKeystroke();
-    }, [terminal]);
+            terminal.setHistory((prev) => [...prev, { id: Date.now(), command: terminal.userInput, output }]);
+            terminal.setUserInput("");
+            terminal.playKeystroke();
+        },
+        [terminal]
+    );
 
+    // Stable handlers — each touches exactly one state value.
     const handleClose = useCallback(() => terminal.setIsClosed(true), [terminal]);
     const handleMinimize = useCallback(() => terminal.setIsMinimized(!terminal.isMinimized), [terminal]);
-    const handleFullScreen = useCallback(() => {
-        terminal.setIsFullScreen(!terminal.isFullScreen);
-        terminal.setIsMinimized(false);
-    }, [terminal]);
+    const handleFullScreen = useCallback(() => { terminal.setIsFullScreen(!terminal.isFullScreen); terminal.setIsMinimized(false); }, [terminal]);
     const handleMute = useCallback(() => terminal.setIsMuted(!terminal.isMuted), [terminal]);
     const handleInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
         terminal.setUserInput(e.target.value);
@@ -97,7 +143,8 @@ export const TerminalWindow = memo(function TerminalWindow({ terminal }: { termi
     const wrapperClasses = terminal.isFullScreen
         ? "fixed inset-0 z-50 w-full h-full rounded-none bg-[#0D1117] flex flex-col text-left"
         : cn(
-            "w-full max-w-3xl mx-auto rounded-xl overflow-hidden border border-border/50 bg-[#0D1117] shadow-xl mb-8 text-left transition-[transform,opacity] duration-200 transform-gpu",
+            "w-full max-w-3xl mx-auto rounded-xl overflow-hidden border border-border/50 bg-[#0D1117] shadow-xl mb-8 text-left",
+            "transition-[transform,opacity] duration-200 will-change-transform",
             terminal.isMinimized ? "scale-90 opacity-60 pointer-events-none" : "scale-100 opacity-100"
         );
 
@@ -109,72 +156,47 @@ export const TerminalWindow = memo(function TerminalWindow({ terminal }: { termi
         <article className={wrapperClasses}>
             <header className="flex items-center justify-between px-4 py-3 bg-[#161B22] border-b border-gray-800 shrink-0">
                 <div className="flex gap-1.5">
-                    <button type="button" aria-label="Close Terminal" onClick={handleClose} className="relative flex items-center justify-center w-3 h-3 rounded-full bg-red-500 hover:bg-red-400 group outline-none focus:ring-2 focus:ring-red-400 transition-colors">
-                        <span className="opacity-0 group-hover:opacity-100 text-[8px] font-bold text-black leading-none" aria-hidden="true">x</span>
-                    </button>
-                    <button type="button" aria-label="Minimize Terminal" onClick={handleMinimize} className="relative flex items-center justify-center w-3 h-3 rounded-full bg-yellow-500 hover:bg-yellow-400 group outline-none focus:ring-2 focus:ring-yellow-400 transition-colors">
-                        <span className="opacity-0 group-hover:opacity-100 text-[8px] font-bold text-black leading-none" aria-hidden="true">-</span>
-                    </button>
-                    <button type="button" aria-label="Maximize Terminal" onClick={handleFullScreen} className="relative flex items-center justify-center w-3 h-3 rounded-full bg-green-500 hover:bg-green-400 group outline-none focus:ring-2 focus:ring-green-400 transition-colors">
-                        <span className="opacity-0 group-hover:opacity-100 text-[8px] font-bold text-black leading-none" aria-hidden="true">+</span>
-                    </button>
+                    {[
+                        { label: "Close Terminal", color: "bg-red-500 hover:bg-red-400 focus:ring-red-400", symbol: "x", action: handleClose },
+                        { label: "Minimize Terminal", color: "bg-yellow-500 hover:bg-yellow-400 focus:ring-yellow-400", symbol: "-", action: handleMinimize },
+                        { label: "Maximize Terminal", color: "bg-green-500 hover:bg-green-400 focus:ring-green-400", symbol: "+", action: handleFullScreen },
+                    ].map(({ label, color, symbol, action }) => (
+                        <button
+                            key={label}
+                            type="button"
+                            aria-label={label}
+                            onClick={action}
+                            className={cn("relative flex items-center justify-center w-3 h-3 rounded-full group outline-none focus:ring-2 transition-colors", color)}
+                        >
+                            <span className="opacity-0 group-hover:opacity-100 text-[8px] font-bold text-black leading-none" aria-hidden="true">
+                                {symbol}
+                            </span>
+                        </button>
+                    ))}
                 </div>
+
                 <div className="flex items-center gap-2 text-gray-400 text-xs font-mono select-none" aria-hidden="true">
                     <Terminal className="w-4 h-4" /> ali-os — bash
                 </div>
-                <button type="button" aria-label={terminal.isMuted ? "Unmute Terminal" : "Mute Terminal"} onClick={handleMute} className="text-gray-400 hover:text-white transition-colors border-none outline-none focus:ring-2 focus:ring-gray-400 rounded-sm">
+
+                <button
+                    type="button"
+                    aria-label={terminal.isMuted ? "Unmute Terminal" : "Mute Terminal"}
+                    onClick={handleMute}
+                    className="text-gray-400 hover:text-white transition-colors outline-none focus-visible:ring-2 focus-visible:ring-gray-400 rounded-sm"
+                >
                     {terminal.isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
                 </button>
             </header>
 
             <div ref={terminal.terminalContainerRef} className={bodyClasses} role="log" aria-live="polite">
-                {terminal.step >= 1 && (
-                    <div className="flex items-start gap-2 w-full text-left">
-                        <span className="text-green-500 dark:text-green-400 font-bold shrink-0">root@ali-haggag:~$</span>
-                        <span className="text-white">whoami</span>
-                    </div>
-                )}
-                {/* PERF: Removed animate-fade-in and glitch-text */}
-                {terminal.step >= 2 && (
-                    <div className="pl-4 border-l-2 border-blue-500/30 ml-2 w-full text-left break-words">
-                        <span className="text-white font-bold text-lg">Ali Haggag</span> <br />
-                        <span className="text-blue-300">Full-Stack Software Engineer | Real-time Systems Architect</span>
-                    </div>
-                )}
-                {terminal.step >= 3 && (
-                    <div className="flex items-start gap-2 mt-4 w-full text-left">
-                        <span className="text-green-500 dark:text-green-400 font-bold shrink-0">root@ali-haggag:~$</span>
-                        <span className="text-white">npm run start:prod</span>
-                    </div>
-                )}
-                {/* PERF: Removed animate-fade-in */}
-                {terminal.step >= 4 && (
-                    <div className="text-emerald-300 pl-4 border-l-2 border-emerald-500/30 ml-2 space-y-1 w-full text-left break-words">
-                        <div>{`> alihaggag-portfolio@2.0.0 start:prod`}</div>
-                        <div>{`> node dist/server.js`}</div>
-                        <div className="text-blue-300">[Server] Running on port 3000...</div>
-                        <div className="text-green-400">[MongoDB] Connected successfully to Cluster0</div>
-                    </div>
-                )}
-                {terminal.step >= 5 && (
-                    <div className="flex items-start gap-2 mt-4 w-full text-left">
-                        <span className="text-green-500 dark:text-green-400 font-bold shrink-0">root@ali-haggag:~$</span>
-                        <span className="text-white">ping db.alihaggag.com -c 1</span>
-                    </div>
-                )}
-                {/* PERF: Removed animate-fade-in */}
-                {terminal.step >= 6 && (
-                    <div className="text-yellow-300 pl-4 border-l-2 border-yellow-500/30 ml-2 w-full text-left break-words">
-                        PING db.alihaggag.com (104.21.2.22): 56 data bytes <br />
-                        64 bytes from 104.21.2.22: icmp_seq=0 ttl=58 time=<span className="text-emerald-400 font-bold">1.02 ms</span> <br />
-                        <span className="text-gray-400 text-xs">--- Database Connection Verified ---</span>
-                    </div>
-                )}
-                {/* PERF: Removed animate-fade-in from history items so they snap in instantly like a real terminal */}
+                {/* Boot lines are isolated in a memo component — user input state changes won't re-render them. */}
+                <BootSequence step={terminal.step} />
+
                 {terminal.history.map((item) => (
-                    <div key={item.id} className="mt-4 w-full text-left">
+                    <div key={item.id} className="mt-4 w-full">
                         <div className="flex items-start gap-2">
-                            <span className="text-green-500 dark:text-green-400 font-bold shrink-0">guest@ali-haggag:~$</span>
+                            <span className="text-green-500 font-bold shrink-0">guest@ali-haggag:~$</span>
                             <span className="text-white break-all">{item.command}</span>
                         </div>
                         {item.output && (
@@ -184,11 +206,11 @@ export const TerminalWindow = memo(function TerminalWindow({ terminal }: { termi
                         )}
                     </div>
                 ))}
-                {/* PERF: Removed animate-fade-in */}
+
                 {terminal.step >= 7 && !terminal.isMinimized && (
-                    <div className="flex items-center gap-2 mt-4 w-full text-left">
+                    <div className="flex items-center gap-2 mt-4 w-full">
                         <label htmlFor="terminal-input" className="sr-only">Terminal command input</label>
-                        <span className="text-green-500 dark:text-green-400 font-bold shrink-0" aria-hidden="true">guest@ali-haggag:~$</span>
+                        <span className="text-green-500 font-bold shrink-0" aria-hidden="true">guest@ali-haggag:~$</span>
                         <input
                             id="terminal-input"
                             type="text"
@@ -197,7 +219,7 @@ export const TerminalWindow = memo(function TerminalWindow({ terminal }: { termi
                             onKeyDown={handleCommand}
                             className="flex-1 bg-transparent border-none outline-none text-white font-mono placeholder:text-gray-600 focus:ring-0"
                             placeholder="Type 'help' to see available commands..."
-                            spellCheck="false"
+                            spellCheck={false}
                             autoComplete="off"
                             autoCorrect="off"
                             autoCapitalize="off"

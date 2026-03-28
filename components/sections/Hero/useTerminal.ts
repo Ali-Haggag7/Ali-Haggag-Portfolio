@@ -4,6 +4,8 @@ import { useState, useEffect, useRef, useCallback } from "react";
 
 export type HistoryItem = { id: number; command: string; output: React.ReactNode };
 
+const BOOT_DELAYS = [100, 300, 1000, 1500, 2200, 2800, 3300] as const;
+
 export function useTerminal() {
     const [step, setStep] = useState(0);
     const [isMuted, setIsMuted] = useState(false);
@@ -12,30 +14,23 @@ export function useTerminal() {
     const [isClosed, setIsClosed] = useState(false);
     const [isFullScreen, setIsFullScreen] = useState(false);
     const [isMinimized, setIsMinimized] = useState(false);
+
     const terminalContainerRef = useRef<HTMLDivElement>(null);
-
     const audioCtxRef = useRef<AudioContext | null>(null);
+    // Ref mirror of isMuted so playKeystroke never stales over closure.
     const isMutedRef = useRef(isMuted);
+    const bootTimersRef = useRef<ReturnType<typeof setTimeout>[]>([]);
 
-    // PERF: Reference to track active timeouts and prevent memory leaks
-    const bootTimersRef = useRef<NodeJS.Timeout[]>([]);
-
-    useEffect(() => {
-        isMutedRef.current = isMuted;
-    }, [isMuted]);
+    useEffect(() => { isMutedRef.current = isMuted; }, [isMuted]);
 
     const playKeystroke = useCallback(() => {
         if (isMutedRef.current) return;
         try {
             if (!audioCtxRef.current || audioCtxRef.current.state === "closed") {
-                const AudioCtx = window.AudioContext || (window as any).webkitAudioContext;
+                const AudioCtx = window.AudioContext ?? (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
                 audioCtxRef.current = new AudioCtx();
             }
-
-            // Handle browser auto-mute policies smoothly
-            if (audioCtxRef.current.state === "suspended") {
-                audioCtxRef.current.resume();
-            }
+            if (audioCtxRef.current.state === "suspended") audioCtxRef.current.resume();
 
             const ctx = audioCtxRef.current;
             const osc = ctx.createOscillator();
@@ -50,19 +45,15 @@ export function useTerminal() {
             gain.connect(ctx.destination);
             osc.start();
             osc.stop(ctx.currentTime + 0.05);
-
-            osc.onended = () => {
-                osc.disconnect();
-                gain.disconnect();
-            };
+            // Disconnect nodes after they've finished to avoid memory accumulation.
+            osc.onended = () => { osc.disconnect(); gain.disconnect(); };
         } catch {
-            // Audio not supported - silent fail
+            // Audio not available — fail silently.
         }
     }, []);
 
     const startBootSequence = useCallback(() => {
-        // BUG FIX: Clear any existing timeouts before starting a new boot sequence
-        // This prevents chaotic state updates if the user spams the "Reboot" button
+        // Clear any in-flight timers before re-booting (e.g. user spams reboot).
         bootTimersRef.current.forEach(clearTimeout);
         bootTimersRef.current = [];
 
@@ -72,53 +63,34 @@ export function useTerminal() {
         setIsFullScreen(false);
         setIsMinimized(false);
 
-        const delays = [100, 300, 1000, 1500, 2200, 2800, 3300];
-        delays.forEach((delay, i) => {
-            const timer = setTimeout(() => {
-                setStep(i + 1);
-                playKeystroke();
-            }, delay);
-            bootTimersRef.current.push(timer);
-        });
+        bootTimersRef.current = BOOT_DELAYS.map((delay, i) =>
+            setTimeout(() => { setStep(i + 1); playKeystroke(); }, delay)
+        );
     }, [playKeystroke]);
 
-    // High performance auto-scroll
+    // RAF-based auto-scroll — skips a paint cycle to let DOM update first.
     useEffect(() => {
         const el = terminalContainerRef.current;
         if (!el) return;
-        const raf = requestAnimationFrame(() => {
-            el.scrollTop = el.scrollHeight;
-        });
+        const raf = requestAnimationFrame(() => { el.scrollTop = el.scrollHeight; });
         return () => cancelAnimationFrame(raf);
     }, [step, history]);
 
-    // Component Mount/Unmount lifecycle
     useEffect(() => {
         startBootSequence();
-
-        // Cleanup all memory resources when leaving the page
         return () => {
             bootTimersRef.current.forEach(clearTimeout);
-            if (audioCtxRef.current && audioCtxRef.current.state !== "closed") {
-                audioCtxRef.current.close();
-            }
+            if (audioCtxRef.current?.state !== "closed") audioCtxRef.current?.close();
         };
     }, [startBootSequence]);
 
     return {
-        step,
-        isMuted,
-        setIsMuted,
-        userInput,
-        setUserInput,
-        history,
-        setHistory,
-        isClosed,
-        setIsClosed,
-        isFullScreen,
-        setIsFullScreen,
-        isMinimized,
-        setIsMinimized,
+        step, isMuted, setIsMuted,
+        userInput, setUserInput,
+        history, setHistory,
+        isClosed, setIsClosed,
+        isFullScreen, setIsFullScreen,
+        isMinimized, setIsMinimized,
         terminalContainerRef,
         playKeystroke,
         startBootSequence,
