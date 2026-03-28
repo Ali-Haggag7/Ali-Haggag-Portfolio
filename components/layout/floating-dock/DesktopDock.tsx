@@ -175,13 +175,13 @@ const IconContainer = memo(function IconContainer({
             enemy of zero-jank interactions.
         ──────────────────────────────────────────────────────────────────── */}
                 <motion.div
+                    initial={{ opacity: 0, y: 10, scale: 0.88 }}
                     animate={
                         hovered
                             ? { opacity: 1, y: 0, scale: 1 }
                             : { opacity: 0, y: 10, scale: 0.88 }
                     }
                     transition={TOOLTIP_SPRING}
-                    // pointer-events:none keeps it inert when invisible — no hit-test cost.
                     className="pointer-events-none px-3 py-1.5 whitespace-pre rounded-lg bg-foreground text-background border border-border absolute left-1/2 -translate-x-1/2 -top-12 w-fit text-sm font-semibold shadow-xl z-50 flex items-center gap-2"
                     style={{ willChange: "transform, opacity" }}
                 >

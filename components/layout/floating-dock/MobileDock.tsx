@@ -53,6 +53,7 @@ const MobileNavItem = memo(function MobileNavItem({
         // will-change declared upfront so the GPU layer is ready before first toggle.
         <motion.div
             aria-hidden={!visible}
+            initial={{ opacity: 0, y: 15, scale: 0.88 }}
             animate={
                 visible
                     ? { opacity: 1, y: 0, scale: 1, pointerEvents: "auto" as const }
@@ -60,7 +61,6 @@ const MobileNavItem = memo(function MobileNavItem({
             }
             transition={{
                 ...ITEM_SPRING,
-                // Swap delay direction based on visibility state.
                 delay: visible ? OPEN_DELAYS[index] : EXIT_DELAYS[index],
             }}
             style={{ willChange: "transform, opacity" }}
@@ -109,7 +109,7 @@ export const FloatingDockMobile = memo(function FloatingDockMobile({
                 className="absolute bottom-full mb-4 inset-x-0 flex flex-col gap-3 items-center"
                 // inert makes the whole group non-interactive & invisible to AT when closed,
                 // without touching individual children — one DOM write instead of N.
-                inert={!open ? ("" as unknown as boolean) : undefined}
+                inert={!open ? true : undefined}
             >
                 {DOCK_ITEMS.map((item, idx) => (
                     <MobileNavItem
