@@ -1,23 +1,32 @@
+// NewsletterForm.tsx
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Send, CheckCircle2, Loader2 } from "lucide-react";
 
 export function NewsletterForm() {
     const [email, setEmail] = useState("");
     const [status, setStatus] = useState<"idle" | "loading" | "success">("idle");
+    // Track pending timeouts so we can clear them on unmount.
+    const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-    const handleSubscribe = async (e: React.FormEvent) => {
+    // Cleanup on unmount — prevents state update on dead component.
+    useEffect(() => {
+        return () => {
+            if (timeoutRef.current) clearTimeout(timeoutRef.current);
+        };
+    }, []);
+
+    const handleSubscribe = (e: React.FormEvent) => {
         e.preventDefault();
-        if (!email) return;
+        if (!email || status === "loading") return;
 
         setStatus("loading");
 
-        // Simulate API call
-        setTimeout(() => {
+        timeoutRef.current = setTimeout(() => {
             setStatus("success");
             setEmail("");
-            setTimeout(() => setStatus("idle"), 5000);
+            timeoutRef.current = setTimeout(() => setStatus("idle"), 5000);
         }, 1500);
     };
 
