@@ -1,41 +1,59 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
+import { AnimatePresence } from "framer-motion";
 import { ProjectFeature } from "./projects.data";
 import { ProjectModalDesktop } from "./ProjectModalDesktop";
 import { ProjectModalMobile } from "./ProjectModalMobile";
 
+// Sync check to prevent layout flash on mount
+const getIsMobile = (): boolean =>
+    typeof window !== "undefined" && window.matchMedia("(max-width: 768px)").matches;
+
 export const ProjectModal = ({
     feature,
-    onClose
+    onClose,
 }: {
     feature: ProjectFeature;
     onClose: () => void;
 }) => {
-    const [isMobile, setIsMobile] = useState(false);
+    const [isMobile, setIsMobile] = useState(getIsMobile);
 
-    // Smart detection for mobile view
+    // Sync state with viewport changes
     useEffect(() => {
         const mql = window.matchMedia("(max-width: 768px)");
-        setIsMobile(mql.matches);
-
         const handler = (e: MediaQueryListEvent) => setIsMobile(e.matches);
+
         mql.addEventListener("change", handler);
         return () => mql.removeEventListener("change", handler);
     }, []);
 
-    // Performance & UX Fix: Lock body scroll to prevent nested scrolling issues
+    // Handle body scroll lock
     useEffect(() => {
-        document.body.style.overflow = "hidden";
-        return () => {
-            document.body.style.overflow = "unset";
-        };
+        document.documentElement.classList.add("modal-open");
+        return () => document.documentElement.classList.remove("modal-open");
     }, []);
 
-    // Render the appropriate component
-    if (isMobile) {
-        return <ProjectModalMobile feature={feature} onClose={onClose} />;
-    }
+    // Accessibility: Close on Escape key
+    const handleKeyDown = useCallback(
+        (e: KeyboardEvent) => {
+            if (e.key === "Escape") onClose();
+        },
+        [onClose]
+    );
 
-    return <ProjectModalDesktop feature={feature} onClose={onClose} />;
+    useEffect(() => {
+        window.addEventListener("keydown", handleKeyDown);
+        return () => window.removeEventListener("keydown", handleKeyDown);
+    }, [handleKeyDown]);
+
+    return (
+        <AnimatePresence mode="wait">
+            {isMobile ? (
+                <ProjectModalMobile key="mobile" feature={feature} onClose={onClose} />
+            ) : (
+                <ProjectModalDesktop key="desktop" feature={feature} onClose={onClose} />
+            )}
+        </AnimatePresence>
+    );
 };

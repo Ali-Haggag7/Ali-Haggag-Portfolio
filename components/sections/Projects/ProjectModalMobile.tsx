@@ -1,139 +1,183 @@
 "use client";
 
+import { useRef, useEffect, useCallback, memo } from "react";
 import { Github, ExternalLink, Target, Zap, Activity, X } from "lucide-react";
-import { motion } from "framer-motion";
+import { motion, type PanInfo } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
 import { ProjectFeature } from "./projects.data";
+import { cn } from "@/lib/utils";
 
-export const ProjectModalMobile = ({ feature, onClose }: { feature: ProjectFeature; onClose: () => void; }) => {
-    const { id, name, description, videoSrc, imageSrc, isGradientBg, gradientClass, autopsy, demoHref, href, cta } = feature;
+// Stable animation constants
+const BACKDROP_VARIANTS = {
+    hidden: { opacity: 0 },
+    visible: { opacity: 1, transition: { duration: 0.18, ease: "easeOut" } },
+    exit: { opacity: 0, transition: { duration: 0.15, ease: "easeIn" } },
+} as const;
+
+const SHEET_VARIANTS = {
+    hidden: { y: "100%", opacity: 0 },
+    visible: {
+        y: 0, opacity: 1,
+        transition: { duration: 0.28, ease: [0.25, 0.46, 0.45, 0.94] },
+    },
+    exit: {
+        y: "100%", opacity: 0,
+        transition: { duration: 0.22, ease: [0.55, 0, 1, 0.45] },
+    },
+} as const;
+
+const DRAG_CONSTRAINTS = { top: 0, bottom: 0 } as const;
+const DRAG_ELASTIC = { top: 0, bottom: 0.4 } as const;
+
+const AutopsyCard = memo(function AutopsyCard({
+    icon: Icon,
+    label,
+    text,
+    accentClass,
+}: {
+    icon: React.ElementType;
+    label: string;
+    text: string;
+    accentClass: string;
+}) {
+    return (
+        <div className="bg-slate-50 dark:bg-slate-900/50 p-5 rounded-2xl border border-slate-100 dark:border-slate-800">
+            <h4 className={cn("flex items-center gap-2 font-bold mb-2 uppercase text-[10px] tracking-wider", accentClass)}>
+                <Icon className="w-3.5 h-3.5" aria-hidden="true" />
+                {label}
+            </h4>
+            <p className="text-xs text-slate-700 dark:text-slate-300 leading-relaxed font-medium">{text}</p>
+        </div>
+    );
+});
+
+export const ProjectModalMobile = memo(function ProjectModalMobile({
+    feature,
+    onClose,
+}: {
+    feature: ProjectFeature;
+    onClose: () => void;
+}) {
+    const {
+        id, name, description, videoSrc, imageSrc,
+        isGradientBg, gradientClass, autopsy, demoHref, href, cta,
+    } = feature;
+
+    const dialogRef = useRef<HTMLElement>(null);
+
+    // Initial focus management
+    useEffect(() => {
+        const previousFocus = document.activeElement as HTMLElement | null;
+        dialogRef.current?.focus();
+        return () => previousFocus?.focus();
+    }, []);
+
+    // Dismiss logic based on drag distance or velocity
+    const handleDragEnd = useCallback(
+        (_e: any, info: PanInfo) => {
+            if (info.offset.y > 100 || info.velocity.y > 500) {
+                onClose();
+            }
+        },
+        [onClose]
+    );
 
     return (
         <div className="fixed inset-0 z-[100] flex items-end justify-center pointer-events-auto">
-
-            {/* Backdrop */}
+            {/* Backdrop Overlay */}
             <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.03, ease: "easeOut" }}
+                variants={BACKDROP_VARIANTS}
+                initial="hidden"
+                animate="visible"
+                exit="exit"
                 onClick={onClose}
-                className="absolute inset-0 bg-slate-900/40 dark:bg-black/60 backdrop-blur-sm transform-gpu"
+                className="absolute inset-0 bg-slate-900/40 dark:bg-black/60 backdrop-blur-sm"
                 aria-hidden="true"
+                style={{ willChange: "opacity" }}
             />
 
             {/* Draggable Bottom Sheet */}
             <motion.article
+                ref={dialogRef}
                 role="dialog"
                 aria-modal="true"
                 aria-labelledby={`modal-title-${id}`}
-                // Slides up fast from the bottom
-                initial={{ opacity: 0, y: "100%" }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: "100%" }}
-                transition={{ duration: 0.03, ease: "easeOut" }}
-
-                // --- سحر السحب لتحت (Swipe to Dismiss) ---
+                tabIndex={-1}
+                variants={SHEET_VARIANTS}
+                initial="hidden"
+                animate="visible"
+                exit="exit"
                 drag="y"
-                dragConstraints={{ top: 0, bottom: 0 }} // يمنع السحب لفوق
-                dragElastic={{ top: 0, bottom: 0.5 }} // مقاومة خفيفة للسحب
-                onDragEnd={(e, info) => {
-                    // لو اليوزر سحبها 100 بيكسل لتحت أو سحبها بسرعة، اقفل المودال
-                    if (info.offset.y > 100 || info.velocity.y > 500) {
-                        onClose();
-                    }
-                }}
-                // ------------------------------------------
-
-                className="relative w-full h-[100dvh] bg-white dark:bg-slate-950 rounded-t-3xl shadow-2xl flex flex-col z-10 overflow-hidden transform-gpu"
+                dragConstraints={DRAG_CONSTRAINTS}
+                dragElastic={DRAG_ELASTIC}
+                onDragEnd={handleDragEnd}
+                style={{ willChange: "transform, opacity" }}
+                className={cn(
+                    "relative w-full h-[100dvh] bg-white dark:bg-slate-950 rounded-t-3xl shadow-2xl",
+                    "flex flex-col z-10 overflow-hidden focus:outline-none"
+                )}
             >
-                {/* Mobile Drag Indicator (الشَرطة اللي فوق اللي بتعرفه إنه يقدر يسحب) */}
-                <div className="w-full flex justify-center py-3 absolute top-0 z-50 pointer-events-none">
-                    <div className="w-12 h-1.5 bg-white/40 backdrop-blur-md rounded-full" />
-                </div>
+                {/* Visual Drag Handle */}
+                <div aria-hidden="true" className="absolute top-3 left-1/2 -translate-x-1/2 z-50 w-12 h-1.5 bg-white/40 backdrop-blur-md rounded-full pointer-events-none" />
 
-                {/* زرار الإغلاق العادي (احتياطي) */}
                 <button
                     type="button"
                     aria-label="Close details"
                     onClick={onClose}
-                    className="absolute top-4 right-4 z-50 p-2.5 rounded-full bg-black/20 hover:bg-black/40 backdrop-blur-md text-white transition-all focus:outline-none focus:ring-2 focus:ring-blue-500 transform-gpu active:scale-95"
+                    className="absolute top-4 right-4 z-50 p-2.5 rounded-full bg-black/20 hover:bg-black/40 backdrop-blur-md text-white transition-[background-color,transform] duration-150 active:scale-95"
                 >
                     <X className="w-5 h-5" aria-hidden="true" />
                 </button>
 
-                {/* --- الجزء المرن (الفيديو والوصف) اللي بيتمدد بناءً على المساحة المتبقية --- */}
+                {/* Hero Content Area */}
                 <div className="relative w-full flex-1 flex flex-col justify-end bg-slate-100 dark:bg-black overflow-hidden rounded-t-3xl min-h-[30vh]">
-
-                    {/* Media container taking full absolute space of the flexible header */}
                     <div className="absolute inset-0 w-full h-full">
                         {videoSrc ? (
-                            <video autoPlay muted playsInline loop className="w-full h-full object-cover">
-                                <source src={videoSrc} type="video/mp4" />
-                            </video>
+                            <video src={videoSrc} autoPlay muted playsInline loop className="w-full h-full object-cover" />
                         ) : isGradientBg ? (
-                            <div className={`h-full w-full bg-gradient-to-br ${gradientClass}`}></div>
+                            <div className={cn("h-full w-full bg-gradient-to-br", gradientClass)} />
                         ) : imageSrc ? (
-                            <Image src={imageSrc} alt={name} className="w-full h-full object-cover" placeholder="blur" />
+                            <Image src={imageSrc} alt={name} className="w-full h-full object-cover" placeholder="blur" sizes="100vw" />
                         ) : null}
 
-                        {/* Gradient عشان الكلام يبان بوضوح */}
-                        <div className="absolute inset-0 bg-gradient-to-t from-white via-white/40 dark:from-slate-950 dark:via-slate-950/60 to-transparent pointer-events-none" />
+                        <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-t from-white via-white/40 dark:from-slate-950 dark:via-slate-950/60 to-transparent pointer-events-none" />
                     </div>
 
                     <div className="relative z-10 p-6 w-full flex flex-col gap-3">
-                        <div>
-                            <h3 id={`modal-title-${id}`} className="text-3xl font-extrabold text-slate-900 dark:text-white mb-1 tracking-tight">
-                                {name}
-                            </h3>
-                            <p className="text-sm text-slate-700 dark:text-slate-300 font-medium line-clamp-3">
-                                {description}
-                            </p>
-                        </div>
+                        <h3 id={`modal-title-${id}`} className="text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+                            {name}
+                        </h3>
+                        <p className="text-sm text-slate-700 dark:text-slate-300 font-medium line-clamp-3">
+                            {description}
+                        </p>
 
                         <div className="flex items-center gap-3 pt-1">
                             {demoHref && (
-                                <Link href={demoHref} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 px-4 py-1.5 text-sm font-semibold text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-500/10 hover:bg-blue-100 dark:hover:bg-blue-500/20 border border-blue-200 dark:border-blue-500/20 rounded-full transition-colors active:scale-95">
-                                    <ExternalLink className="w-3.5 h-3.5" aria-hidden="true" /> Live Demo
+                                <Link href={demoHref} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 px-4 py-1.5 text-sm font-semibold text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-500/10 rounded-full active:scale-95 transition-colors">
+                                    <ExternalLink className="w-3.5 h-3.5" /> Live Demo
                                 </Link>
                             )}
                             {href && (
-                                <Link href={href} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 px-4 py-1.5 text-sm font-semibold text-slate-700 dark:text-slate-300 bg-slate-100 dark:bg-slate-800/50 hover:bg-slate-200 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-full transition-colors active:scale-95">
-                                    <Github className="w-3.5 h-3.5" aria-hidden="true" /> {cta || "Source"}
+                                <Link href={href} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 px-4 py-1.5 text-sm font-semibold text-slate-700 dark:text-slate-300 bg-slate-100 dark:bg-slate-800/50 rounded-full active:scale-95 transition-colors">
+                                    <Github className="w-3.5 h-3.5" /> {cta ?? "Source"}
                                 </Link>
                             )}
                         </div>
                     </div>
                 </div>
 
-                {/* --- الجزء الثابت (كروت الداتا) اللي بيفضل لازق في القاع --- */}
-                {/* shrink-0 بتأكد إن الكروت مش هتنكمش ولا هتصغر، وهتاخد حجمها الطبيعي */}
-                <div className="p-6 pb-8 bg-white dark:bg-slate-950 shrink-0 relative z-20">
-                    {autopsy && (
+                {/* Project Details */}
+                {autopsy && (
+                    <div className="p-6 pb-8 bg-white dark:bg-slate-950 shrink-0 relative z-20">
                         <div className="flex flex-col gap-4">
-                            <div className="bg-slate-50 dark:bg-slate-900/50 p-5 rounded-2xl border border-slate-100 dark:border-slate-800">
-                                <h4 className="flex items-center gap-2 text-red-600 dark:text-red-400 font-bold mb-2 uppercase text-[10px] tracking-wider">
-                                    <Target className="w-3.5 h-3.5" /> The Challenge
-                                </h4>
-                                <p className="text-xs text-slate-700 dark:text-slate-300 leading-relaxed font-medium">{autopsy.challenge}</p>
-                            </div>
-                            <div className="bg-slate-50 dark:bg-slate-900/50 p-5 rounded-2xl border border-slate-100 dark:border-slate-800">
-                                <h4 className="flex items-center gap-2 text-emerald-600 dark:text-emerald-400 font-bold mb-2 uppercase text-[10px] tracking-wider">
-                                    <Activity className="w-3.5 h-3.5" /> Architecture
-                                </h4>
-                                <p className="text-xs text-slate-700 dark:text-slate-300 leading-relaxed font-medium">{autopsy.architecture}</p>
-                            </div>
-                            <div className="bg-slate-50 dark:bg-slate-900/50 p-5 rounded-2xl border border-slate-100 dark:border-slate-800">
-                                <h4 className="flex items-center gap-2 text-blue-600 dark:text-blue-400 font-bold mb-2 uppercase text-[10px] tracking-wider">
-                                    <Zap className="w-3.5 h-3.5" /> The Impact
-                                </h4>
-                                <p className="text-xs text-slate-700 dark:text-slate-300 leading-relaxed font-medium">{autopsy.impact}</p>
-                            </div>
+                            <AutopsyCard icon={Target} label="The Challenge" text={autopsy.challenge} accentClass="text-red-600 dark:text-red-400" />
+                            <AutopsyCard icon={Activity} label="Architecture" text={autopsy.architecture} accentClass="text-emerald-600 dark:text-emerald-400" />
+                            <AutopsyCard icon={Zap} label="The Impact" text={autopsy.impact} accentClass="text-blue-600 dark:text-blue-400" />
                         </div>
-                    )}
-                </div>
+                    </div>
+                )}
             </motion.article>
         </div>
     );
-};
+});
