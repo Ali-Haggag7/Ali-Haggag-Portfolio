@@ -1,33 +1,56 @@
 "use client";
 
-import { useState, useMemo, useCallback } from "react";
+import { useState, useMemo, useCallback, useRef } from "react";
 import { AnimatePresence } from "framer-motion";
 import { Activity } from "lucide-react";
 import { scarsData, scarCategories } from "./scars.data";
 import { CategoryFilter } from "./CategoryFilter";
 import { ScarCard } from "./ScarCard";
 
+// Stable per-card toggle handler factory — same reference per scar.id,
+// so ScarCard's memo bail-out isn't defeated on every expandedId change.
+function useStableToggles(onToggle: (id: string) => void) {
+    const handlersRef = useRef<Map<string, () => void>>(new Map());
+
+    return useCallback(
+        (id: string): (() => void) => {
+            if (!handlersRef.current.has(id)) {
+                handlersRef.current.set(id, () => onToggle(id));
+            }
+            return handlersRef.current.get(id)!;
+        },
+        [onToggle]
+    );
+}
+
 export default function BattleScars() {
     const [activeCategory, setActiveCategory] = useState("All");
     const [expandedId, setExpandedId] = useState<string | null>(scarsData[0].id);
 
-    const filteredScars = useMemo(() => {
-        if (activeCategory === "All") return scarsData;
-        return scarsData.filter((scar) => scar.category === activeCategory);
-    }, [activeCategory]);
+    const filteredScars = useMemo(
+        () => activeCategory === "All" ? scarsData : scarsData.filter((s) => s.category === activeCategory),
+        [activeCategory]
+    );
 
     const handleCategoryChange = useCallback((category: string) => {
         setActiveCategory(category);
         setExpandedId(null);
     }, []);
 
-    const toggleScar = useCallback((id: string) => {
-        setExpandedId((prev) => (prev === id ? null : id));
-    }, []);
+    const toggleScar = useCallback(
+        (id: string) => setExpandedId((prev) => (prev === id ? null : id)),
+        []
+    );
+
+    // Pre-built stable handlers — avoids inline `() => toggleScar(scar.id)` per card.
+    const getToggleHandler = useStableToggles(toggleScar);
 
     return (
-        <section id="battle-scars" aria-labelledby="battle-scars-title" className="py-24 px-4 md:px-8 w-full max-w-5xl mx-auto">
-
+        <section
+            id="battle-scars"
+            aria-labelledby="battle-scars-title"
+            className="py-24 px-4 md:px-8 w-full max-w-5xl mx-auto"
+        >
             <div className="text-center mb-10 animate-fade-in">
                 <div className="inline-flex items-center justify-center gap-2 mb-4">
                     <span className="h-px w-8 bg-red-500/50 block" aria-hidden="true" />
@@ -53,9 +76,7 @@ export default function BattleScars() {
                 onSelect={handleCategoryChange}
             />
 
-            {/* PERF: Removed laggy motion.div layout. Just a solid container now. */}
             <div className="space-y-4 min-h-[400px]">
-                {/* PERF: mode="wait" ensures old items leave cleanly BEFORE new ones enter, killing the bounce! */}
                 <AnimatePresence mode="wait">
                     {filteredScars.map((scar, index) => (
                         <ScarCard
@@ -63,7 +84,8 @@ export default function BattleScars() {
                             scar={scar}
                             index={index}
                             isExpanded={expandedId === scar.id}
-                            onToggle={toggleScar}
+                            // Stable reference — memo bail-out preserved on expandedId changes.
+                            onToggle={getToggleHandler(scar.id)}
                         />
                     ))}
                 </AnimatePresence>
