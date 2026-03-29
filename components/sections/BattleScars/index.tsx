@@ -1,27 +1,12 @@
 "use client";
 
-import { useState, useMemo, useCallback, useRef } from "react";
+import { useState, useMemo, useCallback } from "react";
 import { AnimatePresence } from "framer-motion";
 import { Activity } from "lucide-react";
 import { scarsData, scarCategories } from "./scars.data";
+import { useStableMap } from "@/hooks/useStableMap";
 import { CategoryFilter } from "./CategoryFilter";
 import { ScarCard } from "./ScarCard";
-
-// Stable per-card toggle handler factory — same reference per scar.id,
-// so ScarCard's memo bail-out isn't defeated on every expandedId change.
-function useStableToggles(onToggle: (id: string) => void) {
-    const handlersRef = useRef<Map<string, () => void>>(new Map());
-
-    return useCallback(
-        (id: string): (() => void) => {
-            if (!handlersRef.current.has(id)) {
-                handlersRef.current.set(id, () => onToggle(id));
-            }
-            return handlersRef.current.get(id)!;
-        },
-        [onToggle]
-    );
-}
 
 export default function BattleScars() {
     const [activeCategory, setActiveCategory] = useState("All");
@@ -37,13 +22,13 @@ export default function BattleScars() {
         setExpandedId(null);
     }, []);
 
-    const toggleScar = useCallback(
+    const toggle = useCallback(
         (id: string) => setExpandedId((prev) => (prev === id ? null : id)),
         []
     );
 
-    // Pre-built stable handlers — avoids inline `() => toggleScar(scar.id)` per card.
-    const getToggleHandler = useStableToggles(toggleScar);
+    // Stable per-card handlers — prevents memo bail-out on expandedId changes
+    const getToggleHandler = useStableMap(toggle);
 
     return (
         <section
@@ -53,11 +38,13 @@ export default function BattleScars() {
         >
             <div className="text-center mb-10 animate-fade-in">
                 <div className="inline-flex items-center justify-center gap-2 mb-4">
-                    <span className="h-px w-8 bg-red-500/50 block" aria-hidden="true" />
-                    <span className="text-red-600 dark:text-red-500 font-mono text-sm uppercase tracking-widest font-bold flex items-center gap-2">
-                        <Activity className="w-4 h-4" aria-hidden="true" /> Engineering Logs
+                    <span className="h-px w-8 bg-blue-500/40 block" aria-hidden="true" />
+                    {/* Changed red → blue: red carries 'error' semantics, blue is neutral/brand */}
+                    <span className="text-blue-500 font-mono text-sm uppercase tracking-widest font-bold flex items-center gap-2">
+                        <Activity className="w-4 h-4" aria-hidden="true" />
+                        Engineering Logs
                     </span>
-                    <span className="h-px w-8 bg-red-500/50 block" aria-hidden="true" />
+                    <span className="h-px w-8 bg-blue-500/40 block" aria-hidden="true" />
                 </div>
                 <h2
                     id="battle-scars-title"
@@ -76,15 +63,15 @@ export default function BattleScars() {
                 onSelect={handleCategoryChange}
             />
 
+            {/* popLayout allows concurrent enter/exit — no dead-time between category switches */}
             <div className="space-y-4 min-h-[400px]">
-                <AnimatePresence mode="wait">
+                <AnimatePresence mode="popLayout">
                     {filteredScars.map((scar, index) => (
                         <ScarCard
                             key={scar.id}
                             scar={scar}
                             index={index}
                             isExpanded={expandedId === scar.id}
-                            // Stable reference — memo bail-out preserved on expandedId changes.
                             onToggle={getToggleHandler(scar.id)}
                         />
                     ))}

@@ -11,7 +11,6 @@ import BattleScars from "@/components/sections/BattleScars";
 import Timeline from "@/components/sections/Timeline";
 import Services from "@/components/sections/Services";
 import ContactSection from "@/components/sections/Contact";
-// import Reviews from "@/components/sections/Reviews";
 
 export default function Home() {
   return (
@@ -26,8 +25,8 @@ export default function Home() {
       <Timeline />
       <Services />
 
-      {/* <Reviews /> 
-        TODO: Uncomment this section when I get my first freelance client reviews.
+      {/* <Reviews />
+        TODO: Uncomment when first freelance client reviews are ready.
       */}
 
       <ContactSection />
