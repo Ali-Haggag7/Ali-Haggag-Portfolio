@@ -14,6 +14,9 @@ export type SkillCategory = {
     skills: Skill[];
 };
 
+// Exported so handleJumpToScar and SkillModal can stay in sync without magic numbers
+export const MODAL_EXIT_DURATION = 300;
+
 export const technicalArsenal: SkillCategory[] = [
     {
         title: "Frontend",
@@ -52,7 +55,8 @@ export const technicalArsenal: SkillCategory[] = [
         skills: [
             { name: "Socket.io", icon: "/skills/socketio.svg", status: "Battle-Tested", projects: ["Flurry v2.0"], scarId: "webrtc-latency", themeable: true },
             { name: "WebRTC", icon: "/skills/webrtc.svg", status: "Battle-Tested", projects: ["Flurry v2.0"], scarId: "webrtc-latency", themeable: true },
-            { name: "Google Gemini", icon: "/skills/google.svg", status: "Battle-Tested", projects: ["Gemini Clone", "Flurry v2.0", "My Portfolio"], scarId: "gemini-clone" },
+            // scarId set to null until "gemini-clone" scar entry is added to scarsData
+            { name: "Google Gemini", icon: "/skills/google.svg", status: "Battle-Tested", projects: ["Gemini Clone", "Flurry v2.0", "My Portfolio"], scarId: null },
             { name: "PWA", icon: "/skills/pwa.svg", status: "Battle-Tested", projects: ["Flurry v2.0", "My Portfolio"], scarId: "offline-sync" },
         ],
     },
@@ -89,12 +93,7 @@ export const technicalArsenal: SkillCategory[] = [
             { name: "ImageKit", icon: "/skills/imagekit.jpg", status: "Production Ready", projects: ["Flurry v2.0"], scarId: null },
         ],
     },
-    {
-        title: "Monitoring",
-        skills: [
-            { name: "Sentry", icon: "/skills/sentry.svg", status: "Production Ready", projects: ["CS Arena"], scarId: null },
-        ],
-    },
+    { title: "Monitoring", skills: [{ name: "Sentry", icon: "/skills/sentry.svg", status: "Production Ready", projects: ["CS Arena"], scarId: null }] },
     {
         title: "Email Services",
         skills: [
@@ -124,7 +123,7 @@ export const technicalArsenal: SkillCategory[] = [
     },
 ];
 
-// Precomputed map — O(1) lookup vs a switch statement called on every render.
+// O(1) lookup — avoids a switch statement allocating a new object on every render
 const STATUS_CONFIG = {
     "Battle-Tested": { color: "text-red-600 dark:text-red-500", bg: "bg-red-500/10", icon: Activity },
     "Production Ready": { color: "text-emerald-600 dark:text-emerald-500", bg: "bg-emerald-500/10", icon: CheckCircle2 },
@@ -135,8 +134,8 @@ export const getStatusConfig = (status: Skill["status"]) => STATUS_CONFIG[status
 
 export const handleJumpToScar = (scarId: string, callback: () => void) => {
     callback();
-    // Delay lets the modal exit animation finish before scrolling.
+    // Waits for modal exit animation before scrolling — duration lives here to stay in sync
     setTimeout(() => {
         document.getElementById("battle-scars")?.scrollIntoView({ behavior: "smooth" });
-    }, 300);
+    }, MODAL_EXIT_DURATION);
 };

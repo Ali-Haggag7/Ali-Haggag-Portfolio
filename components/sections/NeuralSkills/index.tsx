@@ -1,29 +1,19 @@
 "use client";
 
-import { useState, useCallback, useRef, memo } from "react";
+import { useState, useCallback, memo } from "react";
 import { AnimatePresence } from "framer-motion";
 import { Wrench } from "lucide-react";
 import { Skill, technicalArsenal } from "./skills.data";
+import { useStableMap } from "@/hooks/useStableMap";
 import { SkillBadge } from "./SkillBadge";
 import { SkillModal } from "./SkillModal";
 
-// Stable per-skill handler factory — same reference per skill.name across renders,
-// so SkillBadge's memo bail-out is never defeated by inline arrow functions.
-function useStableHandlers(onSelect: (s: Skill) => void) {
-    const handlersRef = useRef<Map<string, () => void>>(new Map());
+// Static reference — hoisted to module scope to avoid re-allocation
+const GLOW_STYLE = {
+    background: "radial-gradient(circle, rgba(59,130,246,0.05) 0%, transparent 70%)",
+} as const;
 
-    return useCallback(
-        (skill: Skill): (() => void) => {
-            if (!handlersRef.current.has(skill.name)) {
-                handlersRef.current.set(skill.name, () => onSelect(skill));
-            }
-            return handlersRef.current.get(skill.name)!;
-        },
-        [onSelect]
-    );
-}
-
-// Extracted so React can bail out on re-renders when category data hasn't changed.
+// Memoized category row to isolate reconciliation
 const SkillCategory = memo(function SkillCategory({
     title,
     skills,
@@ -31,13 +21,14 @@ const SkillCategory = memo(function SkillCategory({
 }: {
     title: string;
     skills: Skill[];
-    getHandler: (skill: Skill) => () => void;
+    // Fix: Handler now expects a string key (skill.name)
+    getHandler: (key: string) => () => void;
 }) {
     return (
         <div className="group relative flex flex-col gap-5 bg-card/80 border border-border/50 rounded-3xl p-6 overflow-hidden transition-[border-color,box-shadow] duration-300 hover:border-blue-500/30 hover:shadow-xl hover:shadow-blue-500/5 w-full md:w-fit max-w-full">
             <div
                 aria-hidden="true"
-                className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none bg-gradient-to-br from-blue-500/5 to-transparent"
+                className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none bg-blue-500/5"
             />
 
             <div className="relative z-10 flex items-center gap-3">
@@ -52,7 +43,8 @@ const SkillCategory = memo(function SkillCategory({
                     <SkillBadge
                         key={skill.name}
                         skill={skill}
-                        onClick={getHandler(skill)}
+                        // Solution: Pass the primitive key (name) to the stable map
+                        onClick={getHandler(skill.name)}
                     />
                 ))}
             </div>
@@ -63,9 +55,18 @@ const SkillCategory = memo(function SkillCategory({
 export default function NeuralSkills() {
     const [selectedSkill, setSelectedSkill] = useState<Skill | null>(null);
 
-    const handleSelect = useCallback((skill: Skill) => setSelectedSkill(skill), []);
+    // Factory: finds the skill object by its unique name string
+    const handleSelectByName = useCallback((name: string) => {
+        // Flatten arsenal to find the specific skill object
+        const allSkills = technicalArsenal.flatMap(cat => cat.skills);
+        const match = allSkills.find(s => s.name === name);
+        if (match) setSelectedSkill(match);
+    }, []);
+
     const handleClose = useCallback(() => setSelectedSkill(null), []);
-    const getHandler = useStableHandlers(handleSelect);
+
+    // Stabilize handlers keyed by skill name
+    const getHandler = useStableMap(handleSelectByName);
 
     return (
         <section
@@ -75,7 +76,7 @@ export default function NeuralSkills() {
             <div
                 aria-hidden="true"
                 className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] pointer-events-none -z-10"
-                style={{ background: "radial-gradient(circle, rgba(59,130,246,0.05) 0%, transparent 70%)" }}
+                style={GLOW_STYLE}
             />
 
             <div className="text-center mb-16 px-4 animate-fade-in">
@@ -84,10 +85,7 @@ export default function NeuralSkills() {
                         <Wrench className="w-4 h-4" aria-hidden="true" /> Technical Arsenal
                     </span>
                 </div>
-                <h2
-                    id="skills-title"
-                    className="text-3xl md:text-5xl font-extrabold text-foreground tracking-tight mb-4"
-                >
+                <h2 id="skills-title" className="text-3xl md:text-5xl font-extrabold text-foreground tracking-tight mb-4">
                     My Technology Stack
                 </h2>
                 <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
@@ -106,8 +104,7 @@ export default function NeuralSkills() {
                 ))}
             </div>
 
-            {/* mode="wait" ensures clean exit before a new skill modal mounts */}
-            <AnimatePresence mode="wait">
+            <AnimatePresence mode="sync">
                 {selectedSkill && (
                     <SkillModal
                         key={selectedSkill.name}
