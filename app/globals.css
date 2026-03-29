@@ -26,8 +26,8 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-sm: calc(var(--radius) - 4px);
 
-  --animate-marquee: marquee var(--duration) linear infinite;
-  --animate-marquee-vertical: marquee-vertical var(--duration) linear infinite;
+  --animate-marquee: marquee var(--marquee-duration) linear infinite;
+  --animate-marquee-vertical: marquee-vertical var(--marquee-duration) linear infinite;
   --animate-shimmer: shimmer 2s linear infinite;
   --animate-spin-slow: spin 8s linear infinite;
   --animate-fade-in: fadeIn 0.5s ease-in-out forwards;
@@ -38,7 +38,7 @@
     }
 
     to {
-      transform: translateX(calc(-100% - var(--gap)));
+      transform: translateX(calc(-100% - var(--marquee-gap)));
     }
   }
 
@@ -48,17 +48,19 @@
     }
 
     to {
-      transform: translateY(calc(-100% - var(--gap)));
+      transform: translateY(calc(-100% - var(--marquee-gap)));
     }
   }
 
+  /* Shimmer: translate a pseudo-element instead of animating background-position.
+     background-position triggers Paint every frame — transform is Composite-only. */
   @keyframes shimmer {
     from {
-      background-position: 0 0;
+      transform: translateX(-100%);
     }
 
     to {
-      background-position: -200% 0;
+      transform: translateX(100%);
     }
   }
 
@@ -102,14 +104,13 @@
     --input: 216 34% 17%;
     --ring: 212.7 26.8% 83.9%;
     --radius: 0.75rem;
-    --gap: 1rem;
-    --duration: 40s;
+
+    /* Namespaced — avoids collision with third-party --gap / --duration */
+    --marquee-gap: 1rem;
+    --marquee-duration: 40s;
   }
 
-  /*
-   * .dark mirrors :root — keeps next-themes working correctly
-   * when it adds the .dark class after hydration.
-   */
+  /* Mirrors :root so next-themes works after hydration adds .dark */
   .dark {
     --background: 224 71% 4%;
     --foreground: 210 40% 98%;
@@ -132,10 +133,7 @@
     --ring: 212.7 26.8% 83.9%;
   }
 
-  /*
-   * Light theme — only active when next-themes adds .light class.
-   * Overrides the dark :root defaults above.
-   */
+  /* Light — only active when next-themes adds .light class */
   .light {
     --background: 210 40% 98%;
     --foreground: 222.2 84% 4.9%;
@@ -176,9 +174,22 @@
     overscroll-behavior-y: none;
   }
 
+  /* Scales with theme — hardcoded rgba(59,130,246) fails on .light */
   ::selection {
-    background-color: rgba(59, 130, 246, 0.3);
+    background-color: hsl(var(--primary) / 0.25);
     color: inherit;
+  }
+
+  /* Pause all motion for users who need it — WCAG 2.3.3 */
+  @media (prefers-reduced-motion: reduce) {
+
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
   }
 }
 
@@ -233,19 +244,21 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background: inherit;
+    /* var(--color-background) is reliable; `inherit` is undefined on pseudo-elements */
+    background: var(--color-background);
   }
 
   .glitch-text::before {
     left: 2px;
-    text-shadow: -1px 0 red;
+    /* Theme-aware: adapts to .light without hardcoded red/blue */
+    text-shadow: -1px 0 hsl(var(--destructive));
     clip-path: inset(24px 0 90px 0);
     animation: glitch-anim-2 3s infinite linear alternate-reverse;
   }
 
   .glitch-text::after {
     left: -2px;
-    text-shadow: -1px 0 blue;
+    text-shadow: -1px 0 hsl(var(--primary));
     clip-path: inset(85px 0 14px 0);
     animation: glitch-anim 2.5s infinite linear alternate-reverse;
   }
@@ -307,7 +320,8 @@
   overflow: hidden;
 }
 
-/* static glow, computed once by the browser, never by JS */
+/* Glow divs — will-change promotes to compositor layer so they never repaint on scroll.
+   The gradient rasterizes once; the GPU composites it from there. */
 .services-glow {
   position: absolute;
   top: 50%;
@@ -315,15 +329,13 @@
   width: 800px;
   height: 800px;
   transform: translate(-50%, -50%);
-  background: radial-gradient(circle,
-      rgba(59, 130, 246, 0.08) 0%,
-      transparent 70%);
+  background: radial-gradient(circle, rgba(59, 130, 246, 0.08) 0%, transparent 70%);
   pointer-events: none;
   z-index: -10;
-  will-change: auto;
+  will-change: transform;
+  /* was: auto — that's a no-op, does nothing */
 }
 
-/* Left glow — static radial, computed once */
 .contact-glow {
   position: absolute;
   top: 50%;
@@ -334,9 +346,9 @@
   background: radial-gradient(circle, rgba(37, 99, 235, 0.08) 0%, transparent 70%);
   pointer-events: none;
   z-index: -10;
+  will-change: transform;
 }
 
-/* Globe inner glow — mix-blend-screen kept, static object */
 .globe-inner-glow {
   background: radial-gradient(circle,
       rgba(59, 130, 246, 0.1) 0%,
@@ -345,7 +357,6 @@
   mix-blend-mode: screen;
 }
 
-/* Footer glow — static radial, computed once */
 .footer-glow {
   position: absolute;
   bottom: 0;
@@ -355,4 +366,5 @@
   background: radial-gradient(circle, rgba(59, 130, 246, 0.05) 0%, transparent 70%);
   pointer-events: none;
   z-index: -10;
+  will-change: transform;
 }
