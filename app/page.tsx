@@ -1,4 +1,3 @@
-import dynamic from "next/dynamic";
 import ClientShell from "@/components/layout/ClientShell";
 import HeroSection from "@/components/sections/Hero";
 import NeuralSkills from "@/components/sections/NeuralSkills";
@@ -7,6 +6,7 @@ import BattleScars from "@/components/sections/BattleScars";
 import Timeline from "@/components/sections/Timeline";
 import Services from "@/components/sections/Services";
 import ContactSection from "@/components/sections/Contact";
+import { Suspense } from 'react';
 
 export default function Home() {
   return (
@@ -14,7 +14,9 @@ export default function Home() {
       <HeroSection />
       <NeuralSkills />
       <ProjectsSection />
-      <BattleScars />
+      <Suspense fallback={<div className="h-20" />}>
+        <BattleScars />
+      </Suspense>
       <Timeline />
       <Services />
       <ContactSection />
