@@ -48,6 +48,7 @@ export const technicalArsenal: SkillCategory[] = [
             { name: "GraphQL", icon: "/skills/graphql.svg", status: "R&D / Exploring", projects: [], scarId: null },
             { name: "Redis", icon: "/skills/redis.svg", status: "Battle-Tested", projects: ["Flurry v2.0"], scarId: "enterprise-security" },
             { name: "Zod", icon: "/skills/zod.svg", status: "Battle-Tested", projects: ["Cybership API", "CS Arena"], scarId: "ddd-boundaries" },
+            { name: "Inngest", icon: "/skills/inngest.webp", status: "Production Ready", projects: ["Flurry v2.0"], scarId: null },
         ],
     },
     {
@@ -84,6 +85,7 @@ export const technicalArsenal: SkillCategory[] = [
             { name: "Vercel", icon: "/skills/vercel.svg", status: "Production Ready", projects: ["Multiple Projects"], scarId: null, themeable: true },
             { name: "Sevalla", icon: "/skills/sevalla.jpeg", status: "Production Ready", projects: ["Blog Pro", "Flurry v2.0"], scarId: null },
             { name: "DigitalOcean", icon: "/skills/digitalocean.svg", status: "R&D / Exploring", projects: [], scarId: null },
+            { name: "Azure", icon: "/skills/azure.svg", status: "R&D / Exploring", projects: [], scarId: null },
         ],
     },
     {
@@ -93,7 +95,13 @@ export const technicalArsenal: SkillCategory[] = [
             { name: "ImageKit", icon: "/skills/imagekit.jpg", status: "Production Ready", projects: ["Flurry v2.0"], scarId: null },
         ],
     },
-    { title: "Monitoring", skills: [{ name: "Sentry", icon: "/skills/sentry.svg", status: "Production Ready", projects: ["CS Arena"], scarId: null }] },
+    {
+        title: "Monitoring",
+        skills: [
+            { name: "Sentry", icon: "/skills/sentry.svg", status: "Production Ready", projects: ["CS Arena"], scarId: null },
+            { name: "Azure Monitor", icon: "/skills/azuremonitor.svg", status: "R&D / Exploring", projects: [], scarId: null },
+        ],
+    },
     {
         title: "Email Services",
         skills: [
