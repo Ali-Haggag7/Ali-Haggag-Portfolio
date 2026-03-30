@@ -64,7 +64,7 @@ export default function HeroSection() {
             <div
                 aria-hidden="true"
                 className={cn(
-                    "absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] md:w-[800px] md:h-[600px] pointer-events-none -z-10",
+                    "absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] md:w-[600px] md:h-[600px] pointer-events-none -z-10",
                     "transition-opacity duration-700 transform-gpu",
                     showUIElements ? "opacity-100" : "opacity-0"
                 )}
