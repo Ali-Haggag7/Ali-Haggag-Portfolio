@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useCallback, memo } from "react";
 import { motion } from "framer-motion";
-import { X, Link as LinkIcon, AlertTriangle, Lightbulb, Activity } from "lucide-react";
+import { X, Link as LinkIcon, AlertTriangle, Lightbulb, Activity, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import { Skill, getStatusConfig, handleJumpToScar } from "./skills.data";
@@ -179,13 +179,24 @@ export const SkillModal = memo(function SkillModal({
                             <button
                                 type="button"
                                 onClick={() => handleJumpToScar(skill.scarId!, onClose)}
-                                className="w-full flex items-center justify-between p-4 rounded-xl border shadow-sm transition-colors duration-150 bg-red-500/10 hover:bg-red-500/20 border-red-500/20 text-red-500 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500"
+                                className="w-full flex items-center justify-between p-4 rounded-xl border shadow-sm transition-all duration-200 
+                                    bg-amber-500/5 hover:bg-amber-500/10 border-amber-500/20 text-amber-600 dark:text-amber-400 
+                                    group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500/50"
                             >
                                 <div className="flex items-center gap-3">
-                                    <AlertTriangle className="w-5 h-5 group-hover:scale-110 transition-transform duration-100" aria-hidden="true" />
-                                    <span className="font-bold text-sm tracking-wide">View Linked Battle Scar</span>
+                                    <div className="p-2 rounded-lg bg-amber-500/10 group-hover:bg-amber-500/20 transition-colors">
+                                        <Activity className="w-5 h-5 group-hover:rotate-12 transition-transform duration-200" aria-hidden="true" />
+                                    </div>
+                                    <div className="flex flex-col items-start leading-tight">
+                                        <span className="font-bold text-sm tracking-wide">View Linked Battle Scar</span>
+                                        <span className="text-[10px] opacity-60 font-mono uppercase">Engineering Post-Mortem</span>
+                                    </div>
                                 </div>
-                                <Activity className="w-4 h-4 opacity-50 group-hover:opacity-100 group-hover:translate-x-1 transition-all duration-100" aria-hidden="true" />
+
+                                <div className="flex items-center gap-2 opacity-50 group-hover:opacity-100 group-hover:translate-x-1 transition-all">
+                                    <span className="text-[10px] font-bold uppercase hidden sm:inline">Explore Case</span>
+                                    <ChevronRight className="w-4 h-4" aria-hidden="true" />
+                                </div>
                             </button>
                         </div>
                     )}
