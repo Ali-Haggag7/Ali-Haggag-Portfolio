@@ -6,6 +6,7 @@ import { X, Link as LinkIcon, AlertTriangle, Lightbulb, Activity, ChevronRight }
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import { Skill, getStatusConfig, handleJumpToScar } from "./skills.data";
+import { useRouter } from "next/navigation";
 
 const isRaster = (src: string) => /\.(png|jpe?g)$/i.test(src);
 
@@ -34,6 +35,7 @@ export const SkillModal = memo(function SkillModal({
     const { icon: StatusIcon, bg, color } = getStatusConfig(skill.status);
     const raster = isRaster(skill.icon);
     const dialogRef = useRef<HTMLDivElement>(null);
+    const router = useRouter();
 
     // Restore focus to the trigger element when the modal closes
     useEffect(() => {
@@ -178,7 +180,7 @@ export const SkillModal = memo(function SkillModal({
                         <div className="pt-6 border-t border-border">
                             <button
                                 type="button"
-                                onClick={() => handleJumpToScar(skill.scarId!, onClose)}
+                                onClick={() => handleJumpToScar(skill.scarId!, onClose, router)}
                                 className="w-full flex items-center justify-between p-4 rounded-xl border shadow-sm transition-all duration-200 
                                     bg-amber-500/5 hover:bg-amber-500/10 border-amber-500/20 text-amber-600 dark:text-amber-400 
                                     group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500/50"

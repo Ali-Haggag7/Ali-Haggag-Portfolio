@@ -48,6 +48,7 @@ export const ScarCard = memo(function ScarCard({ scar, index, isExpanded, onTogg
 
     return (
         <motion.div
+            id={`scar-card-${scar.id}`}
             variants={CARD_VARIANTS}
             initial="hidden"
             animate="visible"

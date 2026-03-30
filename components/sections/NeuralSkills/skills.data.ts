@@ -1,4 +1,5 @@
 import { Activity, CheckCircle2, FlaskConical } from "lucide-react";
+import {  } from 'next/navigation';
 
 export type Skill = {
     name: string;
@@ -47,7 +48,7 @@ export const technicalArsenal: SkillCategory[] = [
             { name: "Inngest", icon: "/skills/inngest.webp", status: "Battle-Tested", projects: ["Flurry v2.0"], scarId: "offline-sync" }, // Tied to background job sync logic
             { name: "Zod", icon: "/skills/zod.svg", status: "Battle-Tested", projects: ["Cybership API", "CS Arena", "Flurry v2.0"], scarId: "ddd-boundaries" },
             { name: "GraphQL", icon: "/skills/graphql.svg", status: "R&D / Exploring", projects: ["In-progress"], scarId: null },
-            { name: "Redis", icon: "/skills/redis.svg", status: "Production Ready", projects: ["Flurry v2.0 (Caching Layer)"], scarId: null },
+            { name: "Redis", icon: "/skills/redis.svg", status: "R&D / Exploring", projects: ["Infrastructure Lab"], scarId: null },
         ],
     },
     {
@@ -62,7 +63,7 @@ export const technicalArsenal: SkillCategory[] = [
     {
         title: "Auth & Security",
         skills: [
-            { name: "JWT", icon: "/skills/jwt.svg", status: "Battle-Tested", projects: ["Blog Pro", "Cybership API"], scarId: "enterprise-security" },
+            { name: "JWT", icon: "/skills/jwt.svg", status: "Battle-Tested", projects: ["Blog Pro", "Cybership API"], scarId: "api-fortress" },
             { name: "Clerk", icon: "/skills/clerk.svg", status: "Production Ready", projects: ["Flurry v2.0"], scarId: null },
             { name: "NextAuth", icon: "/skills/nextauth.svg", status: "Production Ready", projects: ["CS Arena"], scarId: null },
             { name: "OAuth", icon: "/skills/oauth.svg", status: "Production Ready", projects: ["CS Arena"], scarId: null, themeable: true },
@@ -141,9 +142,15 @@ const STATUS_CONFIG = {
 
 export const getStatusConfig = (status: Skill["status"]) => STATUS_CONFIG[status];
 
-export const handleJumpToScar = (scarId: string, callback: () => void) => {
-    callback();
+export const handleJumpToScar = (scarId: string, onClose: () => void, router: any) => {
+    onClose();
+
+    router.push(`?scar=${scarId}`, { scroll: false });
+
     setTimeout(() => {
-        document.getElementById("battle-scars")?.scrollIntoView({ behavior: "smooth" });
-    }, MODAL_EXIT_DURATION);
+        const element = document.getElementById("battle-scars");
+        if (element) {
+            element.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+    }, 300);
 };

@@ -1,16 +1,40 @@
 "use client";
 
-import { useState, useMemo, useCallback } from "react";
+import { useState, useMemo, useCallback, useEffect } from "react";
 import { AnimatePresence } from "framer-motion";
 import { Activity } from "lucide-react";
 import { scarsData, scarCategories } from "./scars.data";
 import { useStableMap } from "@/hooks/useStableMap";
 import { CategoryFilter } from "./CategoryFilter";
 import { ScarCard } from "./ScarCard";
+import { useSearchParams } from "next/navigation";
 
 export default function BattleScars() {
+    const searchParams = useSearchParams();
     const [activeCategory, setActiveCategory] = useState("All");
     const [expandedId, setExpandedId] = useState<string | null>(scarsData[0].id);
+
+    // Deep Linking Logic: On mount, check for ?scar=scarId in URL and auto-expand the corresponding card
+    useEffect(() => {
+        const scarIdParam = searchParams.get('scar');
+        if (scarIdParam) {
+            const targetScar = scarsData.find(s => s.id === scarIdParam);
+            if (targetScar) {
+                setExpandedId(scarIdParam);
+                setActiveCategory("All");
+
+                setTimeout(() => {
+                    const cardElement = document.getElementById(`scar-card-${scarIdParam}`);
+                    if (cardElement) {
+                        cardElement.scrollIntoView({
+                            behavior: "smooth",
+                            block: "center"
+                        });
+                    }
+                }, 400);
+            }
+        }
+    }, [searchParams]);
 
     const filteredScars = useMemo(
         () => activeCategory === "All" ? scarsData : scarsData.filter((s) => s.category === activeCategory),
@@ -69,6 +93,7 @@ export default function BattleScars() {
                     {filteredScars.map((scar, index) => (
                         <ScarCard
                             key={scar.id}
+                            id={`scar-card-${scar.id}`}
                             scar={scar}
                             index={index}
                             isExpanded={expandedId === scar.id}

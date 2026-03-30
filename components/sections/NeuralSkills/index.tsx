@@ -43,7 +43,6 @@ const SkillCategory = memo(function SkillCategory({
                     <SkillBadge
                         key={skill.name}
                         skill={skill}
-                        // Solution: Pass the primitive key (name) to the stable map
                         onClick={getHandler(skill.name)}
                     />
                 ))}

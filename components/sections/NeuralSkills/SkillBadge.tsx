@@ -24,12 +24,10 @@ export const SkillBadge = memo(function SkillBadge({
             aria-label={`View details for ${skill.name}`}
             className={cn(
                 "group relative flex items-center gap-2 px-3 py-2.5 rounded-xl",
-                // min-h ensures 44px touch target on mobile — WCAG 2.5.5
                 "min-h-[44px] border border-border/50 bg-card/50",
-                "transition-[transform,box-shadow,border-color,background-color] duration-200 ease-out",
-                "hover:bg-card hover:border-blue-500/50 hover:-translate-y-1 hover:shadow-lg hover:shadow-blue-500/10",
-                // will-change only on hover — 40+ permanent layers exhausts GPU compositor budget
-                "hover:will-change-transform",
+                "transition-all duration-200 ease-in-out",
+                "hover:bg-card hover:border-blue-500/50 hover:-translate-y-1.5 hover:shadow-xl hover:shadow-blue-500/10",
+                "will-change-transform",
                 "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500",
                 "active:scale-95 cursor-pointer"
             )}
