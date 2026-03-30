@@ -30,6 +30,8 @@ export default function BattleScars() {
                             behavior: "smooth",
                             block: "center"
                         });
+                        const newUrl = window.location.pathname;
+                        window.history.replaceState({}, '', newUrl);
                     }
                 }, 400);
             }
@@ -93,7 +95,6 @@ export default function BattleScars() {
                     {filteredScars.map((scar, index) => (
                         <ScarCard
                             key={scar.id}
-                            id={`scar-card-${scar.id}`}
                             scar={scar}
                             index={index}
                             isExpanded={expandedId === scar.id}
