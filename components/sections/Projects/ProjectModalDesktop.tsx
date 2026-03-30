@@ -154,17 +154,28 @@ export const ProjectModalDesktop = memo(function ProjectModalDesktop({
                                     href={demoHref}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="inline-flex items-center gap-1.5 px-4 py-1.5 text-sm font-semibold text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-500/10 hover:bg-blue-100 border border-blue-200 dark:border-blue-500/20 rounded-full transition-colors active:scale-95"
+                                    className="inline-flex items-center gap-1.5 px-4 py-1.5 text-sm font-bold 
+                                        text-blue-600 dark:text-blue-400 
+                                        bg-blue-50 dark:bg-blue-500/10 
+                                        hover:bg-blue-600 hover:text-white dark:hover:bg-blue-500 dark:hover:text-white
+                                        border border-blue-200 dark:border-blue-500/20 
+                                        rounded-full transition-all duration-300 active:scale-95 shadow-sm hover:shadow-blue-500/20"
                                 >
                                     <ExternalLink className="w-3.5 h-3.5" /> Live Demo
                                 </Link>
                             )}
+
                             {href && (
                                 <Link
                                     href={href}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="inline-flex items-center gap-1.5 px-4 py-1.5 text-sm font-semibold text-slate-700 dark:text-slate-300 bg-slate-100 dark:bg-slate-800/50 hover:bg-slate-200 border border-slate-200 dark:border-slate-700 rounded-full transition-colors active:scale-95"
+                                    className="inline-flex items-center gap-1.5 px-4 py-1.5 text-sm font-bold 
+                                        text-slate-700 dark:text-slate-300 
+                                        bg-slate-100 dark:bg-slate-800/50 
+                                        hover:bg-slate-900 hover:text-white dark:hover:bg-slate-100 dark:hover:text-slate-900
+                                        border border-slate-200 dark:border-slate-700 
+                                        rounded-full transition-all duration-300 active:scale-95 shadow-sm"
                                 >
                                     <Github className="w-3.5 h-3.5" /> {cta ?? "Source"}
                                 </Link>
