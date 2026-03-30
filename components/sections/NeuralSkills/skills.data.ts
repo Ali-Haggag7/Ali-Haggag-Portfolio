@@ -44,7 +44,7 @@ export const technicalArsenal: SkillCategory[] = [
         title: "ORM & API Layer",
         skills: [
             { name: "Prisma", icon: "/skills/prisma.svg", status: "Production Ready", projects: ["E-commerce Lab", "Real Time Chat Engine"], scarId: null },
-            { name: "Inngest", icon: "/skills/inngest.svg", status: "Battle-Tested", projects: ["Flurry v2.0"], scarId: "offline-sync" }, // Tied to background job sync logic
+            { name: "Inngest", icon: "/skills/inngest.webp", status: "Battle-Tested", projects: ["Flurry v2.0"], scarId: "offline-sync" }, // Tied to background job sync logic
             { name: "Zod", icon: "/skills/zod.svg", status: "Battle-Tested", projects: ["Cybership API", "CS Arena", "Flurry v2.0"], scarId: "ddd-boundaries" },
             { name: "GraphQL", icon: "/skills/graphql.svg", status: "R&D / Exploring", projects: ["In-progress"], scarId: null },
             { name: "Redis", icon: "/skills/redis.svg", status: "Production Ready", projects: ["Flurry v2.0 (Caching Layer)"], scarId: null },
