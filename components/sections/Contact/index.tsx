@@ -3,9 +3,9 @@
 
 import { motion } from "framer-motion";
 import { MagneticButton } from "./MagneticButton";
-import { Globe } from "./Globe";
+import { Suspense } from "react";
+import { GitHubStatsPanel } from "./GitHubStatsPanel";
 
-// All variants live in module scope — one allocation, zero re-creation.
 const fadeUp = {
     hidden: { opacity: 0, y: 20 },
     visible: { opacity: 1, y: 0 },
@@ -21,25 +21,37 @@ const scaleIn = {
     visible: { opacity: 1, scale: 1 },
 };
 
-const globeVariant = {
-    hidden: { opacity: 0, scale: 0.8 },
+const rightVariant = {
+    hidden: { opacity: 0, x: 30 },
     visible: {
         opacity: 1,
-        scale: 1,
-        transition: { duration: 0.8 },
+        x: 0,
+        transition: { duration: 0.6 },
     },
 };
 
-// Shared viewport config — same object ref passed to every motion element.
 const viewport = { once: true } as const;
 
-export default function ContactSection() {
+function StatsSkeleton() {
+    return (
+        <div className="w-full flex flex-col gap-4 animate-pulse">
+            <div className="grid grid-cols-2 gap-3">
+                {[...Array(4)].map((_, i) => (
+                    <div key={i} className="h-20 rounded-xl bg-muted/30" />
+                ))}
+            </div>
+            <div className="h-24 rounded-xl bg-muted/30" />
+            <div className="h-16 rounded-xl bg-muted/30" />
+        </div>
+    );
+}
+
+export default function ContactSection({ statsPanel }: { statsPanel: React.ReactNode }) {
     return (
         <section
             id="contact"
             className="py-32 w-full relative overflow-hidden flex items-center justify-center"
         >
-            {/* Static glow — moved to CSS class, no inline style object on render */}
             <div className="contact-glow" aria-hidden="true" />
 
             <div className="container mx-auto px-4 flex flex-col lg:flex-row items-center justify-between gap-16 relative z-10">
@@ -47,7 +59,6 @@ export default function ContactSection() {
                 {/* ── Left column ── */}
                 <div className="w-full lg:w-1/2 flex flex-col items-center text-center lg:items-start lg:text-left">
 
-                    {/* Available badge */}
                     <motion.div
                         variants={fadeUp}
                         initial="hidden"
@@ -62,7 +73,6 @@ export default function ContactSection() {
                         Available for Remote Opportunities
                     </motion.div>
 
-                    {/* Heading */}
                     <motion.h2
                         variants={fadeUpFar}
                         initial="hidden"
@@ -77,7 +87,6 @@ export default function ContactSection() {
                         </span>
                     </motion.h2>
 
-                    {/* Body */}
                     <motion.p
                         variants={fadeUp}
                         initial="hidden"
@@ -91,7 +100,6 @@ export default function ContactSection() {
                         globe. Distance is just a detail.
                     </motion.p>
 
-                    {/* CTA — MagneticButton handles its own GPU layer, no wrapper needed */}
                     <motion.div
                         variants={scaleIn}
                         initial="hidden"
@@ -105,20 +113,18 @@ export default function ContactSection() {
                     </motion.div>
                 </div>
 
-                {/* ── Globe column ── */}
+                {/* ── Right column — GitHub Stats ── */}
                 <motion.div
-                    variants={globeVariant}
+                    variants={rightVariant}
                     initial="hidden"
                     whileInView="visible"
                     viewport={viewport}
-                    className="w-full lg:w-1/2 flex items-center justify-center mt-10 lg:mt-0"
-                    // Promote to its own compositor layer early — prevents jank on entry animation.
-                    style={{ willChange: "transform, opacity" }}
+                    className="w-full lg:w-1/2 flex items-start justify-center mt-10 lg:mt-0"
                 >
-                    {/* Single sizing wrapper — Globe inherits w-full / aspect-square internally */}
-                    <div className="relative w-full max-w-[600px] aspect-square">
-                        <div className="globe-inner-glow absolute inset-0 rounded-full pointer-events-none" aria-hidden="true" />
-                        <Globe className="w-full h-full relative z-10" />
+                    <div className="w-full max-w-md">
+                        <Suspense fallback={<StatsSkeleton />}>
+                            {statsPanel}
+                        </Suspense>
                     </div>
                 </motion.div>
 
