@@ -182,11 +182,11 @@ export const SkillModal = memo(function SkillModal({
                                 type="button"
                                 onClick={() => handleJumpToScar(skill.scarId!, onClose, router)}
                                 className="w-full flex items-center justify-between p-4 rounded-xl border shadow-sm transition-all duration-200 
-                                    bg-amber-500/5 hover:bg-amber-500/10 border-amber-500/20 text-amber-600 dark:text-amber-400 
-                                    group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500/50"
+                                    bg-violet-500/10 hover:bg-violet-500/20 border-violet-500/20 text-violet-600 dark:text-violet-400 
+                                    group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500/50"
                             >
                                 <div className="flex items-center gap-3">
-                                    <div className="p-2 rounded-lg bg-amber-500/10 group-hover:bg-amber-500/20 transition-colors">
+                                    <div className="p-2 rounded-lg bg-violet-500/10 group-hover:bg-violet-500/20 transition-colors">
                                         <Activity className="w-5 h-5 group-hover:rotate-12 transition-transform duration-200" aria-hidden="true" />
                                     </div>
                                     <div className="flex flex-col items-start leading-tight">

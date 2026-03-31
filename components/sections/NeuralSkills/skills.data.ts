@@ -22,19 +22,19 @@ export const technicalArsenal: SkillCategory[] = [
         title: "Frontend",
         skills: [
             { name: "Next.js 15", icon: "/skills/nextjs.svg", status: "Battle-Tested", projects: ["Flurry v2.0", "CS Arena", "My Portfolio"], scarId: "cascading-filters-race", themeable: true },
-            { name: "React", icon: "/skills/react.svg", status: "Battle-Tested", projects: ["Flurry v2.0", "CS Arena", "Gemini Clone"], scarId: null },
+            { name: "React", icon: "/skills/react.svg", status: "Production Ready", projects: ["Flurry v2.0", "CS Arena", "Gemini Clone"], scarId: null },
             { name: "TypeScript", icon: "/skills/typescript.svg", status: "Battle-Tested", projects: ["Flurry v2.0", "Cybership API", "My Portfolio"], scarId: "ddd-boundaries" },
             { name: "JavaScript", icon: "/skills/javascript.svg", status: "Production Ready", projects: ["Legacy Projects", "Core Logic"], scarId: null },
             { name: "Redux", icon: "/skills/redux.svg", status: "Production Ready", projects: ["Blog Pro", "Flurry v2.0"], scarId: null },
-            { name: "Tailwind CSS", icon: "/skills/tailwindcss.svg", status: "Battle-Tested", projects: ["All Modern Projects"], scarId: null },
+            { name: "Tailwind CSS", icon: "/skills/tailwindcss.svg", status: "Production Ready", projects: ["All Modern Projects"], scarId: null },
             { name: "Bootstrap", icon: "/skills/bootstrap.svg", status: "Production Ready", projects: ["Legacy Web Projects"], scarId: null },
         ],
     },
     {
         title: "Backend",
         skills: [
-            { name: "Node.js", icon: "/skills/nodejs.svg", status: "Battle-Tested", projects: ["Cybership API", "Blog Pro", "Flurry v2.0"], scarId: null },
-            { name: "MongoDB", icon: "/skills/mongodb.svg", status: "Battle-Tested", projects: ["Flurry v2.0", "Blog Pro", "Admin Dashboard"], scarId: null },
+            { name: "Node.js", icon: "/skills/nodejs.svg", status: "Production Ready", projects: ["Cybership API", "Blog Pro", "Flurry v2.0"], scarId: null },
+            { name: "MongoDB", icon: "/skills/mongodb.svg", status: "Production Ready", projects: ["Flurry v2.0", "Blog Pro", "Admin Dashboard"], scarId: null },
             { name: "Firebase", icon: "/skills/firebase.svg", status: "Production Ready", projects: ["Flurry v2.0", "Realtime Chat Engine"], scarId: null },
             { name: "Supabase", icon: "/skills/supabase.svg", status: "R&D / Exploring", projects: ["E-commerce Lab"], scarId: null },
             { name: "PostgreSQL", icon: "/skills/postgresql.svg", status: "R&D / Exploring", projects: ["E-commerce Lab"], scarId: null },
@@ -56,7 +56,7 @@ export const technicalArsenal: SkillCategory[] = [
         skills: [
             { name: "Socket.io", icon: "/skills/socketio.svg", status: "Battle-Tested", projects: ["Flurry v2.0"], scarId: "webrtc-latency", themeable: true },
             { name: "WebRTC", icon: "/skills/webrtc.svg", status: "Battle-Tested", projects: ["Flurry v2.0"], scarId: "webrtc-latency", themeable: true },
-            { name: "Google Gemini", icon: "/skills/google.svg", status: "Battle-Tested", projects: ["Flurry v2.0", "Gemini Clone", "My Portfolio"], scarId: null },
+            { name: "Google Gemini", icon: "/skills/google.svg", status: "Production Ready", projects: ["Flurry v2.0", "Gemini Clone", "My Portfolio"], scarId: null },
             { name: "PWA", icon: "/skills/pwa.svg", status: "Battle-Tested", projects: ["Flurry v2.0", "CS Arena", "My Portfolio"], scarId: "offline-sync" },
         ],
     },
@@ -75,13 +75,13 @@ export const technicalArsenal: SkillCategory[] = [
             { name: "Sanity", icon: "/skills/sanity.svg", status: "Production Ready", projects: ["CS Arena"], scarId: null, themeable: true },
             { name: "Zustand", icon: "/skills/zustand.png", status: "Production Ready", projects: ["Real Time Chat Engine"], scarId: null },
             { name: "React Query", icon: "/skills/reactquery.svg", status: "Production Ready", projects: ["Flurry v2.0 (Optimistic UI)"], scarId: null },
-            { name: "I18next", icon: "/skills/i18next.svg", status: "Battle-Tested", projects: ["Flurry v2.0", "CS Arena"], scarId: null },
+            { name: "I18next", icon: "/skills/i18next.svg", status: "Production Ready", projects: ["Flurry v2.0", "CS Arena"], scarId: null },
         ],
     },
     {
         title: "Deploy & DevOps",
         skills: [
-            { name: "Vercel", icon: "/skills/vercel.svg", status: "Battle-Tested", projects: ["All Modern Apps"], scarId: null, themeable: true },
+            { name: "Vercel", icon: "/skills/vercel.svg", status: "Production Ready", projects: ["All Modern Apps"], scarId: null, themeable: true },
             { name: "DigitalOcean", icon: "/skills/digitalocean.svg", status: "R&D / Exploring", projects: ["Droplet Experimentation"], scarId: null },
             { name: "Azure", icon: "/skills/azure.svg", status: "R&D / Exploring", projects: ["Cloud Architecture Lab"], scarId: null },
             { name: "Sevalla", icon: "/skills/sevalla.jpeg", status: "Production Ready", projects: ["Flurry v2.0 Backend"], scarId: null },
@@ -106,7 +106,7 @@ export const technicalArsenal: SkillCategory[] = [
         title: "Design & UI Libs",
         skills: [
             { name: "Figma", icon: "/skills/figma.svg", status: "Production Ready", projects: ["UI/UX Prototyping"], scarId: null },
-            { name: "Shadcn/UI", icon: "/skills/shadcn.svg", status: "Battle-Tested", projects: ["CS Arena", "My Portfolio"], scarId: null, themeable: true },
+            { name: "Shadcn/UI", icon: "/skills/shadcn.svg", status: "Production Ready", projects: ["CS Arena", "My Portfolio"], scarId: null, themeable: true },
             { name: "Material UI", icon: "/skills/mui.svg", status: "Production Ready", projects: ["Youtube Clone"], scarId: null },
             { name: "Magic UI", icon: "/skills/magicui.svg", status: "Production Ready", projects: ["Portfolio Motion"], scarId: null },
         ],
@@ -114,7 +114,7 @@ export const technicalArsenal: SkillCategory[] = [
     {
         title: "CS & Tools",
         skills: [
-            { name: "C++", icon: "/skills/cpp.svg", status: "Battle-Tested", projects: ["Competitive Programming", "Algorithms"], scarId: null },
+            { name: "C++", icon: "/skills/cpp.svg", status: "Production Ready", projects: ["Competitive Programming", "Algorithms"], scarId: null },
             { name: "Postman", icon: "/skills/postman.svg", status: "Production Ready", projects: ["API Lifecycle Testing"], scarId: null },
             { name: "Git", icon: "/skills/git.svg", status: "Production Ready", projects: ["Version Control"], scarId: null },
             { name: "GitHub", icon: "/skills/github.svg", status: "Production Ready", projects: ["Open Source / CI/CD"], scarId: null, themeable: true },
@@ -124,8 +124,8 @@ export const technicalArsenal: SkillCategory[] = [
 
 const STATUS_CONFIG = {
     "Battle-Tested": {
-        color: "text-amber-600 dark:text-amber-400",
-        bg: "bg-amber-500/10",
+        color: "text-violet-600 dark:text-violet-400",
+        bg: "bg-violet-500/10",
         icon: Activity
     },
     "Production Ready": {
