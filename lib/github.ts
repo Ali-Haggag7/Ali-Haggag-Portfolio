@@ -8,6 +8,23 @@ export interface GitHubStats {
     topLanguages: { name: string; percentage: number }[];
 }
 
+function getFallbackStats(): GitHubStats {
+    return {
+        totalStars: 180,
+        totalCommits: 373,
+        totalRepos: 18,
+        contributions2026: 408,
+        currentStreak: 18,
+        longestStreak: 16,
+        topLanguages: [
+            { name: "JavaScript", percentage: 48 },
+            { name: "TypeScript", percentage: 24 },
+            { name: "HTML", percentage: 14 },
+            { name: "CSS", percentage: 12 },
+        ],
+    };
+}
+
 export async function getGitHubStats(): Promise<GitHubStats> {
     const headers = {
         Authorization: `Bearer ${process.env.GITHUB_TOKEN}`,
@@ -19,12 +36,14 @@ export async function getGitHubStats(): Promise<GitHubStats> {
         next: { revalidate: 3600 },
     });
     const user = await userRes.json();
+    if (!user || user.message) return getFallbackStats();
 
     const reposRes = await fetch(
         "https://api.github.com/users/Ali-Haggag7/repos?per_page=100",
         { headers, next: { revalidate: 3600 } }
     );
     const repos = await reposRes.json();
+    if (!Array.isArray(repos)) return getFallbackStats();
 
     const totalStars = repos.reduce(
         (acc: number, r: { stargazers_count: number }) => acc + r.stargazers_count,
@@ -97,7 +116,7 @@ export async function getGitHubStats(): Promise<GitHubStats> {
         (collection?.restrictedContributionsCount ?? 0);
 
     const contributions2026 =
-    collection?.contributionCalendar?.totalContributions ?? 0;
+        collection?.contributionCalendar?.totalContributions ?? 0;
 
     const days: { date: string; count: number }[] =
         collection?.contributionCalendar?.weeks?.flatMap(
