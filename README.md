@@ -120,7 +120,7 @@ Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
 | **Desktop View** | **Mobile PWA View** |
 | :---: | :---: |
-| <img src="/desktop-view.png" width="100%" /> | <img src="/mobile-view.png" width="100%" /> |
+| <img src="/contact-section.png" width="100%" /> | <img src="/mobile-view.png" width="100%" /> |
 
 ---
 
