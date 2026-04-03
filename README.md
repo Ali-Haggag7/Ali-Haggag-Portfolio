@@ -15,7 +15,7 @@
     <img src="https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white" />
   </p>
   <br />
-  <img src="/main-preview.png" alt="Project Preview" width="100%" style="border-radius: 10px;" />
+  <img src="/hero-section.png" alt="Project Preview" width="100%" style="border-radius: 10px;" />
 </div>
 
 <br />
