@@ -36,6 +36,12 @@ export async function getGitHubStats(): Promise<GitHubStats> {
             headers,
             next: { revalidate: 3600 },
         });
+        if (!userRes.ok) {
+            console.error(`GitHub User API error: Status ${userRes.status} ${userRes.statusText}`);
+            const errorText = await userRes.text().catch(() => "");
+            console.error("GitHub User API response body:", errorText);
+            return getFallbackStats();
+        }
         const user = await userRes.json();
         if (!user || user.message) return getFallbackStats();
 
@@ -43,6 +49,12 @@ export async function getGitHubStats(): Promise<GitHubStats> {
             "https://api.github.com/users/Ali-Haggag7/repos?per_page=100",
             { headers, next: { revalidate: 3600 } }
         );
+        if (!reposRes.ok) {
+            console.error(`GitHub Repos API error: Status ${reposRes.status} ${reposRes.statusText}`);
+            const errorText = await reposRes.text().catch(() => "");
+            console.error("GitHub Repos API response body:", errorText);
+            return getFallbackStats();
+        }
         const repos = await reposRes.json();
         if (!Array.isArray(repos)) return getFallbackStats();
 
@@ -59,7 +71,13 @@ export async function getGitHubStats(): Promise<GitHubStats> {
                 fetch(repo.languages_url, {
                     headers,
                     next: { revalidate: 3600 },
-                }).then((r) => r.json())
+                }).then(async (r) => {
+                    if (!r.ok) {
+                        console.error(`GitHub Languages API error for ${repo.languages_url}: Status ${r.status} ${r.statusText}`);
+                        return {};
+                    }
+                    return r.json().catch(() => ({}));
+                })
             )
         );
 
@@ -109,7 +127,19 @@ export async function getGitHubStats(): Promise<GitHubStats> {
             next: { revalidate: 3600 },
         });
 
+        if (!graphqlRes.ok) {
+            console.error(`GitHub GraphQL API error: Status ${graphqlRes.status} ${graphqlRes.statusText}`);
+            const errorText = await graphqlRes.text().catch(() => "");
+            console.error("GitHub GraphQL response body:", errorText);
+            return getFallbackStats();
+        }
+
         const gql = await graphqlRes.json();
+        if (gql?.errors) {
+            console.error("GitHub GraphQL query errors:", JSON.stringify(gql.errors, null, 2));
+            return getFallbackStats();
+        }
+
         const collection = gql?.data?.user?.contributionsCollection;
 
         const totalCommits =
