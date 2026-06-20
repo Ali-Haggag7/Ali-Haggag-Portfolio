@@ -6,6 +6,7 @@ import BattleScars from "@/components/sections/BattleScars";
 import Timeline from "@/components/sections/Timeline";
 import Services from "@/components/sections/Services";
 import ContactSection from "@/components/sections/Contact";
+import { BattleScarsSkeleton } from "@/components/sections/BattleScars/Skeleton";
 import { GitHubStatsPanel } from "@/components/sections/Contact/GitHubStatsPanel";
 import { Suspense } from "react";
 
@@ -15,7 +16,7 @@ export default function Home() {
       <HeroSection />
       <NeuralSkills />
       <ProjectsSection />
-      <Suspense fallback={<div className="h-20" />}>
+      <Suspense fallback={<BattleScarsSkeleton />}>
         <BattleScars />
       </Suspense>
       <Timeline />

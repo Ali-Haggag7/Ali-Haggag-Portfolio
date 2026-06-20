@@ -13,7 +13,7 @@ const TerminalWindow = dynamic(
     {
         ssr: false,
         loading: () => (
-            <div className="w-full max-w-3xl h-[360px] bg-slate-950/40 rounded-xl border border-slate-800/40 flex items-center justify-center font-mono text-gray-500 animate-pulse">
+            <div className="w-full max-w-3xl mx-auto mb-8 h-[360px] bg-slate-950/40 rounded-xl border border-slate-800/40 flex items-center justify-center font-mono text-gray-500 animate-pulse">
                 Initializing Terminal...
             </div>
         ),

@@ -50,7 +50,7 @@ export default memo(function Chatbot() {
     const [bubbleMessage, setBubbleMessage] = useState("");
     const [bubblePrompt, setBubblePrompt] = useState("");
 
-    const { messages, sendMessage, status } = useChat({
+    const { messages, sendMessage, status, error } = useChat({
         transport: new DefaultChatTransport({ api: "/api/chat" }),
     });
 
@@ -233,6 +233,21 @@ export default memo(function Chatbot() {
 
                     {/* Isolated memo — its mount/unmount won't re-render the message list */}
                     <TypingIndicator visible={isLoading} />
+
+                    {error && (
+                        <motion.div
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            className="flex gap-3 max-w-[85%] mr-auto"
+                        >
+                            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full shadow-sm mt-1 bg-red-500/10 border border-red-500/30 text-red-500">
+                                <Bot className="h-4 w-4" aria-hidden />
+                            </div>
+                            <div className="rounded-2xl px-4 py-3 text-sm leading-relaxed shadow-sm bg-red-500/10 border border-red-500/20 text-red-600 dark:text-red-400 font-medium">
+                                ⚠️ Connection error: Unable to reach the AI assistant. Please try again.
+                            </div>
+                        </motion.div>
+                    )}
 
                     <div ref={messagesEndRef} aria-hidden />
                 </div>
