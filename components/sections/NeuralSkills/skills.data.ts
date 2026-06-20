@@ -47,7 +47,7 @@ export const technicalArsenal: SkillCategory[] = [
             { name: "Prisma", icon: "/skills/prisma.svg", status: "Production Ready", projects: ["E-commerce Lab", "Real Time Chat Engine", "Logic Arena"], scarId: null },
             { name: "Inngest", icon: "/skills/inngest.webp", status: "Battle-Tested", projects: ["Flurry v2.0"], scarId: "offline-sync" }, // Tied to background job sync logic
             { name: "Zod", icon: "/skills/zod.svg", status: "Battle-Tested", projects: ["Cybership API", "CS Arena", "Flurry v2.0", "Logic Arena"], scarId: "ddd-boundaries" },
-            { name: "GraphQL", icon: "/skills/graphql.svg", status: "R&D / Exploring", projects: ["In-progress"], scarId: null },
+            { name: "GraphQL", icon: "/skills/graphql.svg", status: "Battle-Tested", projects: ["Portfolio"], scarId: "graphql-lying-zeros" },
             { name: "Redis", icon: "/skills/redis.svg", status: "Battle-Tested", projects: ["Logic Arena"], scarId: "redis-ipv6-docker" },
         ],
     },

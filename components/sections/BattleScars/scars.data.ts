@@ -519,6 +519,38 @@ const rate = CarrierRate.parse(external); // throws at the boundary`,
         impact:
             "Blocked 100% of basic automated exploits during testing and ensured zero unauthorized data access in production.",
     },
+    {
+        id: "graphql-lying-zeros",
+        category: "Architecture",
+        icon: WifiOff,
+        title: "The GraphQL That Lied With Zeros",
+        project: "My Portfolio v2.0.0",
+        severity: "medium",
+        timeToSolve: "2 hours",
+        badges: ["GraphQL", "Next.js", "API Safety"],
+        symptom:
+            "The GitHub Activity card on the Hero section showed 0 for Commits, Contributions, and Day Streak, while Total Stars, repo count, and Top Languages all displayed correctly.",
+        rootCause:
+            "The GitHub personal access token was revoked, causing API requests to fail. REST API calls returned stale cached data, masking the failure, while the GraphQL query returned a 401 status that resolved silently to undefined due to optional chaining.",
+        solution:
+            "Rotated the token, implemented strict .ok status checks on REST/GraphQL calls, and checked for gql.errors in the GraphQL response body, logging errors to console immediately on failure.",
+        problem:
+            "The GitHub personal access token was revoked. Because Next.js was caching previous REST responses (revalidate: 3600), the profile and repositories calls succeeded from cache, masking the auth failure. However, the GraphQL query for contributions returned a 401 Unauthorized status. Due to loose optional chaining on the response (gql?.data?.user?.contributionsCollection) and a lack of HTTP status or gql.errors checks, the failure silently resolved to undefined, mapping all metrics to 0 with zero console logs.",
+        impact:
+            "Authentication and API errors are logged immediately to the console in development, preventing silent data degradation and ensuring high visibility of token status.",
+        codeSnippet: `// before:
+const gql = await graphqlRes.json();
+// after:
+if (!graphqlRes.ok) {
+  console.error("GraphQL API error: Status " + graphqlRes.status);
+  return getFallbackStats();
+}
+const gql = await graphqlRes.json();
+if (gql?.errors) {
+  console.error("GraphQL query errors:", gql.errors);
+  return getFallbackStats();
+}`,
+    },
 ];
 
 export const scarCategories = ["All", ...new Set(scarsData.map((s) => s.category))];
