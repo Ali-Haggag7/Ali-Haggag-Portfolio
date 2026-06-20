@@ -1,12 +1,32 @@
 "use client";
 
-import { useRef, useEffect, memo } from "react";
-import { Github, ExternalLink, Target, Zap, Activity, X } from "lucide-react";
+import { useRef, useEffect, memo, useCallback } from "react";
+import { Github, ExternalLink, Target, Zap, Activity, X, AlertTriangle } from "lucide-react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
-import { ProjectFeature } from "./projects.data";
+import { useRouter } from "next/navigation";
+import { ProjectFeature, PILL_CATEGORY_VAR } from "./projects.data";
+import { scarsData } from "../BattleScars/scars.data";
+import { handleJumpToScar } from "../NeuralSkills/skills.data";
 import { cn } from "@/lib/utils";
+
+/** Max pills shown in modal */
+const MODAL_PILL_LIMIT = 8;
+
+/** Severity badge label map */
+const SEVERITY_LABEL: Record<string, string> = {
+    critical: "CRITICAL",
+    high: "HIGH",
+    medium: "MEDIUM",
+};
+
+/** Severity CSS variable map */
+const SEVERITY_VAR: Record<string, string> = {
+    critical: "var(--scar-critical)",
+    high: "var(--scar-high)",
+    medium: "var(--scar-medium)",
+};
 
 // Stable animation variants to prevent unnecessary re-renders
 const BACKDROP_VARIANTS = {
@@ -25,6 +45,18 @@ const MODAL_VARIANTS = {
         opacity: 0, y: 12, scale: 0.97,
         transition: { duration: 0.16, ease: "easeIn" },
     },
+} as const;
+
+const STAGGER_CONTAINER = {
+    hidden: {},
+    visible: {
+        transition: { staggerChildren: 0.06, delayChildren: 0.1 },
+    },
+} as const;
+
+const STAGGER_ITEM = {
+    hidden: { opacity: 0, y: 12 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.28, ease: "easeOut" } },
 } as const;
 
 const AutopsyCard = memo(function AutopsyCard({
@@ -54,6 +86,27 @@ const AutopsyCard = memo(function AutopsyCard({
     );
 });
 
+const MetricCardComponent = memo(function MetricCardComponent({
+    value,
+    label,
+}: {
+    value: string;
+    label: string;
+}) {
+    return (
+        <div
+            className="flex flex-col items-center justify-center px-4 py-3 rounded-xl border border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/50 transition-all duration-300 ease-out hover:shadow-[0_0_20px_var(--metric-glow)] hover:-translate-y-0.5 hover:border-slate-300 dark:hover:border-slate-600"
+        >
+            <span className="text-lg font-extrabold text-slate-900 dark:text-white leading-tight">
+                {value}
+            </span>
+            <span className="text-[10px] font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider mt-1 text-center leading-tight">
+                {label}
+            </span>
+        </div>
+    );
+});
+
 export const ProjectModalDesktop = memo(function ProjectModalDesktop({
     feature,
     onClose,
@@ -64,9 +117,16 @@ export const ProjectModalDesktop = memo(function ProjectModalDesktop({
     const {
         id, name, description, videoSrc, imageSrc,
         isGradientBg, gradientClass, autopsy, demoHref, href, cta,
+        techStack, metrics, scarIds,
     } = feature;
 
+    const router = useRouter();
     const dialogRef = useRef<HTMLElement>(null);
+
+    const visiblePills = techStack.slice(0, MODAL_PILL_LIMIT);
+    const relatedScars = scarIds
+        .map((sid) => scarsData.find((s) => s.id === sid))
+        .filter((s): s is (typeof scarsData)[number] => Boolean(s));
 
     // Focus management for accessibility
     useEffect(() => {
@@ -74,6 +134,13 @@ export const ProjectModalDesktop = memo(function ProjectModalDesktop({
         dialogRef.current?.focus();
         return () => previousFocus?.focus();
     }, []);
+
+    const handleScarClick = useCallback(
+        (scarId: string) => {
+            handleJumpToScar(scarId, onClose, router);
+        },
+        [onClose, router]
+    );
 
     return (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-12 pointer-events-auto">
@@ -113,12 +180,12 @@ export const ProjectModalDesktop = memo(function ProjectModalDesktop({
                     type="button"
                     aria-label="Close details"
                     onClick={onClose}
-                    className="absolute top-6 right-6 z-50 p-2.5 rounded-full bg-black/20 hover:bg-black/40 backdrop-blur-md text-white transition-[background-color,transform] duration-150 active:scale-95"
+                    className="cursor-pointer absolute top-6 right-6 z-50 p-2.5 rounded-full bg-black/20 hover:bg-black/40 hover:scale-110 backdrop-blur-md text-white transition-all duration-200 active:scale-95"
                 >
                     <X className="w-5 h-5" aria-hidden="true" />
                 </button>
 
-                {/* Hero Section */}
+                {/* Hero Section — video stays here as the hero background */}
                 <div className="relative w-full aspect-video shrink-0 bg-slate-100 dark:bg-black overflow-hidden">
                     {videoSrc ? (
                         <video
@@ -154,7 +221,7 @@ export const ProjectModalDesktop = memo(function ProjectModalDesktop({
                                     href={demoHref}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="inline-flex items-center gap-1.5 px-4 py-1.5 text-sm font-bold 
+                                    className="cursor-pointer inline-flex items-center gap-1.5 px-4 py-1.5 text-sm font-bold 
                                         text-blue-600 dark:text-blue-400 
                                         bg-blue-50 dark:bg-blue-500/10 
                                         hover:bg-blue-600 hover:text-white dark:hover:bg-blue-500 dark:hover:text-white
@@ -170,7 +237,7 @@ export const ProjectModalDesktop = memo(function ProjectModalDesktop({
                                     href={href}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="inline-flex items-center gap-1.5 px-4 py-1.5 text-sm font-bold 
+                                    className="cursor-pointer inline-flex items-center gap-1.5 px-4 py-1.5 text-sm font-bold 
                                         text-slate-700 dark:text-slate-300 
                                         bg-slate-100 dark:bg-slate-800/50 
                                         hover:bg-slate-900 hover:text-white dark:hover:bg-slate-100 dark:hover:text-slate-900
@@ -184,28 +251,106 @@ export const ProjectModalDesktop = memo(function ProjectModalDesktop({
                     </div>
                 </div>
 
-                {/* Content Section */}
-                {autopsy && (
-                    <div className="p-8 bg-white dark:bg-slate-950">
-                        <div className="grid grid-cols-3 gap-6">
-                            <AutopsyCard
-                                icon={Target} label="The Challenge" text={autopsy.challenge}
-                                accentClass="text-red-600 dark:text-red-400"
-                                borderHoverClass="hover:border-red-200 dark:hover:border-red-900/50"
-                            />
-                            <AutopsyCard
-                                icon={Activity} label="Architecture" text={autopsy.architecture}
-                                accentClass="text-emerald-600 dark:text-emerald-400"
-                                borderHoverClass="hover:border-emerald-200 dark:hover:border-emerald-900/50"
-                            />
-                            <AutopsyCard
-                                icon={Zap} label="The Impact" text={autopsy.impact}
-                                accentClass="text-blue-600 dark:text-blue-400"
-                                borderHoverClass="hover:border-blue-200 dark:hover:border-blue-900/50"
-                            />
+                {/* Staggered Content Body */}
+                <motion.div
+                    variants={STAGGER_CONTAINER}
+                    initial="hidden"
+                    animate="visible"
+                    className="flex flex-col gap-0"
+                >
+                    {/* Tech Stack Pills */}
+                    <motion.div variants={STAGGER_ITEM} className="px-8 pt-6 pb-2">
+                        <div className="flex flex-wrap gap-2">
+                            {visiblePills.map((pill) => (
+                                <span
+                                    key={pill.name}
+                                    className="inline-flex items-center px-3 py-1 text-xs font-semibold uppercase tracking-wide rounded-full border transition-all duration-200 ease-out cursor-default"
+                                    style={{
+                                        color: PILL_CATEGORY_VAR[pill.category],
+                                        borderColor: PILL_CATEGORY_VAR[pill.category],
+                                        backgroundColor: `color-mix(in srgb, ${PILL_CATEGORY_VAR[pill.category]} 8%, transparent)`,
+                                    }}
+                                >
+                                    {pill.name}
+                                </span>
+                            ))}
                         </div>
-                    </div>
-                )}
+                    </motion.div>
+
+                    {/* Case Study Panels */}
+                    {autopsy && (
+                        <motion.div variants={STAGGER_ITEM} className="p-8 bg-white dark:bg-slate-950">
+                            <div className="grid grid-cols-3 gap-6">
+                                <AutopsyCard
+                                    icon={Target} label="The Challenge" text={autopsy.challenge}
+                                    accentClass="text-red-600 dark:text-red-400"
+                                    borderHoverClass="hover:border-red-200 dark:hover:border-red-900/50"
+                                />
+                                <AutopsyCard
+                                    icon={Activity} label="Architecture" text={autopsy.architecture}
+                                    accentClass="text-emerald-600 dark:text-emerald-400"
+                                    borderHoverClass="hover:border-emerald-200 dark:hover:border-emerald-900/50"
+                                />
+                                <AutopsyCard
+                                    icon={Zap} label="The Impact" text={autopsy.impact}
+                                    accentClass="text-blue-600 dark:text-blue-400"
+                                    borderHoverClass="hover:border-blue-200 dark:hover:border-blue-900/50"
+                                />
+                            </div>
+                        </motion.div>
+                    )}
+
+                    {/* Key Metrics */}
+                    {metrics.length > 0 && (
+                        <motion.div variants={STAGGER_ITEM} className="px-8 pb-6">
+                            <h4 className="flex items-center gap-2 font-bold mb-4 uppercase text-[10px] tracking-wider text-slate-500 dark:text-slate-400">
+                                <Zap className="w-3.5 h-3.5" aria-hidden="true" />
+                                Key Metrics
+                            </h4>
+                            <div className="grid grid-cols-3 md:grid-cols-6 gap-3">
+                                {metrics.map((metric) => (
+                                    <MetricCardComponent
+                                        key={metric.label}
+                                        value={metric.value}
+                                        label={metric.label}
+                                    />
+                                ))}
+                            </div>
+                        </motion.div>
+                    )}
+
+                    {/* Battle Scars Involved */}
+                    {relatedScars.length > 0 && (
+                        <motion.div variants={STAGGER_ITEM} className="px-8 pb-8">
+                            <h4 className="flex items-center gap-2 font-bold mb-4 uppercase text-[10px] tracking-wider text-slate-500 dark:text-slate-400">
+                                <AlertTriangle className="w-3.5 h-3.5" aria-hidden="true" />
+                                Battle Scars Involved
+                            </h4>
+                            <div className="flex flex-wrap gap-2">
+                                {relatedScars.map((scar) => (
+                                    <button
+                                        key={scar.id}
+                                        type="button"
+                                        onClick={() => handleScarClick(scar.id)}
+                                        className="cursor-pointer inline-flex items-center gap-2 px-3 py-2 text-xs font-medium rounded-xl border border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/50 text-slate-700 dark:text-slate-300 hover:border-slate-300 dark:hover:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-800/80  transition-all duration-200 ease-out active:scale-[0.98] min-h-[44px]"
+                                    >
+                                        <span className="truncate max-w-[200px]">{scar.title}</span>
+                                        <span
+                                            className="shrink-0 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider rounded"
+                                            style={{
+                                                color: SEVERITY_VAR[scar.severity],
+                                                backgroundColor: "transparent",
+                                                border: `1px solid ${SEVERITY_VAR[scar.severity]}`,
+                                            }}
+                                        >
+                                            {SEVERITY_LABEL[scar.severity]}
+                                        </span>
+                                    </button>
+                                ))}
+                            </div>
+                        </motion.div>
+                    )}
+                </motion.div>
             </motion.article>
         </div>
     );

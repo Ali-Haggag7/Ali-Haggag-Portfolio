@@ -73,6 +73,17 @@
       opacity: 1;
     }
   }
+
+  @keyframes live-pulse {
+    0%,
+    100% {
+      opacity: 1;
+    }
+
+    50% {
+      opacity: 0.4;
+    }
+  }
 }
 
 @layer base {
@@ -124,6 +135,19 @@
     --scar-code-fg: #c7d2e0;
     --scar-code-border: rgba(148, 163, 184, 0.18);
 
+    /* Project tech pill category colors — aliased to existing design tokens */
+    --pill-frontend: var(--tl-accent-blue);
+    --pill-backend: var(--tl-accent-emerald);
+    --pill-realtime: var(--tl-accent-purple);
+    --pill-infra: var(--tl-accent-yellow);
+    --pill-language: var(--scar-high);
+
+    /* Project metric card hover glow */
+    --metric-glow: var(--tl-accent-blue);
+
+    /* Project live indicator */
+    --live-dot: var(--tl-accent-emerald);
+
     /* Namespaced — avoids collision with third-party --gap / --duration */
     --marquee-gap: 1rem;
     --marquee-duration: 40s;
@@ -166,6 +190,14 @@
     --scar-code-bg: #0a0e1a;
     --scar-code-fg: #c7d2e0;
     --scar-code-border: rgba(148, 163, 184, 0.18);
+
+    --pill-frontend: var(--tl-accent-blue);
+    --pill-backend: var(--tl-accent-emerald);
+    --pill-realtime: var(--tl-accent-purple);
+    --pill-infra: var(--tl-accent-yellow);
+    --pill-language: var(--scar-high);
+    --metric-glow: var(--tl-accent-blue);
+    --live-dot: var(--tl-accent-emerald);
   }
 
   /* Light — only active when next-themes adds .light class */
@@ -207,6 +239,14 @@
     --scar-code-bg: #0f172a;
     --scar-code-fg: #e2e8f0;
     --scar-code-border: rgba(15, 23, 42, 0.12);
+
+    --pill-frontend: var(--tl-accent-blue);
+    --pill-backend: var(--tl-accent-emerald);
+    --pill-realtime: var(--tl-accent-purple);
+    --pill-infra: var(--tl-accent-yellow);
+    --pill-language: var(--scar-high);
+    --metric-glow: var(--tl-accent-blue);
+    --live-dot: var(--tl-accent-emerald);
   }
 
   html {

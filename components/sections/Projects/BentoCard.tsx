@@ -11,7 +11,10 @@ import {
 import { Activity } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
-import { ProjectFeature } from "./projects.data";
+import { ProjectFeature, PILL_CATEGORY_VAR } from "./projects.data";
+
+/** Max pills shown on a card to keep it compact */
+const CARD_PILL_LIMIT = 4;
 
 // Custom hook to detect mobile view using ResizeObserver for better performance and responsiveness
 function useIsMobile(): RefObject<boolean> {
@@ -93,9 +96,12 @@ export const BentoCard = memo(function BentoCard({
         imageSrc,
         isGradientBg,
         gradientClass,
+        techStack,
+        demoHref,
     } = feature;
 
     const isColSpan2 = className.includes("md:col-span-2") || className.includes("col-span-2");
+    const visiblePills = techStack.slice(0, CARD_PILL_LIMIT);
 
     return (
         <button
@@ -109,16 +115,19 @@ export const BentoCard = memo(function BentoCard({
             aria-label={`View details for ${name}`}
             className={cn(
                 "group relative flex flex-col justify-end overflow-hidden rounded-2xl min-h-[22rem] w-full text-left",
-                "will-change-transform bg-white dark:bg-black border border-slate-200 dark:border-white/10 shadow-sm",
-                "transition-[transform,box-shadow,border-color] duration-300 ease-out",
+                "will-change-transform bg-white dark:bg-black border border-slate-200 dark:border-white/10 shadow-sm translate-y-0",
+                "transition-all duration-500 ease-[cubic-bezier(0.25,0.8,0.25,1)]",
                 "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50 cursor-pointer",
-                "hover:shadow-xl hover:border-blue-500/50 hover:-translate-y-1",
+                "hover:shadow-xl hover:border-blue-500/50 hover:-translate-y-1.5",
                 className
             )}
         >
             {/* Media Layer */}
             <div className="absolute inset-0 z-0 overflow-hidden rounded-2xl bg-slate-100 dark:bg-black">
-                <div className="h-full w-full transition-transform duration-700 ease-out group-hover:scale-105">
+                <div
+                    className="h-full w-full transition-all duration-700 ease-out group-hover:scale-[1.03] group-hover:brightness-[1.08]"
+                    style={{ willChange: "transform, filter" }}
+                >
                     {isGradientBg ? (
                         <div className={cn("h-full w-full bg-gradient-to-br", gradientClass)} />
                     ) : imageSrc ? (
@@ -155,8 +164,25 @@ export const BentoCard = memo(function BentoCard({
             <div aria-hidden="true" className="absolute inset-0 z-10 bg-gradient-to-t from-black/90 via-black/40 to-transparent pointer-events-none" />
 
             <div className="relative z-20 flex flex-col gap-2 p-6 mt-auto">
-                <div className="mb-2 inline-flex h-10 w-10 items-center justify-center rounded-lg bg-white/20 backdrop-blur-md border border-white/20 transition-transform duration-300 group-hover:scale-110">
-                    <Icon className="h-5 w-5 text-white" aria-hidden="true" />
+                {/* Icon + LIVE indicator row */}
+                <div className="mb-2 flex items-center gap-3">
+                    <div className="inline-flex h-10 w-10 items-center justify-center rounded-lg bg-white/20 backdrop-blur-md border border-white/20 transition-transform duration-300 group-hover:scale-110">
+                        <Icon className="h-5 w-5 text-white" aria-hidden="true" />
+                    </div>
+
+                    {demoHref && (
+                        <span className="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-white/90">
+                            <span
+                                className="inline-block h-2 w-2 rounded-full"
+                                style={{
+                                    backgroundColor: "var(--live-dot)",
+                                    animation: "live-pulse 2s ease-in-out infinite",
+                                }}
+                                aria-hidden="true"
+                            />
+                            LIVE
+                        </span>
+                    )}
                 </div>
 
                 <h3 className="text-xl font-bold text-white transition-transform duration-300 group-hover:translate-x-1">
@@ -167,7 +193,23 @@ export const BentoCard = memo(function BentoCard({
                     {description}
                 </p>
 
-                <div className="mt-2 text-xs font-bold text-blue-400 flex items-center gap-1 opacity-0 translate-y-2 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300 delay-100">
+                {/* Tech stack pills */}
+                <div className="flex flex-wrap gap-1.5 mt-1">
+                    {visiblePills.map((pill) => (
+                        <span
+                            key={pill.name}
+                            className="inline-flex items-center px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide rounded-full border border-white/15 backdrop-blur-md transition-transform duration-200 group-hover:translate-x-0.5"
+                            style={{
+                                color: PILL_CATEGORY_VAR[pill.category],
+                                backgroundColor: "rgba(255,255,255,0.08)",
+                            }}
+                        >
+                            {pill.name}
+                        </span>
+                    ))}
+                </div>
+
+                <div className="mt-1 text-xs font-bold text-blue-400 flex items-center gap-1 opacity-0 translate-y-2 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300 delay-100">
                     Click to view Autopsy <Activity className="w-3 h-3" aria-hidden="true" />
                 </div>
             </div>
