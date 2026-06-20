@@ -116,6 +116,14 @@
     --svc-accent-realtime: #a855f7;
     --svc-accent-security: #10b981;
 
+    /* Battle Scars severity accents (incident-report pills + code blocks) */
+    --scar-critical: #ef4444;
+    --scar-high: #f97316;
+    --scar-medium: #eab308;
+    --scar-code-bg: #0a0e1a;
+    --scar-code-fg: #c7d2e0;
+    --scar-code-border: rgba(148, 163, 184, 0.18);
+
     /* Namespaced — avoids collision with third-party --gap / --duration */
     --marquee-gap: 1rem;
     --marquee-duration: 40s;
@@ -151,6 +159,13 @@
     --svc-accent-systems: #3b82f6;
     --svc-accent-realtime: #a855f7;
     --svc-accent-security: #10b981;
+
+    --scar-critical: #ef4444;
+    --scar-high: #f97316;
+    --scar-medium: #eab308;
+    --scar-code-bg: #0a0e1a;
+    --scar-code-fg: #c7d2e0;
+    --scar-code-border: rgba(148, 163, 184, 0.18);
   }
 
   /* Light — only active when next-themes adds .light class */
@@ -184,6 +199,14 @@
     --svc-accent-systems: #2563eb;
     --svc-accent-realtime: #9333ea;
     --svc-accent-security: #059669;
+
+    /* Slightly deeper severity accents for contrast on the light background */
+    --scar-critical: #dc2626;
+    --scar-high: #ea580c;
+    --scar-medium: #ca8a04;
+    --scar-code-bg: #0f172a;
+    --scar-code-fg: #e2e8f0;
+    --scar-code-border: rgba(15, 23, 42, 0.12);
   }
 
   html {
