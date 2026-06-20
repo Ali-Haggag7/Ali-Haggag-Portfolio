@@ -1,0 +1,1152 @@
+/* ===========================================================
+   StudentHub — Final Presentation Theme (Reveal.js override)
+   Dark, on-brand (indigo → cyan), presentation-grade.
+   Enhanced with animations, SVG icons, and premium polish.
+   =========================================================== */
+
+:root {
+  --bg: #070b16;
+  --bg2: #0c1326;
+  --ink: #eaf0fb;
+  --muted: #9aa7c2;
+  --faint: #6b7a99;
+  --indigo: #6366f1;
+  --cyan: #22d3ee;
+  --emerald: #10b981;
+  --amber: #f59e0b;
+  --rose: #f43f5e;
+  --violet: #a855f7;
+  --card: rgba(255, 255, 255, 0.045);
+  --card-2: rgba(255, 255, 255, 0.07);
+  --border: rgba(255, 255, 255, 0.10);
+  --border-2: rgba(255, 255, 255, 0.18);
+  --grad: linear-gradient(100deg, var(--indigo), var(--cyan));
+}
+
+.reveal-viewport {
+  background:
+    radial-gradient(1200px 700px at 78% -8%, rgba(99, 102, 241, 0.20), transparent 60%),
+    radial-gradient(1000px 700px at 8% 108%, rgba(34, 211, 238, 0.16), transparent 60%),
+    var(--bg);
+}
+
+.reveal {
+  font-family: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+  font-size: 32px;
+  color: var(--ink);
+  font-weight: 400;
+  letter-spacing: -0.01em;
+}
+
+.reveal .slides {
+  text-align: left;
+}
+
+.reveal .slides section {
+  height: 100%;
+}
+
+/* ---------- Headings ---------- */
+.reveal h1,
+.reveal h2,
+.reveal h3,
+.reveal h4 {
+  color: var(--ink);
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  line-height: 1.08;
+  margin: 0 0 0.35em 0;
+  text-transform: none;
+  text-shadow: none;
+}
+
+.reveal h1 {
+  font-size: 2.5em;
+}
+
+.reveal h2 {
+  font-size: 1.55em;
+}
+
+.reveal h3 {
+  font-size: 1.05em;
+}
+
+.reveal p {
+  line-height: 1.4;
+}
+
+.reveal .muted {
+  color: var(--muted);
+}
+
+.reveal strong {
+  color: #fff;
+  font-weight: 700;
+}
+
+.reveal em {
+  color: var(--cyan);
+  font-style: normal;
+  font-weight: 600;
+}
+
+.grad-text {
+  background: var(--grad);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* ---------- Eyebrow / section kicker ---------- */
+.kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  font-size: 0.5em;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--cyan);
+  padding: 0.45em 0.9em;
+  border: 1px solid var(--border-2);
+  border-radius: 999px;
+  background: rgba(34, 211, 238, 0.07);
+  margin-bottom: 0.7em;
+}
+
+/* ---------- Layout helpers ---------- */
+.center {
+  text-align: center;
+}
+
+.fill {
+  position: absolute;
+  inset: 0;
+}
+
+.cols {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 36px;
+  align-items: center;
+}
+
+.cols-3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+.cols-4 {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.vcenter {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100%;
+}
+
+/* ---------- Cards ---------- */
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 26px 28px;
+  backdrop-filter: blur(4px);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.card h3 {
+  color: #fff;
+}
+
+.card .icon {
+  width: 54px;
+  height: 54px;
+  border-radius: 14px;
+  display: grid;
+  place-items: center;
+  font-size: 26px;
+  margin-bottom: 14px;
+  background: var(--grad);
+  color: #fff;
+  transition: transform 0.3s ease;
+}
+
+.card:hover .icon {
+  transform: scale(1.1) rotate(3deg);
+}
+
+.card.i-cyan .icon {
+  background: linear-gradient(135deg, #06b6d4, #22d3ee);
+}
+
+.card.i-emerald .icon {
+  background: linear-gradient(135deg, #059669, #34d399);
+}
+
+.card.i-amber .icon {
+  background: linear-gradient(135deg, #d97706, #fbbf24);
+}
+
+.card.i-violet .icon {
+  background: linear-gradient(135deg, #7c3aed, #c084fc);
+}
+
+.card.i-rose .icon {
+  background: linear-gradient(135deg, #e11d48, #fb7185);
+}
+
+.card.i-indigo .icon {
+  background: linear-gradient(135deg, #4f46e5, #818cf8);
+}
+
+.card:hover {
+  transform: translateY(-6px);
+  background: var(--card-2);
+}
+
+.card.i-cyan:hover {
+  border-color: rgba(34, 211, 238, 0.4);
+  box-shadow: 0 12px 30px -10px rgba(34, 211, 238, 0.25);
+}
+
+.card.i-emerald:hover {
+  border-color: rgba(16, 185, 129, 0.4);
+  box-shadow: 0 12px 30px -10px rgba(16, 185, 129, 0.25);
+}
+
+.card.i-amber:hover {
+  border-color: rgba(245, 158, 11, 0.4);
+  box-shadow: 0 12px 30px -10px rgba(245, 158, 11, 0.25);
+}
+
+.card.i-violet:hover {
+  border-color: rgba(168, 85, 247, 0.4);
+  box-shadow: 0 12px 30px -10px rgba(168, 85, 247, 0.25);
+}
+
+.card.i-rose:hover {
+  border-color: rgba(244, 63, 94, 0.4);
+  box-shadow: 0 12px 30px -10px rgba(244, 63, 94, 0.25);
+}
+
+.card.i-indigo:hover {
+  border-color: rgba(99, 102, 241, 0.4);
+  box-shadow: 0 12px 30px -10px rgba(99, 102, 241, 0.25);
+}
+
+.card p {
+  font-size: 0.62em;
+  color: var(--muted);
+  margin: 0;
+  line-height: 1.45;
+}
+
+.card .ttl {
+  font-size: 0.8em;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 6px;
+  display: block;
+}
+
+/* ---------- KPI / stats ---------- */
+.kpis {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+.kpi {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 22px 20px;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.kpi:hover {
+  transform: translateY(-4px);
+  border-color: var(--border-2);
+  background: var(--card-2);
+}
+
+.kpi .num {
+  font-size: 1.7em;
+  font-weight: 800;
+  line-height: 1;
+  background: var(--grad);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.kpi .lbl {
+  font-size: 0.46em;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-top: 10px;
+}
+
+/* ---------- Pills / badges ---------- */
+.pill {
+  display: inline-block;
+  font-size: 0.5em;
+  font-weight: 600;
+  padding: 0.4em 0.85em;
+  border-radius: 999px;
+  border: 1px solid var(--border-2);
+  color: var(--ink);
+  background: var(--card-2);
+  margin: 3px;
+  transition: all 0.2s ease;
+}
+
+.pill:hover {
+  transform: translateY(-2px);
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.pill.indigo {
+  color: #c7d2fe;
+  border-color: rgba(99, 102, 241, .5);
+  background: rgba(99, 102, 241, .14);
+}
+
+.pill.cyan {
+  color: #a5f3fc;
+  border-color: rgba(34, 211, 238, .5);
+  background: rgba(34, 211, 238, .12);
+}
+
+.pill.emerald {
+  color: #a7f3d0;
+  border-color: rgba(16, 185, 129, .5);
+  background: rgba(16, 185, 129, .12);
+}
+
+.pill.amber {
+  color: #fde68a;
+  border-color: rgba(245, 158, 11, .5);
+  background: rgba(245, 158, 11, .12);
+}
+
+.pill.violet {
+  color: #e9d5ff;
+  border-color: rgba(168, 85, 247, .5);
+  background: rgba(168, 85, 247, .12);
+}
+
+/* SVG Tech Logo Pills */
+.pill-logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.52em;
+  font-weight: 600;
+  padding: 0.45em 0.9em;
+  border-radius: 999px;
+  border: 1px solid var(--border-2);
+  color: var(--ink);
+  background: var(--card-2);
+  margin: 4px;
+  transition: all 0.2s ease;
+}
+
+.pill-logo:hover {
+  transform: translateY(-3px);
+  background: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+}
+
+.pill-logo svg {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.pill-logo.cyan {
+  border-color: rgba(34, 211, 238, .4);
+  background: rgba(34, 211, 238, .08);
+}
+
+.pill-logo.violet {
+  border-color: rgba(168, 85, 247, .4);
+  background: rgba(168, 85, 247, .08);
+}
+
+.pill-logo.indigo {
+  border-color: rgba(99, 102, 241, .4);
+  background: rgba(99, 102, 241, .08);
+}
+
+/* ---------- Browser frame for screenshots ---------- */
+.browser {
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid var(--border-2);
+  background: #0b1020;
+  box-shadow: 0 30px 70px -25px rgba(0, 0, 0, 0.85), 0 0 0 1px rgba(255, 255, 255, 0.03);
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.browser:hover {
+  transform: translateY(-4px) scale(1.008);
+  box-shadow: 0 35px 80px -20px rgba(99, 102, 241, 0.25), 0 0 0 1px rgba(255, 255, 255, 0.06);
+}
+
+.browser .bar {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 9px 14px;
+  background: #131a2e;
+  border-bottom: 1px solid var(--border);
+}
+
+.browser .bar i {
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.browser .bar .r {
+  background: #ff5f57;
+}
+
+.browser .bar .y {
+  background: #febc2e;
+}
+
+.browser .bar .g {
+  background: #28c840;
+}
+
+.browser .bar .url {
+  margin-left: 12px;
+  font-size: 13px;
+  color: var(--faint);
+  background: #0b1020;
+  border-radius: 7px;
+  padding: 4px 12px;
+  flex: 1;
+  font-family: ui-monospace, monospace;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.browser img {
+  display: block;
+  width: 100%;
+}
+
+.shot-tall img {
+  object-fit: cover;
+  object-position: top;
+  max-height: 560px;
+}
+
+/* Browser glow effect */
+.browser-glow {
+  position: relative;
+  overflow: visible;
+}
+
+.browser-glow::after {
+  content: "";
+  position: absolute;
+  bottom: -20px;
+  left: 15%;
+  right: 15%;
+  height: 40px;
+  background: radial-gradient(ellipse, rgba(99, 102, 241, 0.2), transparent 60%);
+  filter: blur(10px);
+  z-index: -1;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.browser-glow:hover::after {
+  background: radial-gradient(ellipse, rgba(34, 211, 238, 0.35), transparent 60%);
+}
+
+/* Constrained height container for hero browser pages */
+.browser-hero {
+  width: 100%;
+  max-width: 960px;
+  margin: 0 auto;
+  height: 550px;
+  /* Constrained but spacious height to fit screenshots beautifully */
+  display: flex;
+  flex-direction: column;
+}
+
+.browser-hero .browser {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.browser-hero img {
+  flex: 1;
+  min-height: 0;
+  object-fit: cover;
+  object-position: top;
+}
+
+/* ---------- Demo caption ---------- */
+.caption {
+  font-size: 0.6em;
+  color: var(--muted);
+  margin-top: 14px;
+}
+
+.caption b {
+  color: var(--cyan);
+  font-weight: 700;
+}
+
+/* ---------- Flow steps (GitHub flow) ---------- */
+.flow {
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+  margin-top: 10px;
+}
+
+.flow .step {
+  flex: 1;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 18px 14px;
+  text-align: center;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.flow .step:hover {
+  transform: translateY(-4px);
+  border-color: var(--cyan);
+  background: var(--card-2);
+}
+
+.flow .step .s-ic {
+  font-size: 24px;
+  margin-bottom: 8px;
+}
+
+.flow .step .s-t {
+  font-size: 0.55em;
+  font-weight: 700;
+  color: #fff;
+}
+
+.flow .arrow {
+  display: grid;
+  place-items: center;
+  color: var(--cyan);
+  font-size: 1.1em;
+  padding: 0 10px;
+}
+
+/* ---------- Architecture layers ---------- */
+.arch {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.layer {
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 16px 22px;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  background: var(--card);
+  transition: all 0.3s ease;
+}
+
+.layer:hover {
+  transform: translateX(6px);
+  background: var(--card-2);
+}
+
+.layer .tag {
+  font-size: 0.45em;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--cyan);
+  min-width: 150px;
+}
+
+.layer .body {
+  font-size: 0.62em;
+  color: var(--ink);
+}
+
+.layer.l-web {
+  border-color: rgba(34, 211, 238, .35);
+}
+
+.layer.l-web:hover {
+  border-color: rgba(34, 211, 238, .6);
+}
+
+.layer.l-api {
+  border-color: rgba(99, 102, 241, .35);
+}
+
+.layer.l-api:hover {
+  border-color: rgba(99, 102, 241, .6);
+}
+
+.layer.l-core {
+  border-color: rgba(168, 85, 247, .35);
+}
+
+.layer.l-core:hover {
+  border-color: rgba(168, 85, 247, .6);
+}
+
+.layer.l-data {
+  border-color: rgba(16, 185, 129, .35);
+}
+
+.layer.l-data:hover {
+  border-color: rgba(16, 185, 129, .6);
+}
+
+.conn {
+  text-align: center;
+  color: var(--faint);
+  font-size: 0.7em;
+  margin: -6px 0;
+}
+
+/* ---------- Team grid ---------- */
+.team {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 22px;
+}
+
+.member {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 22px 18px;
+  text-align: center;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.member:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 30px rgba(99, 102, 241, 0.2);
+  border-color: rgba(99, 102, 241, 0.4);
+}
+
+.member .av {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  margin: 0 auto 14px;
+  display: grid;
+  place-items: center;
+  font-weight: 800;
+  font-size: 1.3em;
+  color: #fff;
+  background: var(--grad);
+  position: relative;
+  overflow: hidden;
+  border: 2px solid var(--border-2);
+  box-shadow: 0 8px 20px -5px rgba(0, 0, 0, 0.4);
+}
+
+.member .av img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  /* Align to the top-middle to focus on the face */
+}
+
+.member .nm {
+  font-size: 0.58em;
+  font-weight: 700;
+  color: #fff;
+  margin-top: 8px;
+}
+
+.member .rl {
+  display: inline-block;
+  font-size: 0.44em;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  margin-top: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.member .rl-lead {
+  color: #fde68a;
+  border-color: rgba(245, 158, 11, .5);
+  background: rgba(245, 158, 11, .12);
+}
+
+.member .rl-backend {
+  color: #c7d2fe;
+  border-color: rgba(99, 102, 241, .5);
+  background: rgba(99, 102, 241, .14);
+}
+
+.member .rl-frontend {
+  color: #a5f3fc;
+  border-color: rgba(34, 211, 238, .5);
+  background: rgba(34, 211, 238, .12);
+}
+
+.member .rl-mobile {
+  color: #e9d5ff;
+  border-color: rgba(168, 85, 247, .5);
+  background: rgba(168, 85, 247, .12);
+}
+
+/* ---------- Bar chart (contributions) ---------- */
+.bars {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.bar-row {
+  display: grid;
+  grid-template-columns: 220px 1fr 60px;
+  align-items: center;
+  gap: 14px;
+  font-size: 0.55em;
+}
+
+.bar-row .bn {
+  color: var(--ink);
+}
+
+.bar-track {
+  background: var(--card-2);
+  border-radius: 999px;
+  height: 18px;
+  overflow: hidden;
+}
+
+.bar-fill {
+  height: 100%;
+  border-radius: 999px;
+  background: var(--grad);
+}
+
+.bar-row .bv {
+  color: var(--muted);
+  text-align: right;
+}
+
+/* ---------- Lists ---------- */
+.reveal ul.clean {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.reveal ul.clean li {
+  position: relative;
+  padding-left: 1.5em;
+  margin: 0.55em 0;
+  font-size: 0.66em;
+  line-height: 1.4;
+}
+
+.reveal ul.clean li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.55em;
+  width: 9px;
+  height: 9px;
+  border-radius: 3px;
+  background: var(--grad);
+}
+
+.reveal .chk li::before {
+  content: "\2713";
+  background: none;
+  color: var(--emerald);
+  font-weight: 800;
+  top: 0.15em;
+  width: auto;
+  height: auto;
+}
+
+/* ---------- Title slide ---------- */
+.title-wrap {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.brandmark {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 26px;
+}
+
+.brandmark .logo {
+  width: 60px;
+  height: 60px;
+  border-radius: 16px;
+  background: var(--grad);
+  display: grid;
+  place-items: center;
+  font-size: 30px;
+  box-shadow: 0 10px 30px -8px rgba(99, 102, 241, .6);
+}
+
+.brandmark .bt {
+  font-size: 1.1em;
+  font-weight: 800;
+}
+
+.title-meta {
+  display: flex;
+  gap: 28px;
+  margin-top: 30px;
+  flex-wrap: wrap;
+  font-size: 0.5em;
+  color: var(--muted);
+}
+
+.title-meta b {
+  color: var(--ink);
+}
+
+/* ---------- Footer brand on every slide ---------- */
+.reveal .slide-number {
+  color: var(--faint);
+  font-size: 14px;
+  background: transparent;
+}
+
+.footer-brand {
+  position: fixed;
+  bottom: 16px;
+  left: 26px;
+  z-index: 30;
+  font-size: 14px;
+  color: var(--faint);
+  letter-spacing: 0.04em;
+}
+
+.footer-brand b {
+  color: var(--muted);
+}
+
+/* ---------- Two-up screenshot ---------- */
+.duo {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 22px;
+}
+
+/* ---------- Quote / problem ---------- */
+.big-stat {
+  font-size: 1.2em;
+  font-weight: 800;
+  line-height: 1.15;
+}
+
+.reveal .progress {
+  color: var(--cyan);
+  height: 5px;
+}
+
+/* Clean, slightly thicker progress bar */
+
+/* tighten links */
+.reveal a {
+  color: var(--cyan);
+  text-decoration: none;
+}
+
+.mono {
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+}
+
+/* ===========================================================
+   ENTRANCE ANIMATIONS (Triggered when slide has .present)
+   =========================================================== */
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.92);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-40px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Apply staggered fadeUp to cards inside the active slide */
+.reveal section.present .card {
+  animation: fadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.reveal section.present .cols-3 .card:nth-child(1) {
+  animation-delay: 0.05s;
+}
+
+.reveal section.present .cols-3 .card:nth-child(2) {
+  animation-delay: 0.15s;
+}
+
+.reveal section.present .cols-3 .card:nth-child(3) {
+  animation-delay: 0.25s;
+}
+
+/* Apply staggered fadeUp to KPIs inside active slide */
+.reveal section.present .kpi {
+  animation: fadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.reveal section.present .kpis .kpi:nth-child(1) {
+  animation-delay: 0.05s;
+}
+
+.reveal section.present .kpis .kpi:nth-child(2) {
+  animation-delay: 0.15s;
+}
+
+.reveal section.present .kpis .kpi:nth-child(3) {
+  animation-delay: 0.25s;
+}
+
+.reveal section.present .kpis .kpi:nth-child(4) {
+  animation-delay: 0.35s;
+}
+
+/* Apply scaleIn cascade to Git flow steps */
+.reveal section.present .flow .step {
+  animation: scaleIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+.reveal section.present .flow .step:nth-child(1) {
+  animation-delay: 0.1s;
+}
+
+.reveal section.present .flow .step:nth-child(3) {
+  animation-delay: 0.25s;
+}
+
+.reveal section.present .flow .step:nth-child(5) {
+  animation-delay: 0.4s;
+}
+
+.reveal section.present .flow .step:nth-child(7) {
+  animation-delay: 0.55s;
+}
+
+.reveal section.present .flow .step:nth-child(9) {
+  animation-delay: 0.7s;
+}
+
+/* Git Flow arrows fade in */
+.reveal section.present .flow .arrow {
+  animation: scaleIn 0.5s ease both;
+}
+
+.reveal section.present .flow .arrow:nth-child(2) {
+  animation-delay: 0.18s;
+}
+
+.reveal section.present .flow .arrow:nth-child(4) {
+  animation-delay: 0.33s;
+}
+
+.reveal section.present .flow .arrow:nth-child(6) {
+  animation-delay: 0.48s;
+}
+
+.reveal section.present .flow .arrow:nth-child(8) {
+  animation-delay: 0.63s;
+}
+
+/* Architecture layers slide in from left sequentially */
+.reveal section.present .layer {
+  animation: slideInLeft 0.55s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.reveal section.present .arch .layer:nth-child(1) {
+  animation-delay: 0.1s;
+}
+
+.reveal section.present .arch .layer:nth-child(3) {
+  animation-delay: 0.22s;
+}
+
+.reveal section.present .arch .layer:nth-child(5) {
+  animation-delay: 0.34s;
+}
+
+.reveal section.present .arch .layer:nth-child(7) {
+  animation-delay: 0.46s;
+}
+
+/* Architecture connect labels */
+.reveal section.present .conn {
+  animation: scaleIn 0.5s ease both;
+}
+
+.reveal section.present .conn:nth-child(2) {
+  animation-delay: 0.16s;
+}
+
+.reveal section.present .conn:nth-child(4) {
+  animation-delay: 0.28s;
+}
+
+.reveal section.present .conn:nth-child(6) {
+  animation-delay: 0.40s;
+}
+
+/* Team members staggered pop-in */
+.reveal section.present .member {
+  animation: scaleIn 0.55s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+.reveal section.present .team .member:nth-child(1) {
+  animation-delay: 0.05s;
+}
+
+.reveal section.present .team .member:nth-child(2) {
+  animation-delay: 0.12s;
+}
+
+.reveal section.present .team .member:nth-child(3) {
+  animation-delay: 0.19s;
+}
+
+.reveal section.present .team .member:nth-child(4) {
+  animation-delay: 0.26s;
+}
+
+.reveal section.present .team .member:nth-child(5) {
+  animation-delay: 0.33s;
+}
+
+.reveal section.present .team .member:nth-child(6) {
+  animation-delay: 0.40s;
+}
+
+.reveal section.present .team .member:nth-child(7) {
+  animation-delay: 0.47s;
+}
+
+.reveal section.present .team .member:nth-child(8) {
+  animation-delay: 0.54s;
+}
+
+/* Browser screenshots animation */
+.reveal section.present .browser {
+  animation: fadeUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: 0.15s;
+}
+
+.reveal section.present .duo .browser:nth-child(1) {
+  animation-delay: 0.15s;
+}
+
+.reveal section.present .duo .browser:nth-child(2) {
+  animation-delay: 0.32s;
+}
+
+/* Animated Radial Background specifically for Title slide and Thank You slide */
+@keyframes radialPulse {
+  0% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+
+  50% {
+    transform: scale(1.08);
+    opacity: 1;
+  }
+
+  100% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+}
+
+.animated-bg {
+  position: relative;
+  overflow: hidden;
+}
+
+.animated-bg::before {
+  content: "";
+  position: absolute;
+  top: -10%;
+  left: -10%;
+  right: -10%;
+  bottom: -10%;
+  background:
+    radial-gradient(900px 600px at 50% 30%, rgba(99, 102, 241, .24), transparent 60%),
+    radial-gradient(700px 600px at 80% 110%, rgba(34, 211, 238, .18), transparent 60%);
+  z-index: -2;
+  animation: radialPulse 8s ease-in-out infinite;
+  pointer-events: none;
+}

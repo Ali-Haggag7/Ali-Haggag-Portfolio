@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>StudentHub — Final Presentation</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="assets/vendor/reveal/dist/reset.css" />
+  <link rel="stylesheet" href="assets/vendor/reveal/dist/reveal.css" />
+  <link rel="stylesheet" href="theme.css" />
+  <script src="assets/vendor/lucide.min.js"></script>
+</head>
+<body>
+  <div class="footer-brand"><b>StudentHub</b> &nbsp;·&nbsp; Software Engineering Project &nbsp;·&nbsp; 2026</div>
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- 1 · TITLE -->
+      <section data-background-gradient="radial-gradient(900px 600px at 75% 10%, rgba(99,102,241,.28), transparent 60%), radial-gradient(800px 600px at 10% 110%, rgba(34,211,238,.22), transparent 60%), #070b16" class="animated-bg">
+        <div class="title-wrap">
+          <div class="brandmark">
+            <span class="logo"><i data-lucide="graduation-cap"></i></span>
+            <span class="bt grad-text">StudentHub</span>
+          </div>
+          <div class="kicker">Graduation / Software Engineering Project</div>
+          <h1>The all-in-one <span class="grad-text">campus platform</span><br/>for university students</h1>
+          <p class="muted" style="font-size:0.66em; max-width:20em; margin-top:8px;">
+            One product connecting students, activity agents, and administrators —
+            web, mobile, and a unified API.
+          </p>
+          <div class="title-meta">
+            <div><b>Team:</b> Abdelrahman Yahia (Lead), Yousef Alaa, Mohamed Ezz, Marwan Mohamed, Omar Mohamed, Ali Haggag, Mahmoud Abdelhady, Omar Abdeen</div>
+          </div>
+          <div class="title-meta" style="margin-top:14px;">
+            <div><b>Stack:</b> React · .NET (Clean Architecture) · Flutter · SQL Server</div>
+            <div><b>Date:</b> June 2026</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 2 · PROBLEM -->
+      <section>
+        <div class="vcenter">
+          <div class="kicker">The Problem</div>
+          <h2>Campus life is <span class="grad-text">scattered everywhere</span></h2>
+          <div class="cols" style="margin-top:24px;">
+            <div class="stack">
+              <p class="muted" style="font-size:0.72em;">Students juggle a different tool for every need:</p>
+              <ul class="clean">
+                <li>Activities &amp; events live on <strong>social media posts</strong> and group chats</li>
+                <li>Applications happen over <strong>scattered forms</strong> with no tracking</li>
+                <li>Achievements and engagement are <strong>invisible</strong> — no portfolio, no proof</li>
+                <li>Services, housing, and community are <strong>fragmented</strong> across channels</li>
+              </ul>
+            </div>
+            <div class="stack">
+              <div class="card i-rose">
+                <span class="icon"><i data-lucide="puzzle"></i></span>
+                <span class="ttl">No single source of truth</span>
+                <p>Students miss opportunities; agents can't reach the right audience; admins have no oversight.</p>
+              </div>
+              <div class="card i-amber">
+                <span class="icon"><i data-lucide="trending-down"></i></span>
+                <span class="ttl">No recognition loop</span>
+                <p>Participation isn't measured or rewarded, so engagement stays low.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 3 · SOLUTION -->
+      <section>
+        <div class="vcenter">
+          <div class="kicker">Our Solution</div>
+          <h2>One platform. <span class="grad-text">Three roles.</span> Zero friction.</h2>
+          <div class="cols-3" style="margin-top:30px;">
+            <div class="card i-cyan">
+              <span class="icon"><i data-lucide="backpack"></i></span>
+              <span class="ttl">Students</span>
+              <p>Discover &amp; apply to activities, earn points &amp; badges, build a public portfolio, shop the store, and join communities.</p>
+            </div>
+            <div class="card i-violet">
+              <span class="icon"><i data-lucide="clipboard-list"></i></span>
+              <span class="ttl">Agents</span>
+              <p>Publish activities, manage applicants on a kanban board, verify check-ins, and track performance with analytics.</p>
+            </div>
+            <div class="card i-emerald">
+              <span class="icon"><i data-lucide="shield-check"></i></span>
+              <span class="ttl">Admins</span>
+              <p>Approve agents, moderate content, oversee finance, manage users, and maintain platform-wide lookups.</p>
+            </div>
+          </div>
+          <p class="caption center" style="margin-top:26px;">Backed by <b>role-based access control</b> and a single <b>REST API</b> shared by web &amp; mobile.</p>
+        </div>
+      </section>
+
+      <!-- 4 · LIVE PRODUCT -->
+      <section>
+        <div class="vcenter center">
+          <div class="kicker">Live Product</div>
+          <h2 style="margin-bottom:14px;">This is real, running software</h2>
+          <div class="browser-hero browser-glow">
+            <div class="browser">
+              <div class="bar"><i class="r"></i><i class="y"></i><i class="g"></i><span class="url">studenthub.app</span></div>
+              <img src="assets/screens/01-landing.png" alt="StudentHub landing page" />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 5 · FEATURE PILLARS -->
+      <section>
+        <div class="vcenter">
+          <div class="kicker">What We Built</div>
+          <h2>Four pillars, <span class="grad-text">one experience</span></h2>
+          <div class="cols-4" style="margin-top:26px;">
+            <div class="card i-cyan">
+              <span class="icon"><i data-lucide="calendar-check"></i></span>
+              <span class="ttl">Activities</span>
+              <p>Browse, filter, apply, and track decisions. Agents manage applicants end-to-end.</p>
+            </div>
+            <div class="card i-amber">
+              <span class="icon"><i data-lucide="trophy"></i></span>
+              <span class="ttl">Engagement</span>
+              <p>Points, badges, leaderboards, and a shareable student portfolio.</p>
+            </div>
+            <div class="card i-violet">
+              <span class="icon"><i data-lucide="message-circle"></i></span>
+              <span class="ttl">Community</span>
+              <p>University &amp; faculty communities with threads, polls, and discussions.</p>
+            </div>
+            <div class="card i-emerald">
+              <span class="icon"><i data-lucide="shopping-bag"></i></span>
+              <span class="ttl">Store &amp; Services</span>
+              <p>Campus store, food pre-orders, housing, scholarships, and charity.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 6 · STUDENT DEMO -->
+      <section>
+        <div class="vcenter">
+          <div class="kicker">Demo · Students</div>
+          <h2>Discover &amp; apply in <span class="grad-text">a few clicks</span></h2>
+          <div class="duo" style="margin-top:14px;">
+            <div class="browser shot-tall"><div class="bar"><i class="r"></i><i class="y"></i><i class="g"></i><span class="url">/activities</span></div><img src="assets/screens/03-activities.png" alt="Browse activities" /></div>
+            <div class="browser shot-tall"><div class="bar"><i class="r"></i><i class="y"></i><i class="g"></i><span class="url">/activities/:id</span></div><img src="assets/screens/04-activity-details.png" alt="Activity details &amp; apply" /></div>
+          </div>
+          <p class="caption">Search &amp; filter activities → open details → <b>apply and reserve a seat</b>, with live capacity and deadlines.</p>
+        </div>
+      </section>
+
+      <!-- 7 · ENGAGEMENT / GAMIFICATION -->
+      <section>
+        <div class="vcenter">
+          <div class="kicker">Engagement &amp; Recognition</div>
+          <h2>Participation that <span class="grad-text">counts</span></h2>
+          <div class="duo" style="margin-top:14px;">
+            <div class="browser shot-tall"><div class="bar"><i class="r"></i><i class="y"></i><i class="g"></i><span class="url">/student/dashboard</span></div><img src="assets/screens/02-student-dashboard.png" alt="Student dashboard" /></div>
+            <div class="browser shot-tall"><div class="bar"><i class="r"></i><i class="y"></i><i class="g"></i><span class="url">/leaderboard</span></div><img src="assets/screens/05-leaderboard.png" alt="Leaderboard &amp; badges" /></div>
+          </div>
+          <p class="caption">A personal dashboard tracks every application, while <b>points, badges, and leaderboards</b> reward real engagement.</p>
+        </div>
+      </section>
+
+      <!-- 8 · COMMUNITY & STORE -->
+      <section>
+        <div class="vcenter">
+          <div class="kicker">Community &amp; Marketplace</div>
+          <h2>A place to <span class="grad-text">connect and shop</span></h2>
+          <div class="duo" style="margin-top:14px;">
+            <div class="browser shot-tall"><div class="bar"><i class="r"></i><i class="y"></i><i class="g"></i><span class="url">/community</span></div><img src="assets/screens/09-community.png" alt="University communities" /></div>
+            <div class="browser shot-tall"><div class="bar"><i class="r"></i><i class="y"></i><i class="g"></i><span class="url">/store</span></div><img src="assets/screens/07-store.png" alt="Campus store" /></div>
+          </div>
+          <p class="caption">University &amp; faculty <b>communities</b> for discussion, plus a <b>campus store</b> for housing, stationery, food, and products.</p>
+        </div>
+      </section>
+
+      <!-- 9 · STUDENT SERVICES -->
+      <section>
+        <div class="vcenter">
+          <div class="kicker">Student Services</div>
+          <h2>Beyond activities: <span class="grad-text">real campus life</span></h2>
+          <div class="duo" style="margin-top:14px;">
+            <div class="browser shot-tall"><div class="bar"><i class="r"></i><i class="y"></i><i class="g"></i><span class="url">/services/opportunities</span></div><img src="assets/screens/10-services-opportunities.png" alt="Opportunities" /></div>
+            <div class="browser shot-tall"><div class="bar"><i class="r"></i><i class="y"></i><i class="g"></i><span class="url">/services/charity</span></div><img src="assets/screens/12-services-charity.png" alt="Charity initiatives" /></div>
+          </div>
+          <p class="caption"><b>Internships &amp; scholarships</b>, charitable initiatives, polls, and onboarding sessions — all in one hub.</p>
+        </div>
+      </section>
+
+      <!-- 10 · AGENT DEMO -->
+      <section>
+        <div class="vcenter">
+          <div class="kicker">Demo · Agents</div>
+          <h2>Run activities like a <span class="grad-text">product team</span></h2>
+          <div class="duo" style="margin-top:14px;">
+            <div class="browser shot-tall"><div class="bar"><i class="r"></i><i class="y"></i><i class="g"></i><span class="url">/agent/dashboard</span></div><img src="assets/screens/13-agent-dashboard.png" alt="Agent dashboard" /></div>
+            <div class="browser shot-tall"><div class="bar"><i class="r"></i><i class="y"></i><i class="g"></i><span class="url">/agent/analytics</span></div><img src="assets/screens/14-agent-analytics.png" alt="Agent analytics" /></div>
+          </div>
+          <p class="caption">Manage every activity from one dashboard, with <b>real-time analytics</b> — applicants, acceptance rate, and distributions.</p>
+        </div>
+      </section>
+
+      <!-- 11 · KANBAN -->
+      <section>
+        <div class="vcenter center">
+          <div class="kicker">Applicant Pipeline</div>
+          <h2 style="margin-bottom:14px;">Drag-and-drop <span class="grad-text">applicant management</span></h2>
+          <div class="browser-hero browser-glow">
+            <div class="browser">
+              <div class="bar"><i class="r"></i><i class="y"></i><i class="g"></i><span class="url">/agent/activities/:id/kanban</span></div>
+              <img src="assets/screens/15-agent-kanban.png" alt="Kanban applicant board" />
+            </div>
+          </div>
+          <p class="caption" style="margin-top:10px;">Move applicants across <b>Applied → Accepted → Rejected</b>; decisions sync instantly to each student's dashboard.</p>
+        </div>
+      </section>
+
+      <!-- 12 · ADMIN DEMO -->
+      <section>
+        <div class="vcenter">
+          <div class="kicker">Demo · Admins</div>
+          <h2>A full <span class="grad-text">control center</span></h2>
+          <div class="duo" style="margin-top:14px;">
+            <div class="browser shot-tall"><div class="bar"><i class="r"></i><i class="y"></i><i class="g"></i><span class="url">/admin/dashboard</span></div><img src="assets/screens/16-admin-dashboard.png" alt="Admin dashboard" /></div>
+            <div class="browser shot-tall"><div class="bar"><i class="r"></i><i class="y"></i><i class="g"></i><span class="url">/admin/moderation</span></div><img src="assets/screens/17-admin-moderation.png" alt="Moderation panel" /></div>
+          </div>
+          <p class="caption">Approve agents, <b>moderate flagged content</b>, oversee <b>finance &amp; revenue</b>, and manage users — platform-wide.</p>
+        </div>
+      </section>
+
+      <!-- 13 · BILINGUAL -->
+      <section>
+        <div class="vcenter">
+          <div class="kicker">Accessibility</div>
+          <h2>Fully <span class="grad-text">bilingual</span> — English &amp; Arabic with RTL</h2>
+          <div class="cols" style="margin-top:14px;">
+            <div class="browser shot-tall"><div class="bar"><i class="r"></i><i class="y"></i><i class="g"></i><span class="url">العربية · RTL</span></div><img src="assets/screens/20-landing-ar.png" alt="Arabic RTL landing" /></div>
+            <div class="stack">
+              <ul class="clean">
+                <li>Complete <strong>Arabic / English</strong> localization across every screen</li>
+                <li>Proper <strong>right-to-left (RTL)</strong> layout mirroring</li>
+                <li>Light &amp; <strong>dark mode</strong> throughout</li>
+                <li>Built for <strong>Egyptian universities</strong> from day one</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 14 · ARCHITECTURE -->
+      <section>
+        <div class="vcenter">
+          <div class="kicker">Under the Hood</div>
+          <h2>Clean, layered <span class="grad-text">architecture</span></h2>
+          <div class="arch" style="margin-top:18px;">
+            <div class="layer l-web"><span class="tag">Clients</span><span class="body"><strong>React</strong> web app &nbsp;+&nbsp; <strong>Flutter</strong> mobile app — same API, one source of truth</span></div>
+            <div class="conn">▼ &nbsp; HTTPS · JWT Bearer tokens &nbsp; ▼</div>
+            <div class="layer l-api"><span class="tag">API Layer</span><span class="body"><strong>ASP.NET Core</strong> REST API · 17 controllers · role-based authorization</span></div>
+            <div class="layer l-core"><span class="tag">Application / Domain</span><span class="body">Business logic, services &amp; entities — framework-independent <strong>Clean Architecture</strong></span></div>
+            <div class="layer l-data"><span class="tag">Infrastructure</span><span class="body"><strong>EF Core</strong> + <strong>SQL Server</strong> · Cloudinary image storage · email &amp; auth</span></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 15 · TECH STACK -->
+      <section>
+        <div class="vcenter">
+          <div class="kicker">Technology</div>
+          <h2>Modern, <span class="grad-text">production-grade stack</span></h2>
+          <div class="cols-3" style="margin-top:24px; align-items:start;">
+            <div class="card i-cyan">
+              <span class="icon"><i data-lucide="monitor"></i></span>
+              <span class="ttl">Web</span>
+              <div style="margin-top:8px;">
+                <span class="pill-logo cyan"><svg viewBox="0 0 24 24" width="18" height="18"><circle cx="12" cy="12" r="2.5" fill="#61dafb"/><ellipse cx="12" cy="12" rx="10" ry="4" fill="none" stroke="#61dafb" stroke-width="1.2"/><ellipse cx="12" cy="12" rx="10" ry="4" fill="none" stroke="#61dafb" stroke-width="1.2" transform="rotate(60 12 12)"/><ellipse cx="12" cy="12" rx="10" ry="4" fill="none" stroke="#61dafb" stroke-width="1.2" transform="rotate(120 12 12)"/></svg>React</span>
+                <span class="pill-logo cyan"><svg viewBox="0 0 24 24" width="18" height="18"><path d="M12 2L3 22h6l3-7 3 7h6L12 2z" fill="none" stroke="#a78bfa" stroke-width="1.5" stroke-linejoin="round"/><path d="M16.5 2L12 12" stroke="#fbbf24" stroke-width="2" stroke-linecap="round"/></svg>Vite</span>
+                <span class="pill-logo cyan"><svg viewBox="0 0 24 24" width="18" height="18"><path d="M4 8c2-3 6-4 8-2s4 4 4 2 2-4 4-4" fill="none" stroke="#38bdf8" stroke-width="2" stroke-linecap="round"/><path d="M4 16c2-3 6-4 8-2s4 4 4 2 2-4 4-4" fill="none" stroke="#38bdf8" stroke-width="2" stroke-linecap="round"/></svg>Tailwind CSS</span>
+                <span class="pill-logo cyan"><svg viewBox="0 0 24 24" width="18" height="18"><path d="M5 12h14M12 5l7 7-7 7" fill="none" stroke="#f44250" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>React Router</span>
+              </div>
+            </div>
+            <div class="card i-violet">
+              <span class="icon"><i data-lucide="smartphone"></i></span>
+              <span class="ttl">Mobile</span>
+              <div style="margin-top:8px;">
+                <span class="pill-logo violet"><svg viewBox="0 0 24 24" width="18" height="18"><path d="M7 4l5 8-5 8h4l5-8-5-8H7z" fill="#44d1fd" opacity="0.7"/><path d="M11 4l5 8-5 8h4l5-8-5-8h-4z" fill="#44d1fd"/></svg>Flutter</span>
+                <span class="pill-logo violet"><svg viewBox="0 0 24 24" width="18" height="18"><path d="M6 3c2.5 0 6 1.5 6 6s-3.5 6-6 6h12c-2.5 0-6-1.5-6-6s3.5-6 6-6H6z" fill="none" stroke="#0175C2" stroke-width="1.5"/><circle cx="12" cy="15" r="3" fill="none" stroke="#0175C2" stroke-width="1.5"/></svg>Dart</span>
+                <span class="pill-logo violet"><i data-lucide="layers" style="width:16px;height:16px;stroke:#c084fc;"></i>Cross-platform</span>
+              </div>
+            </div>
+            <div class="card i-indigo">
+              <span class="icon"><i data-lucide="server"></i></span>
+              <span class="ttl">Backend</span>
+              <div style="margin-top:8px;">
+                <span class="pill-logo indigo"><svg viewBox="0 0 24 24" width="18" height="18"><path d="M4 6l8-4 8 4v12l-8 4-8-4V6z" fill="none" stroke="#512BD4" stroke-width="1.5" stroke-linejoin="round"/><path d="M4 6l8 4 8-4M12 10v12" fill="none" stroke="#512BD4" stroke-width="1.5"/></svg>.NET Core</span>
+                <span class="pill-logo indigo"><svg viewBox="0 0 24 24" width="18" height="18"><ellipse cx="12" cy="6" rx="8" ry="3" fill="none" stroke="#818cf8" stroke-width="1.3"/><path d="M4 6v12c0 1.66 3.58 3 8 3s8-1.34 8-3V6" fill="none" stroke="#818cf8" stroke-width="1.3"/><path d="M4 12c0 1.66 3.58 3 8 3s8-1.34 8-3" fill="none" stroke="#818cf8" stroke-width="1.3"/></svg>EF Core</span>
+                <span class="pill-logo indigo"><svg viewBox="0 0 24 24" width="18" height="18"><ellipse cx="12" cy="5.5" rx="7.5" ry="3" fill="none" stroke="#CC2927" stroke-width="1.3"/><path d="M4.5 5.5v13c0 1.66 3.36 3 7.5 3s7.5-1.34 7.5-3v-13" fill="none" stroke="#CC2927" stroke-width="1.3"/><path d="M4.5 11.5c0 1.66 3.36 3 7.5 3s7.5-1.34 7.5-3" fill="none" stroke="#CC2927" stroke-width="1.3"/></svg>SQL Server</span>
+                <span class="pill-logo indigo"><i data-lucide="key-round" style="width:16px;height:16px;stroke:#fb7185;"></i>JWT</span>
+                <span class="pill-logo indigo"><svg viewBox="0 0 24 24" width="18" height="18"><path d="M4 12c0-3.3 3.6-6 8-6s8 2.7 8 6-3.6 6-8 6-8-2.7-8-6z" fill="none" stroke="#3448c5" stroke-width="1.5"/><path d="M12 6v12M8 8c0 2 1.8 4 4 4s4-2 4-4" fill="none" stroke="#3448c5" stroke-width="1"/></svg>Cloudinary</span>
+              </div>
+            </div>
+          </div>
+          <p class="caption center" style="margin-top:24px;">Three platforms, <b>one shared REST API</b> — documented with Swagger / OpenAPI.</p>
+        </div>
+      </section>
+
+      <!-- 16 · ENGINEERING HIGHLIGHTS -->
+      <section>
+        <div class="vcenter">
+          <div class="kicker">Engineering Highlights</div>
+          <h2>The hard parts, <span class="grad-text">done right</span></h2>
+          <div class="cols-3" style="margin-top:22px;">
+            <div class="card i-indigo"><span class="icon"><i data-lucide="lock-keyhole"></i></span><span class="ttl">RBAC + JWT</span><p>Three roles with account-status gates (Pending / Active / Rejected) enforced on every endpoint.</p></div>
+            <div class="card i-violet"><span class="icon"><i data-lucide="layers"></i></span><span class="ttl">Clean Architecture</span><p>Domain, Application, Infrastructure, API — testable and independent of frameworks.</p></div>
+            <div class="card i-amber"><span class="icon"><i data-lucide="target"></i></span><span class="ttl">Gamification engine</span><p>Points, badges, and leaderboards computed from real participation.</p></div>
+            <div class="card i-cyan"><span class="icon"><i data-lucide="image"></i></span><span class="ttl">Media pipeline</span><p>Cloudinary-backed image uploads for profiles, activities, and the store.</p></div>
+            <div class="card i-emerald"><span class="icon"><i data-lucide="scan-line"></i></span><span class="ttl">QR check-in</span><p>Agents verify event attendance on the spot via QR scanning.</p></div>
+            <div class="card i-rose"><span class="icon"><i data-lucide="globe"></i></span><span class="ttl">i18n + RTL</span><p>Full Arabic/English localization with mirrored right-to-left layouts.</p></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 17 · HOW WE BUILT IT -->
+      <section>
+        <div class="vcenter">
+          <div class="kicker">How We Built It</div>
+          <h2>A real <span class="grad-text">GitHub workflow</span></h2>
+          <div class="flow" style="margin-top:18px;">
+            <div class="step"><div class="s-ic"><i data-lucide="git-branch"></i></div><div class="s-t">Feature branch</div></div>
+            <div class="arrow"><i data-lucide="chevron-right"></i></div>
+            <div class="step"><div class="s-ic"><i data-lucide="git-pull-request"></i></div><div class="s-t">Pull request</div></div>
+            <div class="arrow"><i data-lucide="chevron-right"></i></div>
+            <div class="step"><div class="s-ic"><i data-lucide="eye"></i></div><div class="s-t">Code review</div></div>
+            <div class="arrow"><i data-lucide="chevron-right"></i></div>
+            <div class="step"><div class="s-ic"><i data-lucide="circle-check"></i></div><div class="s-t">CI checks</div></div>
+            <div class="arrow"><i data-lucide="chevron-right"></i></div>
+            <div class="step"><div class="s-ic"><i data-lucide="rocket"></i></div><div class="s-t">Merge to main</div></div>
+          </div>
+          <div class="kpis" style="margin-top:30px;">
+            <div class="kpi"><div class="num">500+</div><div class="lbl">Commits</div></div>
+            <div class="kpi"><div class="num">135+</div><div class="lbl">Pull requests</div></div>
+            <div class="kpi"><div class="num">25</div><div class="lbl">Issues tracked</div></div>
+            <div class="kpi"><div class="num">~4 mo</div><div class="lbl">Feb → Jun 2026</div></div>
+          </div>
+          <p class="caption center" style="margin-top:20px;">Conventional branch naming (<span class="mono">feat/ · fix/ · chore/</span>), reviews on every PR, and continuous integration.</p>
+        </div>
+      </section>
+
+      <!-- 18 · PROJECT MANAGEMENT (CLICKUP) -->
+      <section>
+        <div class="vcenter center">
+          <div class="kicker">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" style="vertical-align: middle; margin-right: 4px; display: inline-block;">
+              <path d="M5 12c0 3.866 3.134 7 7 7s7-3.134 7-7h-3c0 2.21-1.79 4-4 4s-4-1.79-4-4H5z" fill="#7B61FF"/>
+              <path d="M12 5.5l5 5-2 2-3-3-3 3-2-2 5-5z" fill="#FF5353"/>
+            </svg>
+            Project Management
+          </div>
+          <h2 style="margin-bottom:14px;">Sprint execution via <span class="grad-text">ClickUp</span></h2>
+          <div class="browser-hero browser-glow">
+            <div class="browser">
+              <div class="bar">
+                <i class="r"></i><i class="y"></i><i class="g"></i>
+                <span class="url">clickup.com/workspace/studenthub</span>
+              </div>
+              <img src="assets/screens/ClickUp.png" alt="ClickUp Workspace" />
+            </div>
+          </div>
+          <p class="caption" style="margin-top:10px;">Enforcing task ownership, daily updates, and transparent milestone tracking.</p>
+        </div>
+      </section>
+
+      <!-- 19 · TEAM -->
+      <section>
+        <div class="vcenter">
+          <div class="kicker">The Team</div>
+          <h2>Eight people, <span class="grad-text">clear ownership</span></h2>
+          <div class="team" style="margin-top:22px;">
+            <div class="member">
+              <div class="av"><img src="assets/team/Abdelrahman-Yahia.jpg" alt="Abdelrahman Yahia" /></div>
+              <div class="nm">Abdelrahman Yahia</div>
+              <div class="rl rl-lead">Lead · Backend</div>
+            </div>
+            <div class="member">
+              <div class="av"><img src="assets/team/Yousef-Alaa.jpeg" alt="Yousef Alaa" /></div>
+              <div class="nm">Yousef Alaa</div>
+              <div class="rl rl-backend">Backend</div>
+            </div>
+            <div class="member">
+              <div class="av"><img src="assets/team/Mohamed-Ezz.jpeg" alt="Mohamed Ezz" /></div>
+              <div class="nm">Mohamed Ezz</div>
+              <div class="rl rl-backend">Backend</div>
+            </div>
+            <div class="member">
+              <!-- <div class="av"><span class="initials">MM</span></div> -->
+              <div class="av"><img src="assets/team/Marwan.jpeg" alt="Marwan Mohamed" /></div>
+              <div class="nm">Marwan Mohamed</div>
+              <div class="rl rl-backend">Backend</div>
+            </div>
+            <div class="member">
+              <div class="av"><img src="assets/team/Omar-Mohamed.jpeg" alt="Omar Mohamed" /></div>
+              <div class="nm">Omar Mohamed</div>
+              <div class="rl rl-frontend">Frontend</div>
+            </div>
+            <div class="member">
+              <div class="av"><img src="assets/team/Ali-Haggag.jpeg" alt="Ali Haggag" /></div>
+              <div class="nm">Ali Haggag</div>
+              <div class="rl rl-frontend">Frontend</div>
+            </div>
+            <div class="member">
+              <!-- <div class="av"><span class="initials">MA</span></div> -->
+              <div class="av"><img src="assets/team/Mahmoud.jpeg" alt="Mahmoud Abdelhady" /></div>
+              <div class="nm">Mahmoud Abdelhady</div>
+              <div class="rl rl-mobile">Mobile</div>
+            </div>
+            <div class="member">
+              <div class="av"><img src="assets/team/Omar-Abdeen.jpeg" alt="Omar Abdeen" /></div>
+              <div class="nm">Omar Abdeen</div>
+              <div class="rl rl-mobile">Mobile</div>
+            </div>
+          </div>
+          <p class="caption center" style="margin-top:22px;">4 backend · 2 frontend · 2 mobile — collaborating through pull requests &amp; reviews.</p>
+        </div>
+      </section>
+
+      <!-- 20 · BY THE NUMBERS -->
+      <section>
+        <div class="vcenter center">
+          <div class="kicker">By the Numbers</div>
+          <h2 style="margin-bottom:26px;">What “done” looks like</h2>
+          <div class="kpis">
+            <div class="kpi"><div class="num">3</div><div class="lbl">Platforms · web · mobile · API</div></div>
+            <div class="kpi"><div class="num">67</div><div class="lbl">Functional requirements</div></div>
+            <div class="kpi"><div class="num">110+</div><div class="lbl">REST endpoints · 17 controllers</div></div>
+            <div class="kpi"><div class="num">47</div><div class="lbl">Web pages / screens</div></div>
+          </div>
+          <div class="kpis" style="margin-top:22px;">
+            <div class="kpi"><div class="num">3</div><div class="lbl">User roles</div></div>
+            <div class="kpi"><div class="num">7</div><div class="lbl">Feature modules</div></div>
+            <div class="kpi"><div class="num">EN / AR</div><div class="lbl">Bilingual + RTL</div></div>
+            <div class="kpi"><div class="num">8</div><div class="lbl">Team members</div></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 21 · CHALLENGES -->
+      <section>
+        <div class="vcenter">
+          <div class="kicker">Challenges &amp; Solutions</div>
+          <h2>What we <span class="grad-text">solved along the way</span></h2>
+          <div class="cols-3" style="margin-top:22px;">
+            <div class="card i-rose">
+              <span class="icon"><i data-lucide="unplug"></i></span><span class="ttl">Integrating many modules</span>
+              <p><b>Challenge:</b> activities, store, community &amp; services on one data model.<br/><b>Solution:</b> Clean Architecture with clear bounded contexts and a shared API.</p>
+            </div>
+            <div class="card i-amber">
+              <span class="icon"><i data-lucide="users"></i></span><span class="ttl">8 people, one codebase</span>
+              <p><b>Challenge:</b> avoiding conflicts across web, mobile &amp; backend.<br/><b>Solution:</b> feature branches, pull-request reviews, and CI on every change.</p>
+            </div>
+            <div class="card i-cyan">
+              <span class="icon"><i data-lucide="globe-2"></i></span><span class="ttl">Bilingual + RTL</span>
+              <p><b>Challenge:</b> mirroring the whole UI for Arabic.<br/><b>Solution:</b> a central i18n layer driving direction and translations everywhere.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 22 · ROADMAP -->
+      <section>
+        <div class="vcenter">
+          <div class="kicker">What's Next</div>
+          <h2>Roadmap &amp; <span class="grad-text">future work</span></h2>
+          <div class="cols" style="margin-top:18px;">
+            <ul class="clean">
+              <li><strong>Online payments</strong> &amp; checkout for the store and tickets</li>
+              <li><strong>Push notifications</strong> for application decisions &amp; events</li>
+              <li><strong>Expanded mobile app</strong> reaching feature parity with web</li>
+            </ul>
+            <ul class="clean">
+              <li><strong>Advanced analytics</strong> &amp; exportable reports for admins</li>
+              <li><strong>Calendar &amp; reminders</strong> synced to student schedules</li>
+              <li><strong>AI recommendations</strong> for relevant activities &amp; opportunities</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- 23 · THANK YOU -->
+      <section data-background-gradient="radial-gradient(900px 600px at 50% 30%, rgba(99,102,241,.30), transparent 60%), radial-gradient(700px 600px at 80% 110%, rgba(34,211,238,.22), transparent 60%), #070b16">
+        <div class="vcenter center">
+          <div class="brandmark" style="justify-content:center;">
+            <span class="logo"><i data-lucide="graduation-cap"></i></span><span class="bt grad-text">StudentHub</span>
+          </div>
+          <h1 style="font-size:2.2em;">Thank you</h1>
+          <p class="muted" style="font-size:0.7em;">We're happy to take your questions and give a live walkthrough.</p>
+          <div class="title-meta center" style="justify-content:center; margin-top:26px; font-size:0.55em;">
+            <div>🔗 <b>github.com/3bdo-Yahya/Student-Hub</b></div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+  <script src="assets/vendor/reveal/dist/reveal.js"></script>
+  <script src="assets/vendor/reveal/plugin/notes/notes.js"></script>
+  <script src="assets/vendor/reveal/plugin/highlight/highlight.js"></script>
+  <script>
+    Reveal.initialize({
+      width: 1280,
+      height: 720,
+      margin: 0.045,
+      minScale: 0.2,
+      maxScale: 1.6,
+      hash: true,
+      slideNumber: "c/t",
+      transition: "slide",
+      transitionSpeed: "default",
+      backgroundTransition: "fade",
+      controls: true,
+      progress: true,
+      center: false,
+      plugins: [RevealNotes, RevealHighlight],
+    }).then(() => {
+      if (window.lucide) lucide.createIcons();
+    });
+  </script>
+</body>
+</html>
