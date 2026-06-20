@@ -1,9 +1,10 @@
-import { MessageSquare, Network, Code2, ShieldAlert, BarChart3, Bot, type LucideIcon } from "lucide-react";
+import { MessageSquare, Network, Code2, ShieldAlert, Bot, Swords, type LucideIcon } from "lucide-react";
 import type { StaticImageData } from "next/image"; // Added explicit type for Next.js images
 import flurryImg from "@/public/images/flurry.png";
 import blogImg from "@/public/images/blog-pro.png";
 import geminiImg from "@/public/images/gemini-clone-1.jpeg";
 import csArenaImg from "@/public/images/cs-arena.png";
+import logicArenaImg from "@/public/images/logic-arena.png";
 
 export type Autopsy = {
     challenge: string;
@@ -30,20 +31,20 @@ export type ProjectFeature = {
 
 export const projectsData: ProjectFeature[] = [
     {
-        id: "cs-arena",
-        Icon: Code2,
-        name: "CS Arena Platform",
-        description: "Developer ecosystem featuring 3-level cascading classification and collaboration.",
-        href: "https://github.com/Ali-Haggag7/CS-Arena",
+        id: "logic-arena",
+        Icon: Swords,
+        name: "Logic Arena",
+        description: "Competitive coding platform where you program robots in a custom language (AliScript) to battle in a real-time 3D physics arena.",
+        href: "https://github.com/Ali-Haggag7/logic-arena",
         cta: "View Source",
-        demoHref: "https://csarena.tech",
-        imageSrc: csArenaImg,
-        videoSrc: "/videos/cs-arena-demo.mp4",
+        demoHref: "https://logicarena.dev",
+        imageSrc: logicArenaImg,
+        videoSrc: "/videos/logic-arena-demo.mp4",
         className: "col-span-1 md:col-span-2",
         autopsy: {
-            challenge: "State Synchronization & Cascading Filter Race Conditions",
-            architecture: "Engineered a URL-first state management system using Next.js App Router. Leveraged React's useTransition to decouple UI state updates from router navigation.",
-            impact: "Zero race conditions during complex query parameter updates, ensuring a fluid, glitch-free discovery experience."
+            challenge: "Real-Time Physics Sync & Custom Language Security Sandboxing",
+            architecture: "Built a pnpm monorepo with a NestJS 11 backend running a shared TypeScript game engine at 20 ticks/sec. Designed AliScript v2.2 — a custom DSL with a full AST parser — with server-side execution sandboxing, strict command whitelists, logic timeouts, and rate limiting. State is broadcast via Socket.io and rendered through React Three Fiber.",
+            impact: "Zero script injection vulnerabilities, sub-50ms real-time sync for up to 8 concurrent players, and a complete competitive ecosystem including Tournament Brackets, Campaign Mode, PWA support, and Match Replays."
         }
     },
     {
@@ -81,6 +82,23 @@ export const projectsData: ProjectFeature[] = [
         }
     },
     {
+        id: "cs-arena",
+        Icon: Code2,
+        name: "CS Arena Platform",
+        description: "Developer ecosystem featuring 3-level cascading classification and collaboration.",
+        href: "https://github.com/Ali-Haggag7/CS-Arena",
+        cta: "View Source",
+        demoHref: "https://csarena.tech",
+        imageSrc: csArenaImg,
+        videoSrc: "/videos/cs-arena-demo.mp4",
+        className: "col-span-1 md:col-span-2",
+        autopsy: {
+            challenge: "State Synchronization & Cascading Filter Race Conditions",
+            architecture: "Engineered a URL-first state management system using Next.js App Router. Leveraged React's useTransition to decouple UI state updates from router navigation.",
+            impact: "Zero race conditions during complex query parameter updates, ensuring a fluid, glitch-free discovery experience."
+        }
+    },
+    {
         id: "blog-pro",
         Icon: ShieldAlert,
         name: "Blog Pro Platform",
@@ -95,23 +113,6 @@ export const projectsData: ProjectFeature[] = [
             challenge: "Enterprise-Grade Security Against Modern Web Vulnerabilities",
             architecture: "Engineered a multi-layered security pipeline integrating Helmet for HTTP headers, XSS-Clean for payload sanitization, Joi for schema validation, and Redis-backed rate limiting.",
             impact: "Blocked 100% of malicious payloads and mitigated aggressive DDoS attempts without degrading the sub-100ms API response times."
-        }
-    },
-    {
-        id: "admin-dashboard",
-        Icon: BarChart3,
-        name: "Admin Dashboard API",
-        description: "Robust CRM Backend API with MVC Architecture & JWT Authentication.",
-        href: "https://github.com/Ali-Haggag7/Admin-Pro-Dashboard",
-        cta: "View Source",
-        isGradientBg: true,
-        gradientClass: "from-indigo-950 to-slate-900",
-        videoSrc: "/videos/admin-dashboard-demo.mp4",
-        className: "col-span-1 md:col-span-2",
-        autopsy: {
-            challenge: "Scalable Architecture & Centralized Error Handling",
-            architecture: "Architected a RESTful API using strict MVC patterns to ensure clean codebases. Secured admin endpoints with JWT Authentication and enforced strict data validation using Joi middleware.",
-            impact: "Blocked 100% of invalid data payloads and accelerated complex data reporting queries by ~35% using MongoDB Aggregation pipelines."
         }
     },
     {
