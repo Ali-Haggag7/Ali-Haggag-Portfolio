@@ -31,6 +31,8 @@
   --animate-shimmer: shimmer 2s linear infinite;
   --animate-spin-slow: spin 8s linear infinite;
   --animate-fade-in: fadeIn 0.5s ease-in-out forwards;
+  --animate-mesh-spin: mesh-spin 30s linear infinite;
+  --animate-twinkle: twinkle 4s ease-in-out infinite;
 
   @keyframes marquee {
     from {
@@ -84,6 +86,28 @@
       opacity: 0.4;
     }
   }
+
+  @keyframes mesh-spin {
+    0% {
+      transform: translate(0, 0) rotate(0deg);
+    }
+    50% {
+      transform: translate(10%, -5%) rotate(180deg);
+    }
+    100% {
+      transform: translate(0, 0) rotate(360deg);
+    }
+  }
+
+  @keyframes twinkle {
+    0%, 100% {
+      opacity: 0.15;
+    }
+    50% {
+      opacity: 0.85;
+    }
+  }
+
 }
 
 @layer base {
@@ -99,6 +123,7 @@
     --foreground: 210 40% 98%;
     --card: 222 47% 6%;
     --card-foreground: 210 40% 98%;
+    --terminal-bg: 222 47% 6%;
     --popover: 222 47% 6%;
     --popover-foreground: 210 40% 98%;
     --primary: 210 40% 98%;
@@ -115,6 +140,15 @@
     --input: 216 34% 17%;
     --ring: 212.7 26.8% 83.9%;
     --radius: 0.75rem;
+
+    /* HSL equivalents of accents for tailwind opacity / color utilities */
+    --accent-blue: 217.2 91.2% 59.8%;
+    --accent-purple: 270 91.2% 65.1%;
+    --accent-emerald: 160 84% 39%;
+
+    /* Forced Dark Terminal variables */
+    --terminal-bg-forced: 222 47% 6%;
+    --terminal-border-forced: 216 34% 17%;
 
     /* Timeline period accents (used for active left-border + expand details) */
     --tl-accent-purple: #a855f7;
@@ -159,6 +193,7 @@
     --foreground: 210 40% 98%;
     --card: 222 47% 6%;
     --card-foreground: 210 40% 98%;
+    --terminal-bg: 222 47% 6%;
     --popover: 222 47% 6%;
     --popover-foreground: 210 40% 98%;
     --primary: 210 40% 98%;
@@ -174,6 +209,15 @@
     --border: 216 34% 17%;
     --input: 216 34% 17%;
     --ring: 212.7 26.8% 83.9%;
+
+    /* HSL equivalents of accents for tailwind opacity / color utilities */
+    --accent-blue: 217.2 91.2% 59.8%;
+    --accent-purple: 270 91.2% 65.1%;
+    --accent-emerald: 160 84% 39%;
+
+    /* Forced Dark Terminal variables */
+    --terminal-bg-forced: 222 47% 6%;
+    --terminal-border-forced: 216 34% 17%;
 
     --tl-accent-purple: #a855f7;
     --tl-accent-blue: #3b82f6;
@@ -206,6 +250,7 @@
     --foreground: 222.2 84% 4.9%;
     --card: 0 0% 100%;
     --card-foreground: 222.2 84% 4.9%;
+    --terminal-bg: 210 40% 96.1%;
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
     --primary: 222.2 47.4% 11.2%;
@@ -221,6 +266,15 @@
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
     --ring: 222.2 84% 4.9%;
+
+    /* HSL equivalents of accents for tailwind opacity / color utilities */
+    --accent-blue: 221.2 83.2% 53.3%;
+    --accent-purple: 271.5 81.3% 55.9%;
+    --accent-emerald: 162 94% 30%;
+
+    /* Forced Dark Terminal variables */
+    --terminal-bg-forced: 222 47% 6%;
+    --terminal-border-forced: 216 34% 17%;
 
     /* Slightly deeper accents for contrast on the light background */
     --tl-accent-purple: #9333ea;
@@ -460,4 +514,36 @@
   pointer-events: none;
   z-index: -10;
   will-change: transform;
+}
+
+.terminal-glow-container::after {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  box-shadow: 0 0 25px 2px hsl(var(--accent-blue)/0.35);
+  pointer-events: none;
+  z-index: -2;
+  will-change: opacity;
+  animation: pulse-glow 5s ease-in-out infinite;
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    opacity: 0.45;
+  }
+  50% {
+    opacity: 0.85;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-mesh-spin {
+    animation: none !important;
+    transform: none !important;
+  }
+  .animate-twinkle,
+  .terminal-glow-container::after {
+    animation: none !important;
+  }
 }

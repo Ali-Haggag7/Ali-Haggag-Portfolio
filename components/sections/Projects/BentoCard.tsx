@@ -106,6 +106,7 @@ export const BentoCard = memo(function BentoCard({
     return (
         <button
             type="button"
+            id={`project-${feature.id}`}
             ref={cardRef}
             onClick={onClick}
             onMouseEnter={handleMouseEnter}

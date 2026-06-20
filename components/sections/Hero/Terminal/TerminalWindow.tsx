@@ -55,38 +55,203 @@ export const TerminalWindow = memo(function TerminalWindow({ terminal }: { termi
     const handleCommand = useCallback((e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key !== "Enter") return;
 
-        const cmd = terminal.userInput.trim().toLowerCase();
+        const rawInput = terminal.userInput.trim();
+        const parts = rawInput.split(/\s+/);
+        const cmd = parts[0].toLowerCase();
+        const arg = parts[1] ? parts[1].toLowerCase() : "";
         let output: React.ReactNode = "";
 
         switch (cmd) {
             case "help":
                 output = (
-                    <div className="text-gray-400">
-                        Available commands:<br />
-                        <span className="text-yellow-300">whoami</span>   — Display identity<br />
-                        <span className="text-yellow-300">projects</span> — List current missions<br />
-                        <span className="text-yellow-300">skills</span>   — Show technical arsenal<br />
-                        <span className="text-yellow-300">clear</span>    — Clear terminal
+                    <div className="text-gray-400 font-mono space-y-1">
+                        <div>Available commands:</div>
+                        <div><span className="text-yellow-300">whoami</span>       - Display identity card</div>
+                        <div><span className="text-yellow-300">skills</span>       - Show technical skills tree</div>
+                        <div><span className="text-yellow-300">projects</span>     - List current projects</div>
+                        <div><span className="text-yellow-300">cd &lt;project&gt;</span>  - Scroll to specific project section</div>
+                        <div><span className="text-yellow-300">log</span>          - View engineering changelog</div>
+                        <div><span className="text-yellow-300">neofetch</span>     - Show specifications and specs</div>
+                        <div><span className="text-yellow-300">contact</span>      - Get contact coordinates</div>
+                        <div><span className="text-yellow-300">sudo hire-me</span>  - Initialize recruiting protocol</div>
+                        <div><span className="text-yellow-300">clear</span>        - Clear terminal screen</div>
                     </div>
                 );
                 break;
             case "whoami":
-                output = <span className="text-blue-400 block break-words">Ali Haggag | Full-Stack Software Engineer &amp; Real-time Architect</span>;
-                break;
-            case "projects":
                 output = (
-                    <div className="text-gray-300 break-words">
-                        <span className="text-purple-400">1. CS-Arena:</span> Developer Ecosystem (Next.js 16)<br />
-                        <span className="text-purple-400">2. Flurry v2.0:</span> Real-time Social Super App (WebRTC/Socket.io)<br />
-                        <span className="text-purple-400">3. Cybership:</span> Integration API (DDD/TypeScript)
+                    <div className="text-blue-300 font-mono whitespace-pre-line leading-relaxed">
+                        {`Identity ........ Ali Haggag
+Role ............ Full-Stack Engineer / Systems Architect
+Focus ........... Real-time systems, language design, performance engineering
+Building now .... Logic Arena — competitive robot-programming platform
+Notable ......... Designed & shipped AliScript — a custom language with a
+                  full AST parser, from tokenizer to interpreter
+Status .......... Available`}
                     </div>
                 );
                 break;
             case "skills":
-                output = <span className="text-emerald-400 block break-words">Next.js, TypeScript, WebRTC, Socket.io, Node.js, Prisma, GraphQL, PWA</span>;
+                output = (
+                    <div className="text-emerald-400 font-mono whitespace-pre leading-none text-xs md:text-sm">
+{`┌─ FRONTEND ──────────────────────────────────
+│ TypeScript         ████████████ Expert
+│ Next.js 15         ███████████░ Advanced
+│ React Three Fiber  ██████████░░ Advanced
+│ Tailwind CSS       ████████████ Expert
+├─ BACKEND ───────────────────────────────────
+│ NestJS             ███████████░ Advanced
+│ Socket.IO          ███████████░ Advanced
+│ Prisma/PostgreSQL  ██████████░░ Advanced
+│ Redis              █████████░░░ Proficient
+├─ INFRA ─────────────────────────────────────
+│ Docker             ██████████░░ Advanced
+│ DigitalOcean       █████████░░░ Proficient
+├─ LANGUAGE ENGINEERING ──────────────────────
+│ AST Parsers        ██████████░░ Built AliScript from scratch
+└─────────────────────────────────────────────`}
+                    </div>
+                );
+                break;
+            case "projects":
+                output = (
+                    <div className="text-gray-300 font-mono space-y-4">
+                        <div>
+                            <span className="text-purple-400 font-bold">[1] Logic Arena</span> — competitive robot-programming arena<br />
+                            &nbsp;&nbsp;Stack: Next.js 15 · NestJS · React Three Fiber · Socket.IO · Prisma/PostgreSQL · Redis · Docker<br />
+                            &nbsp;&nbsp;→ Custom language &quot;AliScript&quot; — full AST parser built from scratch<br />
+                            &nbsp;&nbsp;→ 60-level campaign engine, audited &amp; fixed 7 AI logic mismatches<br />
+                            &nbsp;&nbsp;→ Real-time server-authoritative pause (timestamp-safe across hitWall/shield/mine timers)<br />
+                            &nbsp;&nbsp;→ Replay system — play / pause / seek / speed controls<br />
+                            &nbsp;&nbsp;<span className="text-blue-300 font-bold">$ cd logic-arena</span>
+                        </div>
+                        <div>
+                            <span className="text-purple-400 font-bold">[2] Portfolio</span> — this site<br />
+                            &nbsp;&nbsp;Stack: Next.js 15 · Tailwind CSS · Framer Motion<br />
+                            &nbsp;&nbsp;→ &quot;Battle Scars&quot; — 21 real production incidents, fully documented<br />
+                            &nbsp;&nbsp;→ You&apos;re literally inside it right now (AliOS terminal)<br />
+                            &nbsp;&nbsp;<span className="text-blue-300 font-bold">$ cd portfolio</span>
+                        </div>
+                    </div>
+                );
+                break;
+            case "cd":
+                if (arg === "logic-arena") {
+                    output = <span className="text-emerald-400">Scrolling to Logic Arena...</span>;
+                    setTimeout(() => {
+                        document.getElementById("project-logic-arena")?.scrollIntoView({ behavior: "smooth" });
+                    }, 100);
+                } else if (arg === "portfolio" || arg === "flurry-v2" || arg === "cybership" || arg === "cs-arena" || arg === "blog-pro" || arg === "gemini-clone") {
+                    output = <span className="text-emerald-400">Scrolling to {arg === "portfolio" ? "Portfolio" : arg}...</span>;
+                    setTimeout(() => {
+                        const targetId = arg === "portfolio" ? "project-flurry-v2" : `project-${arg}`;
+                        const target = document.getElementById(targetId) || document.getElementById("projects");
+                        target?.scrollIntoView({ behavior: "smooth" });
+                    }, 100);
+                } else if (!arg) {
+                    output = <span className="text-red-400">Usage: cd &lt;project-name&gt; (e.g., cd logic-arena)</span>;
+                } else {
+                    output = <span className="text-red-400">Directory not found: {arg}</span>;
+                }
+                break;
+            case "log":
+                output = (
+                    <div className="text-gray-300 font-mono space-y-1">
+                        <div><span className="text-red-400 font-bold">[FIXED]</span>   Docker build failure — missing engine/* wildcard in tsconfig.json</div>
+                        <div><span className="text-red-400 font-bold">[FIXED]</span>   7 AI logic mismatches across 60-level campaign audit</div>
+                        <div><span className="text-red-400 font-bold">[FIXED]</span>   Timing bug — tick thresholds assumed seconds, engine runs 10 ticks/sec (17 levels affected)</div>
+                        <div><span className="text-emerald-400 font-bold">[SHIPPED]</span> Replay controls — play/pause/seek/speed</div>
+                        <div><span className="text-emerald-400 font-bold">[SHIPPED]</span> Server-side pause w/ timestamp-safe state adjustment</div>
+                        <div><span className="text-blue-400 font-bold">[PERF]</span>    Lighthouse optimization pass — lobby, campaign, black-market</div>
+                    </div>
+                );
+                break;
+            case "neofetch":
+                {
+                    const codingYears = new Date().getFullYear() - 2023;
+                    output = (
+                        <div className="flex gap-4 font-mono items-center">
+                            <pre className="text-blue-400 text-xs hidden sm:block">
+{`   /\\_/\\
+  ( o.o )
+   > ^ <
+  /     \\
+ (       )
+`}
+                            </pre>
+                            <div className="text-gray-300 text-xs md:text-sm space-y-1">
+                                <div><span className="text-blue-400 font-bold">OS</span> .............. AliOS v2.0</div>
+                                <div><span className="text-blue-400 font-bold">Shell</span> ........... TypeScript</div>
+                                <div><span className="text-blue-400 font-bold">Uptime</span> .......... {codingYears} years coding (since 2023)</div>
+                                <div><span className="text-blue-400 font-bold">Packages</span> ........ pnpm (12) / npm (8)</div>
+                                <div><span className="text-blue-400 font-bold">CPU</span> ............. Problem-Solving Core, 8 threads</div>
+                                <div><span className="text-blue-400 font-bold">Memory</span> .......... Unlimited (caffeine-backed)</div>
+                            </div>
+                        </div>
+                    );
+                }
+                break;
+            case "contact":
+                output = (
+                    <div className="text-gray-300 font-mono space-y-1 text-xs md:text-sm">
+                        <div>
+                            <span className="text-blue-300">Email</span> ...........{" "}
+                            <a
+                                href="mailto:ali.haggag2005@gmail.com"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="cursor-pointer text-emerald-400 hover:text-emerald-300 underline"
+                            >
+                                ali.haggag2005@gmail.com
+                            </a>
+                        </div>
+                        <div>
+                            <span className="text-blue-300">GitHub</span> ..........{" "}
+                            <a
+                                href="https://github.com/Ali-Haggag7"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="cursor-pointer text-emerald-400 hover:text-emerald-300 underline"
+                            >
+                                github.com/Ali-Haggag7
+                            </a>
+                        </div>
+                        <div>
+                            <span className="text-blue-300">LinkedIn</span> ........{" "}
+                            <a
+                                href="https://www.linkedin.com/in/ali-haggag7/"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="cursor-pointer text-emerald-400 hover:text-emerald-300 underline"
+                            >
+                                linkedin.com/in/ali-haggag7
+                            </a>
+                        </div>
+                    </div>
+                );
                 break;
             case "sudo":
-                output = <span className="text-red-500 font-bold block break-words">Nice try, recruiter. Access Denied.</span>;
+                if (arg === "hire-me") {
+                    output = (
+                        <div className="text-emerald-400 font-mono space-y-1">
+                            <div>Initializing hiring protocol...</div>
+                            <div>Decrypting CV package...</div>
+                            <div>Target acquired: Ali Haggag</div>
+                            <div>Generating contract payload...</div>
+                            <div className="text-white font-bold animate-pulse">Downloading CV... Welcome aboard!</div>
+                        </div>
+                    );
+                    setTimeout(() => {
+                        const link = document.createElement("a");
+                        link.href = "/Ali_Haggag_CV.pdf";
+                        link.download = "Ali_Haggag_FullStack_CV.pdf";
+                        document.body.appendChild(link);
+                        link.click();
+                        document.body.removeChild(link);
+                    }, 800);
+                } else {
+                    output = <span className="text-red-500 font-bold block break-words">Nice try, recruiter. Access Denied.</span>;
+                }
                 break;
             case "clear":
                 terminal.setHistory([]);
@@ -96,10 +261,10 @@ export const TerminalWindow = memo(function TerminalWindow({ terminal }: { termi
                 output = "";
                 break;
             default:
-                output = <span className="text-red-500 block break-words">Command not found: {cmd}. Type &apos;help&apos; for available commands.</span>;
+                output = <span className="text-red-500 block break-words">command not found: zsh: did you mean &apos;help&apos;?</span>;
         }
 
-        terminal.setHistory(prev => [...prev, { id: Date.now(), command: terminal.userInput, output }]);
+        terminal.setHistory(prev => [...prev, { id: Date.now(), command: rawInput, output }]);
         terminal.setUserInput("");
         terminal.playKeystroke();
     }, [terminal]);
@@ -109,18 +274,16 @@ export const TerminalWindow = memo(function TerminalWindow({ terminal }: { termi
         terminal.playKeystroke();
     }, [terminal]);
 
-    // Fixed architecture: Fullscreen escapes the parent container completely
     const wrapperClasses = terminal.isFullScreen
-        ? "fixed inset-0 z-[100] bg-[#0D1117] flex flex-col text-left m-0 rounded-none border-none"
+        ? "fixed inset-0 z-[100] bg-[hsl(var(--terminal-bg-forced))] flex flex-col text-left m-0 rounded-none border-none terminal-scanlines"
         : cn(
-            "w-full max-w-3xl mx-auto rounded-xl overflow-hidden border border-border/50 bg-[#0D1117] shadow-xl mb-8 text-left flex flex-col",
-            "transition-all duration-300 transform-gpu will-change-transform",
-            // Priority: Close > Minimize > Normal
+            "w-full max-w-3xl mx-auto rounded-xl border border-[hsl(var(--terminal-border-forced))] mb-8 text-left flex flex-col terminal-scanlines relative overflow-hidden terminal-glow-container",
+            "transition-[transform,opacity] duration-300 transform-gpu will-change-[transform,opacity]",
             terminal.isClosed
                 ? "scale-95 opacity-0 pointer-events-none"
                 : terminal.isMinimized
-                    ? "scale-90 opacity-60 pointer-events-none" // Removed 'absolute' to maintain layout stability
-                    : "scale-100 opacity-100 relative"
+                    ? "scale-90 opacity-60 pointer-events-none"
+                    : "scale-100 opacity-100"
         );
 
     const bodyClasses = terminal.isFullScreen
@@ -129,27 +292,38 @@ export const TerminalWindow = memo(function TerminalWindow({ terminal }: { termi
 
     return (
         <article className={wrapperClasses}>
-            <header className="flex items-center justify-between px-4 py-4 bg-[#161B22] border-b border-gray-800 shrink-0">
+            {/* Glassmorphism Background Layer (Separated to prevent Chrome box-shadow + backdrop-filter flicker bug) */}
+            {!terminal.isFullScreen && (
+                <div 
+                    aria-hidden="true" 
+                    className="absolute inset-0 -z-10 bg-[hsl(var(--terminal-bg-forced))] backdrop-blur-md rounded-xl pointer-events-none" 
+                />
+            )}
+
+            <header className="flex items-center justify-between px-4 py-4 bg-[hsl(var(--terminal-bg-forced))] border-b border-[hsl(var(--terminal-border-forced))] shrink-0">
                 <div className="flex gap-2">
                     <button
+                        type="button"
                         onClick={() => terminal.setIsClosed(true)}
-                        className="p-1 rounded-full hover:bg-white/10 transition-colors group outline-none"
+                        className="cursor-pointer p-1 rounded-full hover:bg-white/10 transition-colors group outline-none"
                     >
                         <div className="w-3 h-3 rounded-full bg-red-500 relative flex items-center justify-center">
                             <span className="opacity-0 group-hover:opacity-100 text-[8px] font-bold text-black leading-none">x</span>
                         </div>
                     </button>
                     <button
+                        type="button"
                         onClick={() => terminal.setIsMinimized(p => !p)}
-                        className="p-1 rounded-full hover:bg-white/10 transition-colors group outline-none"
+                        className="cursor-pointer p-1 rounded-full hover:bg-white/10 transition-colors group outline-none"
                     >
                         <div className="w-3 h-3 rounded-full bg-yellow-500 relative flex items-center justify-center">
                             <span className="opacity-0 group-hover:opacity-100 text-[8px] font-bold text-black leading-none">-</span>
                         </div>
                     </button>
                     <button
+                        type="button"
                         onClick={() => { terminal.setIsFullScreen(p => !p); terminal.setIsMinimized(false); }}
-                        className="p-1 rounded-full hover:bg-white/10 transition-colors group outline-none"
+                        className="cursor-pointer p-1 rounded-full hover:bg-white/10 transition-colors group outline-none"
                     >
                         <div className="w-3 h-3 rounded-full bg-green-500 relative flex items-center justify-center">
                             <span className="opacity-0 group-hover:opacity-100 text-[8px] font-bold text-black leading-none">+</span>
@@ -162,8 +336,9 @@ export const TerminalWindow = memo(function TerminalWindow({ terminal }: { termi
                 </div>
 
                 <button
+                    type="button"
                     onClick={() => terminal.setIsMuted(p => !p)}
-                    className="p-2 -mr-2 text-gray-400 hover:text-white transition-colors outline-none focus-visible:ring-2 focus-visible:ring-gray-400 rounded-sm"
+                    className="cursor-pointer p-2 -mr-2 text-gray-400 hover:text-white transition-colors outline-none focus-visible:ring-2 focus-visible:ring-gray-400 rounded-sm"
                 >
                     {terminal.isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
                 </button>
@@ -194,7 +369,7 @@ export const TerminalWindow = memo(function TerminalWindow({ terminal }: { termi
                             value={terminal.userInput}
                             onChange={handleInputChange}
                             onKeyDown={handleCommand}
-                            className="flex-1 bg-transparent border-none outline-none text-white font-mono placeholder:text-gray-500 focus:ring-0"
+                            className="flex-1 bg-transparent border-none outline-none text-white font-mono placeholder:text-gray-500 focus:ring-0 caret-[var(--live-dot)]"
                             placeholder="Type 'help' to see available commands..."
                             autoComplete="off"
                             spellCheck={false}

@@ -108,14 +108,13 @@ export function useTerminal(): TerminalState {
     }, [step, history]);
 
     useEffect(() => {
-        startBootSequence();
         return () => {
             bootTimersRef.current.forEach(clearTimeout);
             if (audioCtxRef.current?.state !== "closed") {
                 audioCtxRef.current?.close();
             }
         };
-    }, [startBootSequence]);
+    }, []);
 
     return {
         step,
