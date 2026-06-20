@@ -1,4 +1,4 @@
-import { Swords, WifiOff, Network, Filter, ShieldAlert, type LucideIcon } from "lucide-react";
+import { Swords, WifiOff, Network, Filter, ShieldAlert, Cpu, type LucideIcon } from "lucide-react";
 
 export type Scar = {
     id: string;
@@ -67,6 +67,39 @@ export const scarsData: Scar[] = [
         problem: "Protecting full-stack applications from common vulnerabilities like XSS, Brute-force, and unauthorized state mutations without killing performance.",
         solution: "Implemented a multi-layered security pipeline: custom JWT guards for role-based access, Helmet for secure headers, and express-rate-limit to mitigate automated attacks.",
         impact: "Successfully blocked 100% of basic automated exploits during testing and ensured zero unauthorized data access in production environments.",
+    },
+    {
+        id: "logic-arena-pathfinding",
+        category: "Algorithms",
+        icon: Cpu,
+        title: "Kinematic Intelligence: The Weighted Pathfinding Challenge",
+        project: "Logic Arena",
+        badges: ["A* Algorithm", "Game Engine", "TypeScript"],
+        problem: "Robots entering spasmodic loop oscillations and spinning in place when navigating near hazards, caused by binary pass/block routing and recursive self-waypoint targeting.",
+        solution: "Re-engineered the pathfinding heuristic into a Weighted Cost Grid (assigning dynamic movement penalties to traps and lava) and implemented a Self-Waypoint Skip algorithm that consumes local waypoints within a half-cell threshold.",
+        impact: "Achieved fluid, intelligent hazard-avoidance navigation and eliminated 100% of trajectory jitter and navigation deadlock loops.",
+    },
+    {
+        id: "logic-arena-compiler",
+        category: "Architecture",
+        icon: Cpu,
+        title: "Secure Execution: The AliScript Compiler Sandboxing",
+        project: "Logic Arena",
+        badges: ["AST Parser", "Sandboxing", "Node.js VM2"],
+        problem: "Allowing users to execute arbitrary code (AliScript) on the server posed infinite loop risks and CPU resource exhaustion, threatening server stability.",
+        solution: "Engineered an AST-based parser that validates instructions against a strict whitelist before execution, and sandboxed evaluation inside isolated VM contexts with strict execution timeouts.",
+        impact: "100% secure execution of user-submitted scripts with zero vulnerability surface and robust denial-of-service protection.",
+    },
+    {
+        id: "redis-ipv6-docker",
+        category: "Performance",
+        icon: Network,
+        title: "Network Isolation: The Redis IPv6 Resolution Failure",
+        project: "Logic Arena",
+        badges: ["Redis", "Docker", "Network Configuration"],
+        problem: "Redis presence client silently resolving to IPv6 hostnames in containerized environments, leading to unreachable routing and authentication failures.",
+        solution: "Forced IPv4 resolution by injecting family: 4 into the client connection parameters and configured explicit TLS handshakes to bypass faulty host paths.",
+        impact: "Restored 100% database connectivity and stable real-time user presence tracking in the production environment.",
     },
 ];
 

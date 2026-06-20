@@ -102,7 +102,7 @@ export const SkillModal = memo(function SkillModal({
                     type="button"
                     aria-label="Close"
                     onClick={onClose}
-                    className="absolute top-4 right-4 p-2.5 rounded-full text-muted-foreground hover:text-foreground bg-muted hover:bg-muted/80 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 active:scale-95"
+                    className="absolute top-4 right-4 p-2.5 rounded-full text-muted-foreground hover:text-foreground bg-muted hover:bg-muted/80 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 active:scale-95 cursor-pointer"
                 >
                     <X className="w-5 h-5" aria-hidden="true" />
                 </button>
@@ -183,7 +183,7 @@ export const SkillModal = memo(function SkillModal({
                                 onClick={() => handleJumpToScar(skill.scarId!, onClose, router)}
                                 className="w-full flex items-center justify-between p-4 rounded-xl border shadow-sm transition-all duration-200 
                                     bg-violet-500/10 hover:bg-violet-500/20 border-violet-500/20 text-violet-600 dark:text-violet-400 
-                                    group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500/50"
+                                    group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500/50 cursor-pointer"
                             >
                                 <div className="flex items-center gap-3">
                                     <div className="p-2 rounded-lg bg-violet-500/10 group-hover:bg-violet-500/20 transition-colors">
