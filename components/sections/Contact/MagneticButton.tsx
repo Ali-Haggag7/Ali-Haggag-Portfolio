@@ -3,6 +3,13 @@
 
 import { motion, useMotionValue, useSpring } from "framer-motion";
 import { useRef, useCallback } from "react";
+import { useIsMobile } from "@/hooks/useIsMobile";
+
+const BUTTON_CLASSES =
+    "group relative inline-flex h-14 items-center justify-center gap-3 rounded-full bg-foreground px-8 text-base font-bold text-background transition-colors duration-300 hover:shadow-2xl focus:outline-none focus:ring-4";
+
+const DOT_CLASSES =
+    "h-2 w-2 rounded-full transition-transform duration-300 group-hover:scale-150";
 
 export function MagneticButton({
     children,
@@ -11,9 +18,10 @@ export function MagneticButton({
     children: React.ReactNode;
     href: string;
 }) {
+    const isMobile = useIsMobile();
     const ref = useRef<HTMLAnchorElement>(null);
 
-    // Cache the bounding rect — only invalidated by ResizeObserver, not mousemove.
+    // Cache the bounding rect — only invalidated by mouseleave, not mousemove.
     const rectCache = useRef<DOMRect | null>(null);
 
     const x = useMotionValue(0);
@@ -43,6 +51,28 @@ export function MagneticButton({
         rectCache.current = null;
     }, [x, y]);
 
+    // On touch devices the magnetic mouse-follow is pointless — render a
+    // static anchor with no motion wrapper at all.
+    if (isMobile) {
+        return (
+            <a
+                href={href}
+                className={BUTTON_CLASSES}
+                style={{
+                    boxShadow: undefined,
+                    // ring + shadow colors sourced from accent var
+                    ["--tw-ring-color" as string]: "hsl(var(--accent-blue) / 0.3)",
+                }}
+            >
+                <span>{children}</span>
+                <div
+                    className={DOT_CLASSES}
+                    style={{ backgroundColor: "var(--color-accent)" }}
+                />
+            </a>
+        );
+    }
+
     return (
         <motion.a
             ref={ref}
@@ -50,11 +80,20 @@ export function MagneticButton({
             onMouseEnter={handleMouseEnter}
             onMouseMove={handleMouse}
             onMouseLeave={reset}
-            style={{ x: springX, y: springY, willChange: "transform" }}
-            className="group relative inline-flex h-14 items-center justify-center gap-3 rounded-full bg-foreground px-8 text-base font-bold text-background transition-colors duration-300 hover:shadow-2xl hover:shadow-blue-500/20 focus:outline-none focus:ring-4 focus:ring-blue-500/30"
+            style={{
+                x: springX,
+                y: springY,
+                willChange: "transform",
+                ["--tw-ring-color" as string]: "hsl(var(--accent-blue) / 0.3)",
+                ["--tw-shadow-color" as string]: "hsl(var(--accent-blue) / 0.2)",
+            }}
+            className={BUTTON_CLASSES}
         >
             <span>{children}</span>
-            <div className="h-2 w-2 rounded-full bg-blue-500 transition-transform duration-300 group-hover:scale-150 group-hover:bg-cyan-400" />
+            <div
+                className={`${DOT_CLASSES} group-hover:[background-color:var(--color-accent-secondary)]`}
+                style={{ backgroundColor: "var(--color-accent)" }}
+            />
         </motion.a>
     );
 }
