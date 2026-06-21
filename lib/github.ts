@@ -206,6 +206,10 @@ export async function getGitHubStats(): Promise<GitHubStats> {
             }
         }
 
+        const recentDays = [...days]
+            .sort((a, b) => a.date.localeCompare(b.date))
+            .slice(-RECENT_DAYS_WINDOW);
+
         return {
             totalStars,
             totalCommits,
@@ -214,6 +218,9 @@ export async function getGitHubStats(): Promise<GitHubStats> {
             currentStreak,
             longestStreak,
             topLanguages,
+            recentDays:
+                recentDays.length > 0 ? recentDays : getFallbackRecentDays(),
+            lastSynced: new Date().toISOString(),
         };
     } catch (error) {
         console.error("Error fetching GitHub stats, returning fallback:", error);
