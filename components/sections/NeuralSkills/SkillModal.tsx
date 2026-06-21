@@ -5,7 +5,7 @@ import { motion, useDragControls } from "framer-motion";
 import { X, Link as LinkIcon, Lightbulb, Activity, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
-import { Skill, getStatusConfig, handleJumpToScar, STATUS_PROGRESS } from "./skills.data";
+import { Skill, getStatusConfig, handleJumpToScar } from "./skills.data";
 import { useRouter } from "next/navigation";
 
 const isRaster = (src: string) => /\.(png|jpe?g)$/i.test(src);
@@ -51,8 +51,8 @@ const MOBILE_MODAL_VARIANTS = {
 
 // ── Constants ──────────────────────────────────────────────────────────
 
-const SWIPE_CLOSE_THRESHOLD = 100;
-const SWIPE_VELOCITY_THRESHOLD = 500;
+const SWIPE_CLOSE_THRESHOLD = 30;
+const SWIPE_VELOCITY_THRESHOLD = 100;
 
 // ── Component ──────────────────────────────────────────────────────────
 
@@ -66,7 +66,6 @@ export const SkillModal = memo(function SkillModal({
     isMobile: boolean;
 }) {
     const { icon: StatusIcon, bg, color } = getStatusConfig(skill.status);
-    const progress = STATUS_PROGRESS[skill.status];
     const raster = isRaster(skill.icon);
     const dialogRef = useRef<HTMLDivElement>(null);
     const router = useRouter();
@@ -163,7 +162,7 @@ export const SkillModal = memo(function SkillModal({
                 drag={isMobile ? "y" : false}
                 dragControls={dragControls}
                 dragListener={false}
-                dragConstraints={{ top: 0 }}
+                dragConstraints={{ top: 0, bottom: 1000 }}
                 dragElastic={0.15}
                 onDragEnd={(_, info) => {
                     if (
@@ -281,34 +280,6 @@ export const SkillModal = memo(function SkillModal({
                         </div>
                     </div>
 
-                    {/* ── Mastery Progress Bar ──────────────────── */}
-                    <div className="mb-6">
-                        <div className="flex justify-between items-center mb-2">
-                            <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
-                                Mastery Level
-                            </span>
-                            <span className={cn("text-xs font-bold", color)}>
-                                {progress.percent}%
-                            </span>
-                        </div>
-                        <div className="h-2 bg-muted rounded-full overflow-hidden">
-                            <motion.div
-                                className={cn(
-                                    "h-full rounded-full",
-                                    progress.barColor,
-                                    progress.glowClass,
-                                )}
-                                initial={{ width: 0 }}
-                                animate={{ width: `${progress.percent}%` }}
-                                transition={{
-                                    duration: 0.8,
-                                    ease: [0.25, 0.46, 0.45, 0.94],
-                                    delay: 0.15,
-                                }}
-                            />
-                        </div>
-                    </div>
-
                     {/* ── Body ──────────────────────────────────── */}
                     <div className="space-y-6">
                         <div>
@@ -317,7 +288,7 @@ export const SkillModal = memo(function SkillModal({
                                     className="w-4 h-4"
                                     aria-hidden="true"
                                 />{" "}
-                                Neural Connections
+                                Neural Connections (Core Projects)
                             </h4>
                             {skill.projects.length > 0 ? (
                                 <div className="flex flex-wrap gap-2">

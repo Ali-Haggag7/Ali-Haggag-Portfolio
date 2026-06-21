@@ -192,12 +192,12 @@ export default function HeroSection() {
                     aria-label="Visit Ali Haggag's GitHub Profile"
                     className={cn(
                         "group relative flex items-center justify-center gap-2 px-6 py-3 md:px-8 md:py-4 min-h-[44px] cursor-pointer",
-                        "bg-foreground text-background rounded-full font-bold",
-                        "transition-[transform,box-shadow] duration-200 transform-gpu will-change-transform",
-                        "hover:scale-105 hover:shadow-[0_0_20px_-5px_hsl(var(--foreground)/0.3)] dark:hover:shadow-[0_0_20px_-5px_hsl(var(--foreground)/0.6)] active:scale-95"
+                        "border-2 border-border bg-card/80 text-foreground rounded-full font-bold",
+                        "transition-all duration-300 ease-out",
+                        "hover:bg-[hsl(var(--accent-emerald)/0.05)] hover:border-[hsl(var(--accent-emerald))/0.5] hover:text-[hsl(var(--accent-emerald))] active:scale-95 hover:scale-105 hover:shadow-[0_0_20px_hsl(var(--accent-emerald)/0.15)] shadow-sm"
                     )}
                 >
-                    <Code2 className="w-5 h-5 transition-transform duration-300 group-hover:rotate-12 transform-gpu" aria-hidden="true" />
+                    <Code2 className="w-5 h-5 text-[hsl(var(--accent-emerald))] transition-transform duration-300 group-hover:rotate-12 group-hover:scale-110" aria-hidden="true" />
                     GitHub
                 </a>
 
@@ -209,11 +209,11 @@ export default function HeroSection() {
                     className={cn(
                         "group flex items-center justify-center gap-2 px-6 py-3 md:px-8 md:py-4 min-h-[44px] cursor-pointer",
                         "border-2 border-border bg-card/80 text-foreground rounded-full font-bold",
-                        "transition-[transform,box-shadow,border-color,color,background-color] duration-200 transform-gpu will-change-transform",
+                        "transition-all duration-300 ease-out",
                         "hover:bg-[hsl(var(--accent-blue)/0.05)] hover:border-[hsl(var(--accent-blue)/0.5)] hover:text-[hsl(var(--accent-blue))] active:scale-95 hover:scale-105 hover:shadow-[0_0_20px_hsl(var(--accent-blue)/0.15)] shadow-sm"
                     )}
                 >
-                    <ExternalLink className="w-5 h-5 transition-transform duration-300 group-hover:-translate-y-1 group-hover:translate-x-1 transform-gpu" aria-hidden="true" />
+                    <ExternalLink className="w-5 h-5 text-[hsl(var(--accent-blue))] transition-transform duration-300 group-hover:-translate-y-1 group-hover:translate-x-1 group-hover:scale-110" aria-hidden="true" />
                     LinkedIn
                 </a>
 

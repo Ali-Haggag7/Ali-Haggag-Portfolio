@@ -1,9 +1,11 @@
 "use client";
 
 import { Terminal, Volume2, VolumeX } from "lucide-react";
-import { useCallback, memo } from "react";
+import { useState, useEffect, useRef, useCallback, memo } from "react";
 import { cn } from "@/lib/utils";
 import type { TerminalState } from "./useTerminal";
+
+export type HistoryItem = { id: number; command: string; output: React.ReactNode };
 
 const BootSequence = memo(function BootSequence({ step }: { step: number }) {
     return (
@@ -51,12 +53,132 @@ const BootSequence = memo(function BootSequence({ step }: { step: number }) {
     );
 });
 
-export const TerminalWindow = memo(function TerminalWindow({ terminal }: { terminal: TerminalState }) {
-    const handleCommand = useCallback((e: React.KeyboardEvent<HTMLInputElement>) => {
-        if (e.key !== "Enter") return;
+type TerminalInputProps = {
+    onSubmit: (value: string) => void;
+    playKeystroke: () => void;
+    inputRef: React.RefObject<HTMLInputElement | null>;
+};
 
-        const rawInput = terminal.userInput.trim();
-        const parts = rawInput.split(/\s+/);
+const TerminalInput = memo(function TerminalInput({ onSubmit, playKeystroke, inputRef }: TerminalInputProps) {
+    const [value, setValue] = useState("");
+
+    const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+        setValue(e.target.value);
+        playKeystroke();
+    }, [playKeystroke]);
+
+    const handleKeyDown = useCallback((e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === "Enter") {
+            onSubmit(value);
+            setValue("");
+        }
+    }, [onSubmit, value]);
+
+    return (
+        <div className="flex items-center gap-2 mt-4 w-full">
+            <span className="text-green-500 font-bold shrink-0">guest@ali-haggag:~$</span>
+            <input
+                ref={inputRef}
+                type="text"
+                value={value}
+                onChange={handleChange}
+                onKeyDown={handleKeyDown}
+                className="flex-1 bg-transparent border-none outline-none text-white font-mono placeholder:text-emerald-500/30 focus:ring-0 caret-[var(--live-dot)]"
+                placeholder="Type 'help' to see available commands..."
+                autoComplete="off"
+                spellCheck={false}
+            />
+        </div>
+    );
+});
+
+const AVAILABLE_COMMANDS = [
+    "help",
+    "whoami",
+    "skills",
+    "projects",
+    "cd",
+    "log",
+    "neofetch",
+    "contact",
+    "sudo",
+    "clear"
+];
+
+function getLevenshteinDistance(s1: string, s2: string): number {
+    if (s1.length < s2.length) return getLevenshteinDistance(s2, s1);
+    if (s2.length === 0) return s1.length;
+
+    let previousRow = Array.from({ length: s2.length + 1 }, (_, i) => i);
+    for (let i = 0; i < s1.length; i++) {
+        const currentRow = [i + 1];
+        for (let j = 0; j < s2.length; j++) {
+            const insertions = previousRow[j + 1] + 1;
+            const deletions = currentRow[j] + 1;
+            const substitutions = previousRow[j] + (s1[i] === s2[j] ? 0 : 1);
+            currentRow.push(Math.min(insertions, deletions, substitutions));
+        }
+        previousRow = currentRow;
+    }
+    return previousRow[s2.length];
+}
+
+function getClosestCommand(cmd: string): string {
+    let bestCmd = "help";
+    let minDistance = Infinity;
+    for (const available of AVAILABLE_COMMANDS) {
+        const dist = getLevenshteinDistance(cmd, available);
+        if (dist < minDistance) {
+            minDistance = dist;
+            bestCmd = available;
+        }
+    }
+    return bestCmd;
+}
+
+export const TerminalWindow = memo(function TerminalWindow({ terminal }: { terminal: TerminalState }) {
+    const [history, setHistory] = useState<HistoryItem[]>([]);
+    const terminalContainerRef = useRef<HTMLDivElement>(null);
+    const inputRef = useRef<HTMLInputElement>(null);
+
+    // Sync boot resets with internal history state
+    useEffect(() => {
+        if (terminal.step === 0) {
+            setHistory([]);
+        }
+    }, [terminal.step]);
+
+    // Handle internal scrolling
+    useEffect(() => {
+        const el = terminalContainerRef.current;
+        if (!el) return;
+        const raf = requestAnimationFrame(() => { el.scrollTop = el.scrollHeight; });
+        return () => cancelAnimationFrame(raf);
+    }, [terminal.step, history]);
+
+    // Auto-focus input when boot finishes
+    useEffect(() => {
+        if (terminal.step >= 7) {
+            const timer = setTimeout(() => {
+                inputRef.current?.focus();
+            }, 50);
+            return () => clearTimeout(timer);
+        }
+    }, [terminal.step]);
+
+    const handleTerminalClick = useCallback((e: React.MouseEvent) => {
+        if ((e.target as HTMLElement).closest("a, button")) return;
+        
+        if (terminal.step < 7) {
+            terminal.skipBootSequence();
+        } else {
+            inputRef.current?.focus();
+        }
+    }, [terminal]);
+
+    const handleCommand = useCallback((rawInput: string) => {
+        const trimmedInput = rawInput.trim();
+        const parts = trimmedInput.split(/\s+/);
         const cmd = parts[0].toLowerCase();
         const arg = parts[1] ? parts[1].toLowerCase() : "";
         let output: React.ReactNode = "";
@@ -254,23 +376,23 @@ Status .......... Available`}
                 }
                 break;
             case "clear":
-                terminal.setHistory([]);
-                terminal.setUserInput("");
+                setHistory([]);
                 return;
             case "":
                 output = "";
                 break;
-            default:
-                output = <span className="text-red-500 block break-words">command not found: zsh: did you mean &apos;help&apos;?</span>;
+            default: {
+                const closest = getClosestCommand(cmd);
+                const displayCmd = cmd.length > 30 ? cmd.slice(0, 30) + "..." : cmd;
+                output = (
+                    <span className="text-red-500 block break-words">
+                        command not found: {displayCmd}: did you mean &apos;{closest}&apos;?
+                    </span>
+                );
+            }
         }
 
-        terminal.setHistory(prev => [...prev, { id: Date.now(), command: rawInput, output }]);
-        terminal.setUserInput("");
-        terminal.playKeystroke();
-    }, [terminal]);
-
-    const handleInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-        terminal.setUserInput(e.target.value);
+        setHistory(prev => [...prev, { id: Date.now(), command: trimmedInput, output }]);
         terminal.playKeystroke();
     }, [terminal]);
 
@@ -291,7 +413,7 @@ Status .......... Available`}
         : "p-4 md:p-6 space-y-3 text-gray-300 h-[300px] overflow-y-auto overflow-x-hidden break-words terminal-scrollbar text-xs md:text-sm flex flex-col items-start w-full";
 
     return (
-        <article className={wrapperClasses}>
+        <article className={wrapperClasses} onClick={handleTerminalClick}>
             {/* Glassmorphism Background Layer (Separated to prevent Chrome box-shadow + backdrop-filter flicker bug) */}
             {!terminal.isFullScreen && (
                 <div 
@@ -304,7 +426,7 @@ Status .......... Available`}
                 <div className="flex gap-2">
                     <button
                         type="button"
-                        onClick={() => terminal.setIsClosed(true)}
+                        onClick={(e) => { e.stopPropagation(); terminal.setIsClosed(true); }}
                         className="cursor-pointer p-1 rounded-full hover:bg-white/10 transition-colors group outline-none"
                     >
                         <div className="w-3 h-3 rounded-full bg-red-500 relative flex items-center justify-center">
@@ -313,7 +435,7 @@ Status .......... Available`}
                     </button>
                     <button
                         type="button"
-                        onClick={() => terminal.setIsMinimized(p => !p)}
+                        onClick={(e) => { e.stopPropagation(); terminal.setIsMinimized(p => !p); }}
                         className="cursor-pointer p-1 rounded-full hover:bg-white/10 transition-colors group outline-none"
                     >
                         <div className="w-3 h-3 rounded-full bg-yellow-500 relative flex items-center justify-center">
@@ -322,7 +444,7 @@ Status .......... Available`}
                     </button>
                     <button
                         type="button"
-                        onClick={() => { terminal.setIsFullScreen(p => !p); terminal.setIsMinimized(false); }}
+                        onClick={(e) => { e.stopPropagation(); terminal.setIsFullScreen(p => !p); terminal.setIsMinimized(false); }}
                         className="cursor-pointer p-1 rounded-full hover:bg-white/10 transition-colors group outline-none"
                     >
                         <div className="w-3 h-3 rounded-full bg-green-500 relative flex items-center justify-center">
@@ -337,17 +459,17 @@ Status .......... Available`}
 
                 <button
                     type="button"
-                    onClick={() => terminal.setIsMuted(p => !p)}
+                    onClick={(e) => { e.stopPropagation(); terminal.setIsMuted(p => !p); }}
                     className="cursor-pointer p-2 -mr-2 text-gray-400 hover:text-white transition-colors outline-none focus-visible:ring-2 focus-visible:ring-gray-400 rounded-sm"
                 >
                     {terminal.isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
                 </button>
             </header>
 
-            <div ref={terminal.terminalContainerRef} className={bodyClasses}>
+            <div ref={terminalContainerRef} className={bodyClasses}>
                 <BootSequence step={terminal.step} />
 
-                {terminal.history.map((item) => (
+                {history.map((item) => (
                     <div key={item.id} className="mt-4 w-full">
                         <div className="flex items-start gap-2">
                             <span className="text-green-500 font-bold shrink-0">guest@ali-haggag:~$</span>
@@ -362,19 +484,11 @@ Status .......... Available`}
                 ))}
 
                 {terminal.step >= 7 && (
-                    <div className="flex items-center gap-2 mt-4 w-full">
-                        <span className="text-green-500 font-bold shrink-0">guest@ali-haggag:~$</span>
-                        <input
-                            type="text"
-                            value={terminal.userInput}
-                            onChange={handleInputChange}
-                            onKeyDown={handleCommand}
-                            className="flex-1 bg-transparent border-none outline-none text-white font-mono placeholder:text-gray-500 focus:ring-0 caret-[var(--live-dot)]"
-                            placeholder="Type 'help' to see available commands..."
-                            autoComplete="off"
-                            spellCheck={false}
-                        />
-                    </div>
+                    <TerminalInput
+                        onSubmit={handleCommand}
+                        playKeystroke={terminal.playKeystroke}
+                        inputRef={inputRef}
+                    />
                 )}
             </div>
         </article>

@@ -140,6 +140,7 @@ export const technicalArsenal: SkillCategory[] = [
         skills: [
             { name: "Figma", icon: "/skills/figma.svg", status: "Production Ready", projects: ["UI/UX Prototyping"], scarId: null },
             { name: "Shadcn/UI", icon: "/skills/shadcn.svg", status: "Production Ready", projects: ["CS Arena", "My Portfolio"], scarId: null, themeable: true },
+            { name: "Framer Motion", icon: "/skills/framermotion.svg", status: "Production Ready", projects: ["Most Modern Projects"], scarId: null },
             { name: "Material UI", icon: "/skills/mui.svg", status: "Production Ready", projects: ["Youtube Clone"], scarId: null },
             { name: "Magic UI", icon: "/skills/magicui.svg", status: "Production Ready", projects: ["Portfolio Motion"], scarId: null },
         ],
@@ -155,6 +156,7 @@ export const technicalArsenal: SkillCategory[] = [
             { name: "Postman", icon: "/skills/postman.svg", status: "Production Ready", projects: ["API Lifecycle Testing"], scarId: null },
             { name: "Git", icon: "/skills/git.svg", status: "Production Ready", projects: ["Version Control"], scarId: null },
             { name: "GitHub", icon: "/skills/github.svg", status: "Production Ready", projects: ["Open Source / CI/CD"], scarId: null, themeable: true },
+            { name: "GitLab", icon: "/skills/gitlab.svg", status: "Production Ready", projects: ["AI Agents Collaboration"], scarId: null },
         ],
     },
 ];

@@ -160,7 +160,7 @@ export default function BattleScars() {
             <div ref={containerRef} className="relative min-h-[400px]">
                 {/* Fixed Skip Button (Visible only when scrolling through expanded list) */}
                 {showAllCards && needsExpansion && isInView && (
-                    <div className="fixed bottom-24 md:bottom-28 left-0 z-50 w-full flex justify-center pointer-events-none animate-in slide-in-from-bottom-8 fade-in duration-300">
+                    <div className="fixed bottom-8 md:bottom-28 left-0 z-50 w-full flex justify-center pointer-events-none animate-in slide-in-from-bottom-8 fade-in duration-300">
                         <button 
                             type="button"
                             onClick={() => {

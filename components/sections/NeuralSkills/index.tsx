@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useCallback, useMemo, useEffect, useRef, memo } from "react";
-import { AnimatePresence } from "framer-motion";
+import { AnimatePresence, motion, Variants } from "framer-motion";
 import { Wrench, Search, X, Activity, CheckCircle2, FlaskConical, LayoutGrid } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -22,6 +22,15 @@ const GLOW_STYLE = {
     background: "radial-gradient(circle, rgba(59,130,246,0.05) 0%, transparent 70%)",
 } as const;
 
+const categoryVariants: Variants = {
+    hidden: { opacity: 0, y: 30 },
+    visible: (i: number) => ({
+        opacity: 1,
+        y: 0,
+        transition: { duration: 0.5, delay: i * 0.06, ease: "easeOut" },
+    }),
+};
+
 // ── Memoized category row ──────────────────────────────────────────────
 
 const SkillCategory = memo(function SkillCategory({
@@ -30,17 +39,27 @@ const SkillCategory = memo(function SkillCategory({
     accent,
     skills,
     getHandler,
+    index,
+    isSearching,
 }: {
     title: string;
     icon: LucideIcon;
     accent: AccentColor;
     skills: Skill[];
     getHandler: (key: string) => () => void;
+    index: number;
+    isSearching: boolean;
 }) {
     const styles = ACCENT_STYLES[accent];
 
     return (
-        <div
+        <motion.div
+            variants={categoryVariants}
+            initial={isSearching ? "visible" : "hidden"}
+            whileInView={isSearching ? undefined : "visible"}
+            viewport={{ once: true, margin: "-40px" }}
+            custom={index}
+            style={{ willChange: "transform, opacity" }}
             className={cn(
                 "group relative flex flex-col gap-5 border border-border/50 overflow-hidden",
                 "transition-[border-color,box-shadow] duration-300 w-full max-w-full",
@@ -86,7 +105,7 @@ const SkillCategory = memo(function SkillCategory({
                     />
                 ))}
             </div>
-        </div>
+        </motion.div>
     );
 });
 
@@ -261,7 +280,7 @@ export default function NeuralSkills() {
                 }}
                 className="w-full flex flex-wrap justify-center items-stretch md:items-start gap-4 md:gap-6 relative z-10"
             >
-                {filteredArsenal.map((category) => (
+                {filteredArsenal.map((category, index) => (
                     <SkillCategory
                         key={category.title}
                         title={category.title}
@@ -269,6 +288,8 @@ export default function NeuralSkills() {
                         accent={category.accent}
                         skills={category.skills}
                         getHandler={getHandler}
+                        index={index}
+                        isSearching={!!searchQuery}
                     />
                 ))}
 

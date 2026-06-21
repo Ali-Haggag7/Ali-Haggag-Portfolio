@@ -136,7 +136,11 @@ export function ServiceCard({
                             "group-hover:bg-gradient-to-br group-hover:from-blue-600 group-hover:to-cyan-500",
                             "group-hover:text-white group-hover:scale-110",
                             "group-hover:shadow-lg group-hover:shadow-blue-500/40",
-                            "group-hover:-rotate-6 group-hover:border-transparent"
+                            "group-hover:-rotate-6 group-hover:border-transparent",
+                            "group-focus:bg-gradient-to-br group-focus:from-blue-600 group-focus:to-cyan-500",
+                            "group-focus:text-white group-focus:scale-110",
+                            "group-focus:shadow-lg group-focus:shadow-blue-500/40",
+                            "group-focus:-rotate-6 group-focus:border-transparent"
                         )}
                     >
                         <Icon className="h-7 w-7" aria-hidden="true" />

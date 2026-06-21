@@ -138,7 +138,10 @@ export default function ContactSection({ statsPanel }: { statsPanel: React.React
                         {...anim(fadeUp, { transition: { delay: 0.25 } })}
                         className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 w-full max-w-lg mb-8 text-left mt-2"
                     >
-                        <div className="flex gap-3 p-3 rounded-2xl bg-card border border-border hover:border-[hsl(var(--accent-blue))]/40 hover:bg-muted/20 dark:hover:bg-white/3 transition-all duration-300">
+                        <div 
+                            tabIndex={0}
+                            className="flex gap-3 p-3 rounded-2xl bg-card border border-border hover:border-[hsl(var(--accent-blue))]/40 hover:bg-muted/20 dark:hover:bg-white/3 focus:outline-none focus:border-[hsl(var(--accent-blue))]/40 focus:bg-muted/20 dark:focus:bg-white/3 transition-all duration-300"
+                        >
                             <Cpu className="w-5 h-5 shrink-0 mt-0.5" style={{ color: "hsl(var(--accent-blue))" }} />
                             <div>
                                 <h4 className="text-sm font-semibold text-foreground">Real-Time Engines</h4>
@@ -148,7 +151,10 @@ export default function ContactSection({ statsPanel }: { statsPanel: React.React
                             </div>
                         </div>
 
-                        <div className="flex gap-3 p-3 rounded-2xl bg-card border border-border hover:border-[hsl(var(--accent-purple))]/40 hover:bg-muted/20 dark:hover:bg-white/3 transition-all duration-300">
+                        <div 
+                            tabIndex={0}
+                            className="flex gap-3 p-3 rounded-2xl bg-card border border-border hover:border-[hsl(var(--accent-purple))]/40 hover:bg-muted/20 dark:hover:bg-white/3 focus:outline-none focus:border-[hsl(var(--accent-purple))]/40 focus:bg-muted/20 dark:focus:bg-white/3 transition-all duration-300"
+                        >
                             <Terminal className="w-5 h-5 shrink-0 mt-0.5" style={{ color: "hsl(var(--accent-purple))" }} />
                             <div>
                                 <h4 className="text-sm font-semibold text-foreground">Compiler Design</h4>
@@ -158,7 +164,10 @@ export default function ContactSection({ statsPanel }: { statsPanel: React.React
                             </div>
                         </div>
 
-                        <div className="flex gap-3 p-3 rounded-2xl bg-card border border-border hover:border-[hsl(var(--accent-emerald))]/40 hover:bg-muted/20 dark:hover:bg-white/3 transition-all duration-300">
+                        <div 
+                            tabIndex={0}
+                            className="flex gap-3 p-3 rounded-2xl bg-card border border-border hover:border-[hsl(var(--accent-emerald))]/40 hover:bg-muted/20 dark:hover:bg-white/3 focus:outline-none focus:border-[hsl(var(--accent-emerald))]/40 focus:bg-muted/20 dark:focus:bg-white/3 transition-all duration-300"
+                        >
                             <Shield className="w-5 h-5 shrink-0 mt-0.5" style={{ color: "hsl(var(--accent-emerald))" }} />
                             <div>
                                 <h4 className="text-sm font-semibold text-foreground">Defensive Architecture</h4>
@@ -168,7 +177,10 @@ export default function ContactSection({ statsPanel }: { statsPanel: React.React
                             </div>
                         </div>
 
-                        <div className="flex gap-3 p-3 rounded-2xl bg-card border border-border hover:border-[var(--tl-accent-yellow)]/40 hover:bg-muted/20 dark:hover:bg-white/3 transition-all duration-300">
+                        <div 
+                            tabIndex={0}
+                            className="flex gap-3 p-3 rounded-2xl bg-card border border-border hover:border-[var(--tl-accent-yellow)]/40 hover:bg-muted/20 dark:hover:bg-white/3 focus:outline-none focus:border-[var(--tl-accent-yellow)]/40 focus:bg-muted/20 dark:focus:bg-white/3 transition-all duration-300"
+                        >
                             <Zap className="w-5 h-5 shrink-0 mt-0.5" style={{ color: "var(--tl-accent-yellow)" }} />
                             <div>
                                 <h4 className="text-sm font-semibold text-foreground">High-Throughput APIs</h4>

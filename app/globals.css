@@ -615,6 +615,24 @@ html.modal-open .fixed-right-compensate {
   animation: pulse-glow 5s ease-in-out infinite;
 }
 
+.terminal-scanlines {
+  position: relative;
+}
+
+.terminal-scanlines::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    rgba(18, 16, 16, 0) 50%,
+    rgba(0, 0, 0, 0.15) 50%
+  );
+  background-size: 100% 4px;
+  z-index: 10;
+  pointer-events: none;
+  opacity: 0.45;
+}
+
 @keyframes pulse-glow {
   0%, 100% {
     opacity: 0.45;
