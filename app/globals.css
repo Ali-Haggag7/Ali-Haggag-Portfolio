@@ -345,6 +345,28 @@
     --pill-language: var(--scar-high);
     --metric-glow: var(--tl-accent-blue);
     --live-dot: var(--tl-accent-emerald);
+
+    /* Contact section accents — Tailwind palette classes were theme-independent,
+       so keep identical shades in light mode to stay pixel-identical. */
+    --color-accent: #3b82f6;
+    --color-accent-secondary: #22d3ee;
+    --color-accent-secondary-light: #4ade80;
+    --color-live: #22c55e;
+    --color-live-light: #4ade80;
+
+    --lang-typescript: #3178C6;
+    --lang-javascript: #F7DF1E;
+    --lang-css: #A855F7;
+    --lang-html: #E34F26;
+    --lang-python: #3776AB;
+    --lang-mdx: #4B5563;
+    --lang-fallback: #6B7280;
+
+    --heatmap-0: hsl(var(--accent-blue) / 0.08);
+    --heatmap-1: hsl(var(--accent-blue) / 0.3);
+    --heatmap-2: hsl(var(--accent-blue) / 0.5);
+    --heatmap-3: hsl(var(--accent-blue) / 0.72);
+    --heatmap-4: hsl(var(--accent-blue) / 1);
   }
 
   html {
