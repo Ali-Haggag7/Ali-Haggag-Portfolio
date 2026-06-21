@@ -116,10 +116,10 @@ export const BentoCard = memo(function BentoCard({
             aria-label={`View details for ${name}`}
             className={cn(
                 "group relative flex flex-col justify-end overflow-hidden rounded-2xl min-h-[22rem] w-full text-left",
-                "will-change-transform bg-white dark:bg-black border border-slate-200 dark:border-white/10 shadow-sm translate-y-0",
+                "will-change-transform bg-card border border-border shadow-sm translate-y-0",
                 "transition-all duration-500 ease-[cubic-bezier(0.25,0.8,0.25,1)]",
-                "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50 cursor-pointer",
-                "hover:shadow-xl hover:border-blue-500/50 hover:-translate-y-1.5",
+                "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--accent-blue)/0.5)] cursor-pointer",
+                "hover:shadow-xl hover:border-[hsl(var(--accent-blue)/0.5)] hover:-translate-y-1.5",
                 className
             )}
         >
@@ -210,7 +210,7 @@ export const BentoCard = memo(function BentoCard({
                     ))}
                 </div>
 
-                <div className="mt-1 text-xs font-bold text-blue-400 flex items-center gap-1 opacity-0 translate-y-2 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300 delay-100">
+                <div className="mt-1 text-xs font-bold text-[hsl(var(--accent-blue))] flex items-center gap-1 opacity-0 translate-y-2 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300 delay-100">
                     Click to view Autopsy <Activity className="w-3 h-3" aria-hidden="true" />
                 </div>
             </div>

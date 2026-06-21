@@ -67,28 +67,27 @@ const TerminalInput = memo(function TerminalInput({ onSubmit, playKeystroke, inp
         playKeystroke();
     }, [playKeystroke]);
 
-    const handleKeyDown = useCallback((e: React.KeyboardEvent<HTMLInputElement>) => {
-        if (e.key === "Enter") {
-            onSubmit(value);
-            setValue("");
-        }
+    const handleSubmit = useCallback((e: React.FormEvent) => {
+        e.preventDefault();
+        onSubmit(value);
+        setValue("");
     }, [onSubmit, value]);
 
     return (
-        <div className="flex items-center gap-2 mt-4 w-full">
+        <form onSubmit={handleSubmit} className="flex items-center gap-2 mt-4 w-full">
             <span className="text-green-500 font-bold shrink-0">guest@ali-haggag:~$</span>
             <input
                 ref={inputRef}
                 type="text"
                 value={value}
                 onChange={handleChange}
-                onKeyDown={handleKeyDown}
+                aria-label="Terminal Command"
                 className="flex-1 bg-transparent border-none outline-none text-white font-mono placeholder:text-emerald-500/30 focus:ring-0 caret-[var(--live-dot)]"
                 placeholder="Type 'help' to see available commands..."
                 autoComplete="off"
                 spellCheck={false}
             />
-        </div>
+        </form>
     );
 });
 

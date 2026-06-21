@@ -193,14 +193,14 @@ export const ProjectModalMobile = memo(function ProjectModalMobile({
                             <Image src={imageSrc} alt={name} className="w-full h-full object-cover" placeholder="blur" sizes="100vw" />
                         ) : null}
 
-                        <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-t from-white via-white/40 dark:from-slate-950 dark:via-slate-950/60 to-transparent pointer-events-none" />
+                        <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent pointer-events-none" />
                     </div>
 
                     <div className="relative z-10 p-6 w-full flex flex-col gap-3">
-                        <h3 id={`modal-title-${id}`} className="text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+                        <h3 id={`modal-title-${id}`} className="text-3xl font-extrabold text-white tracking-tight">
                             {name}
                         </h3>
-                        <p className="text-sm text-slate-700 dark:text-slate-300 font-medium line-clamp-3">
+                        <p className="text-sm text-slate-200 font-medium line-clamp-3">
                             {description}
                         </p>
 
@@ -211,10 +211,10 @@ export const ProjectModalMobile = memo(function ProjectModalMobile({
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     className="cursor-pointer inline-flex items-center gap-1.5 px-4 py-1.5 text-sm font-semibold 
-                                        text-blue-600 dark:text-blue-400 
-                                        bg-blue-50 dark:bg-blue-500/10 
-                                        hover:bg-blue-600 hover:text-white dark:hover:bg-blue-500 dark:hover:text-white
-                                        border border-blue-200 dark:border-blue-500/20 
+                                        text-blue-400 
+                                        bg-blue-500/10 
+                                        hover:bg-blue-500 hover:text-white
+                                        border border-blue-500/20 
                                         rounded-full transition-all duration-300 active:scale-95 shadow-sm hover:shadow-blue-500/20 min-h-[44px]"
                                 >
                                     <ExternalLink className="w-3.5 h-3.5" /> Live Demo
@@ -226,10 +226,10 @@ export const ProjectModalMobile = memo(function ProjectModalMobile({
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     className="cursor-pointer inline-flex items-center gap-1.5 px-4 py-1.5 text-sm font-semibold 
-                                        text-slate-700 dark:text-slate-300 
-                                        bg-slate-100 dark:bg-slate-800/50 
-                                        hover:bg-slate-900 hover:text-white dark:hover:bg-slate-100 dark:hover:text-slate-900
-                                        border border-slate-200 dark:border-slate-700 
+                                        text-slate-300 
+                                        bg-slate-800/50 
+                                        hover:bg-slate-100 hover:text-slate-900
+                                        border border-slate-700 
                                         rounded-full transition-all duration-300 active:scale-95 shadow-sm min-h-[44px]"
                                 >
                                     <Github className="w-3.5 h-3.5" /> {cta ?? "Source"}
