@@ -3,6 +3,8 @@
 import { motion } from "framer-motion";
 import type { GitHubStats } from "@/lib/github";
 import { Star, GitCommit, GitBranch, Flame, Github, ExternalLink } from "lucide-react";
+import { useIsMobile } from "@/hooks/useIsMobile";
+import { ContributionHeatmap } from "./ContributionHeatmap";
 
 const fadeUp = {
     hidden: { opacity: 0, y: 16 },
@@ -19,20 +21,27 @@ const fadeUp = {
 
 const viewport = { once: true } as const;
 
-const LANG_COLORS: Record<string, string> = {
-    TypeScript: "#3178C6",
-    JavaScript: "#F7DF1E",
-    CSS: "#A855F7",
-    HTML: "#E34F26",
-    Python: "#3776AB",
-    MDX: "#4B5563",
+// Per-language brand colors sourced from CSS variables (dynamic per language).
+const LANG_COLOR_VARS: Record<string, string> = {
+    TypeScript: "var(--lang-typescript)",
+    JavaScript: "var(--lang-javascript)",
+    CSS: "var(--lang-css)",
+    HTML: "var(--lang-html)",
+    Python: "var(--lang-python)",
+    MDX: "var(--lang-mdx)",
 };
+
+function langColor(name: string): string {
+    return LANG_COLOR_VARS[name] ?? "var(--lang-fallback)";
+}
 
 interface Props {
     stats: GitHubStats;
 }
 
 export function GitHubStatsClient({ stats }: Props) {
+    const isMobile = useIsMobile();
+
     const statCards = [
         { icon: Star, value: stats.totalStars, label: "Total Stars", suffix: "" },
         { icon: GitCommit, value: stats.totalCommits, label: "Commits 2026", suffix: "" },
@@ -40,15 +49,21 @@ export function GitHubStatsClient({ stats }: Props) {
         { icon: Flame, value: stats.currentStreak, label: "Day Streak", suffix: "d" },
     ];
 
+    // On mobile skip all transform animations — render plain static elements.
+    const motionProps = isMobile
+        ? {}
+        : ({
+              variants: fadeUp,
+              initial: "hidden" as const,
+              whileInView: "visible" as const,
+              viewport,
+          });
+
     return (
         <div className="w-full flex flex-col gap-3">
 
             <motion.div
-                custom={0}
-                variants={fadeUp}
-                initial="hidden"
-                whileInView="visible"
-                viewport={viewport}
+                {...(isMobile ? {} : { custom: 0, ...motionProps })}
                 className="flex items-center justify-between mb-1"
             >
                 <div className="flex items-center gap-2">
@@ -57,15 +72,22 @@ export function GitHubStatsClient({ stats }: Props) {
                         GitHub Activity
                     </span>
                     <span className="relative flex h-1.5 w-1.5">
-                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
-                        <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-green-500" />
+                        <span
+                            className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75"
+                            style={{ backgroundColor: "var(--color-live-light)" }}
+                        />
+                        <span
+                            className="relative inline-flex rounded-full h-1.5 w-1.5"
+                            style={{ backgroundColor: "var(--color-live)" }}
+                        />
                     </span>
                 </div>
+                {/* min-h-11 (44px) hit area; negative margin keeps visual box unchanged. */}
                 <a
                     href="https://github.com/Ali-Haggag7"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors"
+                    className="flex items-center gap-1 -my-3 py-3 min-h-11 text-xs text-muted-foreground hover:text-foreground transition-colors"
                 >
                     View profile
                     <ExternalLink size={11} />
@@ -76,13 +98,8 @@ export function GitHubStatsClient({ stats }: Props) {
                 {statCards.map((card, i) => (
                     <motion.div
                         key={card.label}
-                        custom={i + 1}
-                        variants={fadeUp}
-                        initial="hidden"
-                        whileInView="visible"
-                        viewport={viewport}
-                        className="flex flex-col gap-2 rounded-xl p-4 bg-foreground/3 dark:bg-white/3 border !border-foreground/6 dark:border-white/6 hover:border-foreground/12
-                            dark:hover:border-white/10 hover:bg-foreground/5 dark:hover:bg-white/5 transition-all duration-300"
+                        {...(isMobile ? {} : { custom: i + 1, ...motionProps })}
+                        className="flex flex-col gap-2 rounded-xl p-4 bg-foreground/3 dark:bg-white/3 border !border-foreground/6 dark:border-white/6 card-glow"
                     >
                         <div className="flex items-center gap-1.5">
                             <card.icon size={13} className="text-muted-foreground" />
@@ -105,13 +122,8 @@ export function GitHubStatsClient({ stats }: Props) {
             </div>
 
             <motion.div
-                custom={5}
-                variants={fadeUp}
-                initial="hidden"
-                whileInView="visible"
-                viewport={viewport}
-                className="rounded-xl p-4 bg-foreground/3 dark:bg-white/3 border !border-foreground/6 dark:border-white/6 hover:border-foreground/12
-                    dark:hover:border-white/10 hover:bg-foreground/5 dark:hover:bg-white/5 transition-all duration-300"
+                {...(isMobile ? {} : { custom: 5, ...motionProps })}
+                className="rounded-xl p-4 bg-foreground/3 dark:bg-white/3 border !border-foreground/6 dark:border-white/6 card-glow"
             >
                 <div className="flex items-center justify-between mb-3">
                     <p className="text-[11px] text-muted-foreground font-medium uppercase tracking-wider">
@@ -127,7 +139,7 @@ export function GitHubStatsClient({ stats }: Props) {
                             key={lang.name}
                             style={{
                                 width: `${lang.percentage}%`,
-                                backgroundColor: LANG_COLORS[lang.name] ?? "#6B7280",
+                                backgroundColor: langColor(lang.name),
                             }}
                         />
                     ))}
@@ -138,7 +150,7 @@ export function GitHubStatsClient({ stats }: Props) {
                         <div key={lang.name} className="flex items-center gap-1.5">
                             <span
                                 className="inline-block w-2 h-2 rounded-full flex-shrink-0"
-                                style={{ backgroundColor: LANG_COLORS[lang.name] ?? "#6B7280" }}
+                                style={{ backgroundColor: langColor(lang.name) }}
                             />
                             <span className="text-[11px] text-muted-foreground truncate">
                                 {lang.name}
@@ -151,17 +163,17 @@ export function GitHubStatsClient({ stats }: Props) {
                 </div>
             </motion.div>
 
+            <ContributionHeatmap
+                recentDays={stats.recentDays}
+                lastSynced={stats.lastSynced}
+            />
+
             <motion.a
-                custom={6}
-                variants={fadeUp}
-                initial="hidden"
-                whileInView="visible"
-                viewport={viewport}
+                {...(isMobile ? {} : { custom: 6, ...motionProps })}
                 href="https://github.com/Ali-Haggag7"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group flex items-center justify-between rounded-xl p-4 border !border-foreground/6 dark:border-white/6 hover:border-foreground/12
-                    dark:hover:border-white/10 hover:bg-foreground/5 dark:hover:bg-white/5 transition-all duration-300 cursor-pointer"
+                className="group flex items-center justify-between rounded-xl p-4 border !border-foreground/6 dark:border-white/6 card-glow cursor-pointer"
             >
                 <div className="flex items-center gap-3">
                     <div className="w-8 h-8 rounded-lg flex items-center justify-center bg-foreground/3 dark:bg-white/3 group-hover:bg-foreground/5 dark:group-hover:bg-white/5 transition-colors">
