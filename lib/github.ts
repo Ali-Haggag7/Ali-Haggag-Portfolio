@@ -1,3 +1,8 @@
+export interface ContributionDay {
+    date: string;
+    count: number;
+}
+
 export interface GitHubStats {
     totalStars: number;
     totalCommits: number;
@@ -6,6 +11,25 @@ export interface GitHubStats {
     currentStreak: number;
     longestStreak: number;
     topLanguages: { name: string; percentage: number }[];
+    // Most recent ~84 days (12 weeks) of contribution activity for the heatmap.
+    recentDays: ContributionDay[];
+    // ISO timestamp set when this function actually executes (reflects cache freshness).
+    lastSynced: string;
+}
+
+// Number of trailing days to surface to the heatmap widget (12 weeks).
+const RECENT_DAYS_WINDOW = 84;
+
+// Zero-filled trailing window so the heatmap never crashes on a fetch failure.
+function getFallbackRecentDays(): ContributionDay[] {
+    const days: ContributionDay[] = [];
+    const today = new Date();
+    for (let i = RECENT_DAYS_WINDOW - 1; i >= 0; i--) {
+        const d = new Date(today);
+        d.setUTCDate(today.getUTCDate() - i);
+        days.push({ date: d.toISOString().split("T")[0], count: 0 });
+    }
+    return days;
 }
 
 function getFallbackStats(): GitHubStats {
@@ -22,6 +46,8 @@ function getFallbackStats(): GitHubStats {
             { name: "HTML", percentage: 14 },
             { name: "CSS", percentage: 12 },
         ],
+        recentDays: getFallbackRecentDays(),
+        lastSynced: new Date().toISOString(),
     };
 }
 
