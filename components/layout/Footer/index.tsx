@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Terminal } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { footerLinks, socialLinks, handleSmoothScroll, currentYear } from "./footer.data";
 import { LocalTime } from "./LocalTime";
@@ -21,6 +21,12 @@ const socialSpring = {
 const viewport = { once: true } as const;
 
 export default function Footer() {
+    const triggerEasterEgg = (code: string) => {
+        for (const char of code) {
+            window.dispatchEvent(new KeyboardEvent("keydown", { key: char }));
+        }
+    };
+
     return (
         <footer className="w-full relative bg-background pt-20 pb-8 overflow-hidden">
             {/* Top border gradient — CSS only, no layout cost */}
@@ -31,7 +37,7 @@ export default function Footer() {
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-12 lg:gap-8 mb-16">
 
                     {/* ── Brand column ── */}
-                    <div className="lg:col-span-5">
+                    <div className="lg:col-span-4">
                         <motion.h2
                             variants={fadeIn}
                             initial="hidden"
@@ -45,9 +51,8 @@ export default function Footer() {
                             </span>
                         </motion.h2>
 
-                        <p className="text-muted-foreground text-base leading-relaxed max-w-sm mb-8">
-                            Full-Stack Developer crafting scalable web experiences. Turning
-                            complex problems into elegant, high-performance solutions.
+                        <p className="text-muted-foreground text-sm leading-relaxed max-w-sm mb-8 font-medium">
+                            Systems Engineer & Real-Time Architect. Engineering high-frequency physics engines, sandboxed compilers, and resilient distributed microservices.
                         </p>
 
                         <div className="flex gap-4">
@@ -62,7 +67,7 @@ export default function Footer() {
                                     whileTap={{ scale: 0.95 }}
                                     transition={socialSpring}
                                     className={cn(
-                                        "group p-3 rounded-full bg-card border border-border text-muted-foreground transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500",
+                                        "group p-3 rounded-full bg-card border border-border text-muted-foreground transition-colors duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 min-h-11 min-w-11 flex items-center justify-center",
                                         social.hoverClass
                                     )}
                                 >
@@ -73,18 +78,18 @@ export default function Footer() {
                     </div>
 
                     {/* ── Nav links column ── */}
-                    <div className="lg:col-span-3">
-                        <h3 className="text-foreground font-bold mb-6 text-lg">Explore</h3>
-                        <ul className="space-y-4 text-muted-foreground text-sm font-medium">
+                    <div className="lg:col-span-2">
+                        <h3 className="text-foreground font-bold mb-4 text-sm uppercase tracking-wider">Explore</h3>
+                        <ul className="space-y-1 text-muted-foreground text-sm font-medium">
                             {footerLinks.map((link) => (
                                 <li key={link.name}>
                                     <a
                                         href={link.href}
                                         onClick={(e) => handleSmoothScroll(e, link.href)}
-                                        className="group flex items-center gap-2 hover:text-blue-500 transition-colors w-fit cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-sm"
+                                        className="group flex items-center gap-2 hover:text-blue-500 transition-colors w-fit cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded-md min-h-11 py-2 px-1 -my-1.5"
                                     >
                                         <ArrowRight
-                                            className="w-4 h-4 opacity-0 -translate-x-2 transition-all duration-300 group-hover:opacity-100 group-hover:translate-x-0 group-focus:opacity-100 group-focus:translate-x-0 text-blue-500"
+                                            className="w-4 h-4 opacity-0 -translate-x-2 transition-all duration-300 group-hover:opacity-100 group-hover:translate-x-0 group-focus:opacity-100 group-focus:translate-x-0 text-blue-500 shrink-0"
                                             aria-hidden="true"
                                         />
                                         <span className="transition-transform duration-300 group-hover:translate-x-1 group-focus:translate-x-1">
@@ -96,14 +101,85 @@ export default function Footer() {
                         </ul>
                     </div>
 
-                    {/* ── Newsletter column ── */}
-                    <div className="lg:col-span-4">
-                        <h3 className="text-foreground font-bold mb-6 text-lg">Stay Updated</h3>
-                        <p className="text-muted-foreground text-sm mb-6 leading-relaxed">
-                            Subscribe to get the latest updates on my projects, freelance
-                            journey, and tech articles.
-                        </p>
-                        <NewsletterForm />
+                    {/* ── Systems Diagnostics Console ── */}
+                    <div className="lg:col-span-3 flex flex-col">
+                        <div className="flex items-center gap-2 mb-4">
+                            <Terminal size={14} className="text-muted-foreground" />
+                            <h3 className="text-foreground font-bold text-sm uppercase tracking-wider">Diagnostics</h3>
+                        </div>
+                        <div className="relative overflow-hidden rounded-2xl border border-border bg-foreground/3 dark:bg-white/3 p-4 font-mono text-[11px] leading-relaxed shadow-inner">
+                            <div className="flex flex-col gap-1.5 text-muted-foreground select-none">
+                                <div className="flex justify-between items-center">
+                                    <span>SYS_INTEGRITY:</span>
+                                    <span className="text-emerald-500 font-bold flex items-center gap-1.5">
+                                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping shrink-0" />
+                                        SECURE
+                                    </span>
+                                </div>
+                                <div className="flex justify-between">
+                                    <span>RAM_STATUS:</span>
+                                    <span className="text-foreground font-semibold">0_LEAKS</span>
+                                </div>
+                                <div className="flex justify-between">
+                                    <span>COMPILER:</span>
+                                    <span className="text-foreground font-semibold">ALISCRIPT_V2.2</span>
+                                </div>
+                                <div className="flex justify-between">
+                                    <span>TICK_RATE:</span>
+                                    <span className="text-foreground font-semibold">20_HZ_DET</span>
+                                </div>
+                                <div className="flex justify-between">
+                                    <span>SYNC_LATENCY:</span>
+                                    <span className="text-foreground font-semibold">&lt;50_MS</span>
+                                </div>
+                                <div className="flex justify-between items-center border-t border-border/40 pt-1.5 mt-0.5">
+                                    <span>OVERRIDE:</span>
+                                    <span className="text-amber-500 font-semibold animate-pulse">STANDBY</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* ── Stay Updated & Override Console ── */}
+                    <div className="lg:col-span-3 flex flex-col">
+                        <h3 className="text-foreground font-bold mb-4 text-sm uppercase tracking-wider">Stay Updated</h3>
+                        <div className="flex flex-col gap-5">
+                            <NewsletterForm />
+                            <div className="flex flex-col gap-2">
+                                <span className="text-[10px] text-muted-foreground font-bold uppercase tracking-wider">
+                                    System Override (Easter Eggs)
+                                </span>
+                                <div className="flex gap-2">
+                                    <button
+                                        type="button"
+                                        onClick={() => triggerEasterEgg("matrix")}
+                                        className="flex-1 min-h-11 flex items-center justify-center gap-1.5 rounded-xl border border-border bg-card text-xs font-semibold hover:border-[hsl(var(--accent-blue))]/40 hover:bg-muted/20 dark:hover:bg-white/3 active:scale-95 transition-all cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+                                        title="Trigger Matrix Rain"
+                                    >
+                                        <span className="w-1.5 h-1.5 rounded-full bg-blue-500 shrink-0" />
+                                        Matrix
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={() => triggerEasterEgg("party")}
+                                        className="flex-1 min-h-11 flex items-center justify-center gap-1.5 rounded-xl border border-border bg-card text-xs font-semibold hover:border-[hsl(var(--accent-purple))]/40 hover:bg-muted/20 dark:hover:bg-white/3 active:scale-95 transition-all cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+                                        title="Trigger Party Lights"
+                                    >
+                                        <span className="w-1.5 h-1.5 rounded-full bg-purple-500 animate-pulse shrink-0" />
+                                        Party
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={() => triggerEasterEgg("nuke")}
+                                        className="flex-1 min-h-11 flex items-center justify-center gap-1.5 rounded-xl border border-border bg-card text-xs font-semibold hover:border-[hsl(var(--accent-emerald))]/40 hover:bg-muted/20 dark:hover:bg-white/3 active:scale-95 transition-all cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+                                        title="Trigger System Nuke"
+                                    >
+                                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 shrink-0" />
+                                        Nuke
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 

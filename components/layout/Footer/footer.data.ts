@@ -5,6 +5,7 @@ export const footerLinks = [
     { name: "Home", href: "#" },
     { name: "Projects", href: "#projects" },
     { name: "My Journey", href: "#timeline" },
+    { name: "Services", href: "#services" },
     { name: "Contact", href: "#contact" },
 ];
 
@@ -14,21 +15,21 @@ export const socialLinks = [
         href: "https://github.com/Ali-Haggag7",
         label: "GitHub Profile",
         hoverClass:
-            "hover:bg-neutral-800 dark:hover:bg-neutral-100 hover:text-white dark:hover:text-black hover:border-transparent",
+            "hover:bg-foreground/10 hover:border-foreground/20 hover:text-foreground",
     },
     {
         icon: Linkedin,
         href: "https://www.linkedin.com/in/ali-haggag7/",
         label: "LinkedIn Profile",
         hoverClass:
-            "hover:bg-[#0A66C2]/10 hover:border-[#0A66C2]/30 hover:text-[#0A66C2]",
+            "hover:bg-[hsl(var(--accent-blue))]/10 hover:border-[hsl(var(--accent-blue))]/30 hover:text-[hsl(var(--accent-blue))]",
     },
     {
         icon: Mail,
         href: "mailto:ali.haggag2005@gmail.com",
         label: "Email Me",
         hoverClass:
-            "hover:bg-emerald-500/10 hover:border-emerald-500/30 hover:text-emerald-500",
+            "hover:bg-[hsl(var(--accent-emerald))]/10 hover:border-[hsl(var(--accent-emerald))]/30 hover:text-[hsl(var(--accent-emerald))]",
     },
 ];
 
