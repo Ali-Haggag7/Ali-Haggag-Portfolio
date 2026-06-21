@@ -1,21 +1,20 @@
 "use client";
 
-import { memo, useMemo } from "react";
+import { memo } from "react";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
+import { LucideIcon } from "lucide-react";
 
 interface ChatBubbleProps {
     show: boolean;
     message: string;
+    icon?: LucideIcon;
     onClick: () => void;
 }
 
 // Static classes never change — computed once at module load, never re-allocated.
 const BUBBLE_CLASS = cn(
-    "absolute z-40 cursor-pointer whitespace-nowrap shadow-md border border-blue-500",
-    "bg-blue-600 text-white text-xs font-medium px-4 py-2.5",
-    "hover:bg-blue-700 transition-colors",
-    "focus:outline-none focus:ring-2 focus:ring-blue-400",
+    "absolute z-40 cursor-pointer whitespace-nowrap shadow-md border text-white text-xs font-medium px-4 py-2.5 hover:opacity-90 active:scale-95 transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500",
     "bottom-[65px] left-0 rounded-2xl rounded-bl-sm",
     "md:bottom-2 md:left-auto md:right-[72px] md:rounded-bl-2xl md:rounded-r-sm",
 );
@@ -30,6 +29,7 @@ const BUBBLE_TRANSITION = { duration: 0.2, ease: EASE_OUT };
 export const ChatBubble = memo(function ChatBubble({
     show,
     message,
+    icon: Icon,
     onClick,
 }: ChatBubbleProps) {
     return (
@@ -47,11 +47,20 @@ export const ChatBubble = memo(function ChatBubble({
                     : { opacity: 0, y: 10, scale: 0.95, pointerEvents: "none" as const }
             }
             transition={BUBBLE_TRANSITION}
-            style={{ willChange: "transform, opacity", originX: 0, originY: 1 }}
+            style={{
+                willChange: "transform, opacity",
+                originX: 0,
+                originY: 1,
+                backgroundColor: "hsl(var(--accent-blue))",
+                borderColor: "hsl(var(--accent-blue) / 0.8)",
+            }}
             className={BUBBLE_CLASS}
             onClick={onClick}
         >
-            {message}
+            <div className="flex items-center gap-2">
+                {Icon && <Icon className="h-3.5 w-3.5 shrink-0" aria-hidden />}
+                <span>{message}</span>
+            </div>
         </motion.button>
     );
 });
