@@ -442,6 +442,17 @@
     background: rgba(59, 130, 246, 0.8);
   }
 
+  /* Subtle hover glow for stat/language/repo cards.
+     Pure CSS — hover never fires on touch, so no isMobile guard needed. */
+  .card-glow {
+    transition: border-color 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+  }
+
+  .card-glow:hover {
+    border-color: hsl(var(--accent-blue) / 0.4);
+    box-shadow: 0 0 16px -4px hsl(var(--accent-blue) / 0.25);
+  }
+
   .glitch-text {
     position: relative;
     color: white;
