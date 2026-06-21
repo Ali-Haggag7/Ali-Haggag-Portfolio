@@ -206,7 +206,9 @@ export async function getGitHubStats(): Promise<GitHubStats> {
             }
         }
 
+        const todayStr = new Date().toISOString().split("T")[0];
         const recentDays = [...days]
+            .filter((day) => day.date <= todayStr)
             .sort((a, b) => a.date.localeCompare(b.date))
             .slice(-RECENT_DAYS_WINDOW);
 

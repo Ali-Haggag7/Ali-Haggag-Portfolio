@@ -6,6 +6,7 @@ import { MagneticButton } from "./MagneticButton";
 import { Suspense } from "react";
 import { GitHubStatsPanel } from "./GitHubStatsPanel";
 import { useIsMobile } from "@/hooks/useIsMobile";
+import { Cpu, Terminal, Shield, Zap } from "lucide-react";
 
 const fadeUp = {
     hidden: { opacity: 0, y: 20 },
@@ -118,14 +119,59 @@ export default function ContactSection({ statsPanel }: { statsPanel: React.React
 
                     <motion.p
                         {...anim(fadeUp, { transition: { delay: 0.2 } })}
-                        className="text-muted-foreground text-lg md:text-xl mb-10 max-w-lg leading-relaxed font-medium"
+                        className="text-muted-foreground text-lg md:text-xl mb-6 max-w-lg leading-relaxed font-medium"
                     >
-                        Based in Egypt 🇪🇬. Architecting high-performance MERN applications,
-                        real-time systems, and AI-driven solutions for clients across the
-                        globe. Distance is just a detail.
+                        Based in Egypt 🇪🇬. Engineering secure real-time game engines,
+                        custom sandboxed compilers, and high-throughput microservices. Architecting
+                        resilient systems for global scale.
                     </motion.p>
 
-                    <motion.div {...anim(scaleIn, { transition: { delay: 0.3 } })}>
+                    <motion.div
+                        {...anim(fadeUp, { transition: { delay: 0.25 } })}
+                        className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 w-full max-w-lg mb-8 text-left mt-2"
+                    >
+                        <div className="flex gap-3 p-3 rounded-2xl bg-card border border-border hover:border-[hsl(var(--accent-blue))]/40 hover:bg-muted/20 dark:hover:bg-white/3 transition-all duration-300">
+                            <Cpu className="w-5 h-5 shrink-0 mt-0.5" style={{ color: "hsl(var(--accent-blue))" }} />
+                            <div>
+                                <h4 className="text-sm font-semibold text-foreground">Real-Time Engines</h4>
+                                <p className="text-[11px] text-muted-foreground mt-0.5 leading-normal">
+                                    WebSockets, WebRTC, & high-frequency game loop sync.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div className="flex gap-3 p-3 rounded-2xl bg-card border border-border hover:border-[hsl(var(--accent-purple))]/40 hover:bg-muted/20 dark:hover:bg-white/3 transition-all duration-300">
+                            <Terminal className="w-5 h-5 shrink-0 mt-0.5" style={{ color: "hsl(var(--accent-purple))" }} />
+                            <div>
+                                <h4 className="text-sm font-semibold text-foreground">Compiler Design</h4>
+                                <p className="text-[11px] text-muted-foreground mt-0.5 leading-normal">
+                                    Custom AST parsing & secure server-side execution sandboxes.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div className="flex gap-3 p-3 rounded-2xl bg-card border border-border hover:border-[hsl(var(--accent-emerald))]/40 hover:bg-muted/20 dark:hover:bg-white/3 transition-all duration-300">
+                            <Shield className="w-5 h-5 shrink-0 mt-0.5" style={{ color: "hsl(var(--accent-emerald))" }} />
+                            <div>
+                                <h4 className="text-sm font-semibold text-foreground">Defensive Architecture</h4>
+                                <p className="text-[11px] text-muted-foreground mt-0.5 leading-normal">
+                                    Domain-Driven Design & robust Anti-Corruption Layers.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div className="flex gap-3 p-3 rounded-2xl bg-card border border-border hover:border-[var(--tl-accent-yellow)]/40 hover:bg-muted/20 dark:hover:bg-white/3 transition-all duration-300">
+                            <Zap className="w-5 h-5 shrink-0 mt-0.5" style={{ color: "var(--tl-accent-yellow)" }} />
+                            <div>
+                                <h4 className="text-sm font-semibold text-foreground">High-Throughput APIs</h4>
+                                <p className="text-[11px] text-muted-foreground mt-0.5 leading-normal">
+                                    Redis caching, multi-layer validation, & rate-limiting.
+                                </p>
+                            </div>
+                        </div>
+                    </motion.div>
+
+                    <motion.div {...anim(scaleIn, { transition: { delay: 0.35 } })}>
                         <MagneticButton href="mailto:ali.haggag2005@gmail.com">
                             Let&apos;s Build Together
                         </MagneticButton>

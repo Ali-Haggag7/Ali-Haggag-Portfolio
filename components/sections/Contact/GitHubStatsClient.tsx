@@ -43,10 +43,10 @@ export function GitHubStatsClient({ stats }: Props) {
     const isMobile = useIsMobile();
 
     const statCards = [
-        { icon: Star, value: stats.totalStars, label: "Total Stars", suffix: "" },
-        { icon: GitCommit, value: stats.totalCommits, label: "Commits 2026", suffix: "" },
-        { icon: GitBranch, value: stats.contributions2026, label: "Contributions", suffix: "" },
-        { icon: Flame, value: stats.currentStreak, label: "Day Streak", suffix: "d" },
+        { icon: Star, value: stats.totalStars, label: "Total Stars", suffix: "", isStreak: false },
+        { icon: GitCommit, value: stats.totalCommits, label: "Commits 2026", suffix: "", isStreak: false },
+        { icon: GitBranch, value: stats.contributions2026, label: "Contributions", suffix: "", isStreak: false },
+        { icon: Flame, value: stats.currentStreak, label: "Streak", suffix: "d", isStreak: true },
     ];
 
     // On mobile skip all transform animations — render plain static elements.
@@ -107,16 +107,39 @@ export function GitHubStatsClient({ stats }: Props) {
                                 {card.label}
                             </span>
                         </div>
-                        <div className="flex items-baseline gap-0.5">
-                            <span className="text-[28px] font-bold tracking-tight text-foreground leading-none">
-                                {card.value.toLocaleString()}
-                            </span>
-                            {card.suffix && (
-                                <span className="text-sm text-muted-foreground font-medium">
-                                    {card.suffix}
+                        {card.isStreak ? (
+                            <div className="grid grid-cols-2 gap-2 mt-0.5">
+                                <div className="flex flex-col">
+                                    <span className="text-[9px] text-muted-foreground font-medium uppercase tracking-wider">Current</span>
+                                    <div className="flex items-baseline gap-0.5">
+                                        <span className="text-[22px] font-bold tracking-tight text-foreground leading-none">
+                                            {stats.currentStreak.toLocaleString()}
+                                        </span>
+                                        <span className="text-[11px] text-muted-foreground font-medium">d</span>
+                                    </div>
+                                </div>
+                                <div className="flex flex-col border-l border-foreground/6 dark:border-white/6 pl-2.5">
+                                    <span className="text-[9px] text-muted-foreground font-medium uppercase tracking-wider">Max</span>
+                                    <div className="flex items-baseline gap-0.5">
+                                        <span className="text-[22px] font-bold tracking-tight text-foreground leading-none">
+                                            {stats.longestStreak.toLocaleString()}
+                                        </span>
+                                        <span className="text-[11px] text-muted-foreground font-medium">d</span>
+                                    </div>
+                                </div>
+                            </div>
+                        ) : (
+                            <div className="flex items-baseline gap-0.5">
+                                <span className="text-[28px] font-bold tracking-tight text-foreground leading-none">
+                                    {card.value.toLocaleString()}
                                 </span>
-                            )}
-                        </div>
+                                {card.suffix && (
+                                    <span className="text-sm text-muted-foreground font-medium">
+                                        {card.suffix}
+                                    </span>
+                                )}
+                            </div>
+                        )}
                     </motion.div>
                 ))}
             </div>
