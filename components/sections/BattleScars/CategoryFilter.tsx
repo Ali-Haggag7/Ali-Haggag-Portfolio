@@ -14,7 +14,11 @@ export const CategoryFilter = memo(function CategoryFilter({ categories, activeC
     const getHandler = useStableMap(onSelect);
 
     return (
-        <div role="group" aria-label="Filter by category" className="flex flex-wrap items-center justify-center gap-3 mb-12">
+        <div 
+            role="group" 
+            aria-label="Filter by category" 
+            className="flex overflow-x-auto items-center md:justify-center gap-2 mb-10 pb-2 -mx-4 px-4 md:mx-0 md:px-0 snap-x [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
+        >
             {categories.map((category) => {
                 const isActive = activeCategory === category;
                 return (
@@ -24,12 +28,11 @@ export const CategoryFilter = memo(function CategoryFilter({ categories, activeC
                         onClick={getHandler(category)}
                         aria-pressed={isActive}
                         className={cn(
-                            // py-3 = 48px total height — WCAG 2.5.5 touch target compliance
-                            "px-5 py-3 rounded-full text-sm font-bold border",
-                            "transition-[box-shadow,background-color,color,border-color] duration-200 hover:scale-105",
+                            "flex-shrink-0 snap-center px-4 py-2.5 rounded-full text-[13px] font-semibold border cursor-pointer",
+                            "transition-all duration-200",
                             isActive
-                                ? "bg-blue-600 text-white border-transparent shadow-lg shadow-blue-500/30"
-                                : "bg-muted/50 text-muted-foreground border-border hover:bg-muted hover:text-foreground"
+                                ? "bg-blue-600 text-white border-transparent shadow-md shadow-blue-500/20"
+                                : "bg-background/40 backdrop-blur-xl text-muted-foreground border-border/50 hover:bg-muted/80 hover:text-foreground"
                         )}
                     >
                         {category}

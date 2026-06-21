@@ -30,8 +30,16 @@ export const ProjectModal = ({
 
     // Handle body scroll lock
     useEffect(() => {
-        document.documentElement.classList.add("modal-open");
-        return () => document.documentElement.classList.remove("modal-open");
+        const html = document.documentElement;
+        const scrollbarWidth = window.innerWidth - html.clientWidth;
+        if (scrollbarWidth > 0) {
+            html.style.setProperty("--scrollbar-width", `${scrollbarWidth}px`);
+        }
+        html.classList.add("modal-open");
+        return () => {
+            html.classList.remove("modal-open");
+            html.style.removeProperty("--scrollbar-width");
+        };
     }, []);
 
     // Accessibility: Close on Escape key

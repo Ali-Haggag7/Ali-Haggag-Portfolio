@@ -50,8 +50,16 @@ export function GitHubStatsClient({ stats }: Props) {
     ];
 
     // On mobile skip all transform animations — render plain static elements.
+    // By providing `animate: "visible"` and `transition: { duration: 0 }`, we force
+    // Framer Motion to instantly snap to the visible state after SSR hydration,
+    // overriding the initial inline `opacity: 0` that was injected during SSR.
     const motionProps = isMobile
-        ? {}
+        ? {
+              variants: fadeUp,
+              initial: false as const,
+              animate: "visible" as const,
+              transition: { duration: 0 },
+          }
         : ({
               variants: fadeUp,
               initial: "hidden" as const,
@@ -63,7 +71,7 @@ export function GitHubStatsClient({ stats }: Props) {
         <div className="w-full flex flex-col gap-3">
 
             <motion.div
-                {...(isMobile ? {} : { custom: 0, ...motionProps })}
+                {...{ custom: 0, ...motionProps }}
                 className="flex items-center justify-between mb-1"
             >
                 <div className="flex items-center gap-2">
@@ -98,7 +106,7 @@ export function GitHubStatsClient({ stats }: Props) {
                 {statCards.map((card, i) => (
                     <motion.div
                         key={card.label}
-                        {...(isMobile ? {} : { custom: i + 1, ...motionProps })}
+                        {...{ custom: i + 1, ...motionProps }}
                         className="flex flex-col gap-2 rounded-xl p-4 bg-foreground/3 dark:bg-white/3 border !border-foreground/6 dark:border-white/6 card-glow"
                     >
                         <div className="flex items-center gap-1.5">
@@ -145,7 +153,7 @@ export function GitHubStatsClient({ stats }: Props) {
             </div>
 
             <motion.div
-                {...(isMobile ? {} : { custom: 5, ...motionProps })}
+                {...{ custom: 5, ...motionProps }}
                 className="rounded-xl p-4 bg-foreground/3 dark:bg-white/3 border !border-foreground/6 dark:border-white/6 card-glow"
             >
                 <div className="flex items-center justify-between mb-3">
@@ -192,7 +200,7 @@ export function GitHubStatsClient({ stats }: Props) {
             />
 
             <motion.a
-                {...(isMobile ? {} : { custom: 6, ...motionProps })}
+                {...{ custom: 6, ...motionProps }}
                 href="https://github.com/Ali-Haggag7"
                 target="_blank"
                 rel="noopener noreferrer"

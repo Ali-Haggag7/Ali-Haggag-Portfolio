@@ -79,22 +79,28 @@ export default function Footer() {
 
                     {/* ── Nav links column ── */}
                     <div className="lg:col-span-2">
-                        <h3 className="text-foreground font-bold mb-4 text-sm uppercase tracking-wider">Explore</h3>
-                        <ul className="space-y-1 text-muted-foreground text-sm font-medium">
+                        <h3 className="text-foreground font-bold mb-3 md:mb-4 text-xs md:text-sm uppercase tracking-wider pl-1 md:pl-0">Explore</h3>
+                        <ul className="flex flex-col bg-card/40 md:bg-transparent backdrop-blur-xl md:backdrop-blur-none border border-border/50 md:border-none rounded-[24px] md:rounded-none overflow-hidden space-y-0 md:space-y-1 shadow-sm md:shadow-none">
                             {footerLinks.map((link) => (
-                                <li key={link.name}>
+                                <li key={link.name} className={cn("border-b border-border/50 md:border-none last:border-b-0")}>
                                     <a
                                         href={link.href}
                                         onClick={(e) => handleSmoothScroll(e, link.href)}
-                                        className="group flex items-center gap-2 hover:text-blue-500 transition-colors w-fit cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded-md min-h-11 py-2 px-1 -my-1.5"
+                                        className="group flex items-center justify-between md:justify-start gap-2 hover:text-blue-500 transition-colors w-full cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 min-h-[48px] md:min-h-11 py-3.5 px-4 md:py-2 md:px-1 md:-my-1.5 hover:bg-muted/30 md:hover:bg-transparent active:bg-muted/50 md:active:bg-transparent"
                                     >
+                                        <div className="flex items-center gap-2">
+                                            <ArrowRight
+                                                className="hidden md:block w-4 h-4 opacity-0 -translate-x-2 transition-all duration-300 group-hover:opacity-100 group-hover:translate-x-0 group-focus:opacity-100 group-focus:translate-x-0 text-blue-500 shrink-0"
+                                                aria-hidden="true"
+                                            />
+                                            <span className="text-[15px] md:text-sm font-medium text-foreground/90 md:text-muted-foreground transition-transform duration-300 md:group-hover:translate-x-1 md:group-focus:translate-x-1">
+                                                {link.name}
+                                            </span>
+                                        </div>
                                         <ArrowRight
-                                            className="w-4 h-4 opacity-0 -translate-x-2 transition-all duration-300 group-hover:opacity-100 group-hover:translate-x-0 group-focus:opacity-100 group-focus:translate-x-0 text-blue-500 shrink-0"
+                                            className="block md:hidden w-4 h-4 text-muted-foreground/30 shrink-0"
                                             aria-hidden="true"
                                         />
-                                        <span className="transition-transform duration-300 group-hover:translate-x-1 group-focus:translate-x-1">
-                                            {link.name}
-                                        </span>
                                     </a>
                                 </li>
                             ))}
@@ -103,12 +109,12 @@ export default function Footer() {
 
                     {/* ── Systems Diagnostics Console ── */}
                     <div className="lg:col-span-3 flex flex-col">
-                        <div className="flex items-center gap-2 mb-4">
+                        <div className="flex items-center gap-2 mb-3 md:mb-4 pl-1 md:pl-0">
                             <Terminal size={14} className="text-muted-foreground" />
-                            <h3 className="text-foreground font-bold text-sm uppercase tracking-wider">Diagnostics</h3>
+                            <h3 className="text-foreground font-bold text-xs md:text-sm uppercase tracking-wider">Diagnostics</h3>
                         </div>
-                        <div className="relative overflow-hidden rounded-2xl border border-border bg-foreground/3 dark:bg-white/3 p-4 font-mono text-[11px] leading-relaxed shadow-inner">
-                            <div className="flex flex-col gap-1.5 text-muted-foreground select-none">
+                        <div className="relative overflow-hidden rounded-[24px] md:rounded-2xl border border-border/50 bg-card/40 md:bg-foreground/3 dark:md:bg-white/3 backdrop-blur-xl md:backdrop-blur-none p-5 md:p-4 font-mono text-[12px] md:text-[11px] leading-relaxed shadow-sm md:shadow-inner">
+                            <div className="flex flex-col gap-2 md:gap-1.5 text-muted-foreground select-none">
                                 <div className="flex justify-between items-center">
                                     <span>SYS_INTEGRITY:</span>
                                     <span className="text-emerald-500 font-bold flex items-center gap-1.5">
@@ -132,7 +138,7 @@ export default function Footer() {
                                     <span>SYNC_LATENCY:</span>
                                     <span className="text-foreground font-semibold">&lt;50_MS</span>
                                 </div>
-                                <div className="flex justify-between items-center border-t border-border/40 pt-1.5 mt-0.5">
+                                <div className="flex justify-between items-center border-t border-border/40 pt-2 md:pt-1.5 mt-1 md:mt-0.5">
                                     <span>OVERRIDE:</span>
                                     <span className="text-amber-500 font-semibold animate-pulse">STANDBY</span>
                                 </div>
@@ -142,18 +148,20 @@ export default function Footer() {
 
                     {/* ── Stay Updated & Override Console ── */}
                     <div className="lg:col-span-3 flex flex-col">
-                        <h3 className="text-foreground font-bold mb-4 text-sm uppercase tracking-wider">Stay Updated</h3>
-                        <div className="flex flex-col gap-5">
-                            <NewsletterForm />
-                            <div className="flex flex-col gap-2">
-                                <span className="text-[10px] text-muted-foreground font-bold uppercase tracking-wider">
+                        <h3 className="text-foreground font-bold mb-3 md:mb-4 text-xs md:text-sm uppercase tracking-wider pl-1 md:pl-0">Stay Updated</h3>
+                        <div className="flex flex-col gap-6 md:gap-5">
+                            <div className="w-full">
+                                <NewsletterForm />
+                            </div>
+                            <div className="flex flex-col gap-3 md:gap-2">
+                                <span className="text-[10px] text-muted-foreground font-bold uppercase tracking-wider pl-1 md:pl-0">
                                     System Override (Easter Eggs)
                                 </span>
-                                <div className="flex gap-2">
+                                <div className="grid grid-cols-3 md:flex gap-2">
                                     <button
                                         type="button"
                                         onClick={() => triggerEasterEgg("matrix")}
-                                        className="flex-1 min-h-11 flex items-center justify-center gap-1.5 rounded-xl border border-border bg-card text-xs font-semibold hover:border-[hsl(var(--accent-blue))]/40 hover:bg-muted/20 dark:hover:bg-white/3 active:scale-95 transition-all cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+                                        className="flex-1 min-h-[48px] md:min-h-11 flex flex-col md:flex-row items-center justify-center gap-1 md:gap-1.5 rounded-[16px] md:rounded-xl border border-border/50 md:border-border bg-card/40 md:bg-card backdrop-blur-xl md:backdrop-blur-none text-[11px] md:text-xs font-semibold hover:border-[hsl(var(--accent-blue))]/40 hover:bg-muted/20 dark:hover:bg-white/3 active:scale-95 transition-all cursor-pointer shadow-sm md:shadow-none focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
                                         title="Trigger Matrix Rain"
                                     >
                                         <span className="w-1.5 h-1.5 rounded-full bg-blue-500 shrink-0" />
@@ -162,7 +170,7 @@ export default function Footer() {
                                     <button
                                         type="button"
                                         onClick={() => triggerEasterEgg("party")}
-                                        className="flex-1 min-h-11 flex items-center justify-center gap-1.5 rounded-xl border border-border bg-card text-xs font-semibold hover:border-[hsl(var(--accent-purple))]/40 hover:bg-muted/20 dark:hover:bg-white/3 active:scale-95 transition-all cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+                                        className="flex-1 min-h-[48px] md:min-h-11 flex flex-col md:flex-row items-center justify-center gap-1 md:gap-1.5 rounded-[16px] md:rounded-xl border border-border/50 md:border-border bg-card/40 md:bg-card backdrop-blur-xl md:backdrop-blur-none text-[11px] md:text-xs font-semibold hover:border-[hsl(var(--accent-purple))]/40 hover:bg-muted/20 dark:hover:bg-white/3 active:scale-95 transition-all cursor-pointer shadow-sm md:shadow-none focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
                                         title="Trigger Party Lights"
                                     >
                                         <span className="w-1.5 h-1.5 rounded-full bg-purple-500 animate-pulse shrink-0" />
@@ -171,7 +179,7 @@ export default function Footer() {
                                     <button
                                         type="button"
                                         onClick={() => triggerEasterEgg("nuke")}
-                                        className="flex-1 min-h-11 flex items-center justify-center gap-1.5 rounded-xl border border-border bg-card text-xs font-semibold hover:border-[hsl(var(--accent-emerald))]/40 hover:bg-muted/20 dark:hover:bg-white/3 active:scale-95 transition-all cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+                                        className="flex-1 min-h-[48px] md:min-h-11 flex flex-col md:flex-row items-center justify-center gap-1 md:gap-1.5 rounded-[16px] md:rounded-xl border border-border/50 md:border-border bg-card/40 md:bg-card backdrop-blur-xl md:backdrop-blur-none text-[11px] md:text-xs font-semibold hover:border-[hsl(var(--accent-emerald))]/40 hover:bg-muted/20 dark:hover:bg-white/3 active:scale-95 transition-all cursor-pointer shadow-sm md:shadow-none focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
                                         title="Trigger System Nuke"
                                     >
                                         <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 shrink-0" />

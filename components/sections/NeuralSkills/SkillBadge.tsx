@@ -24,9 +24,9 @@ export const SkillBadge = memo(function SkillBadge({
             aria-label={`View details for ${skill.name}`}
             className={cn(
                 "group relative flex items-center gap-2 px-3 py-2.5 rounded-xl",
-                "min-h-[44px] border border-border/50 bg-card/50",
+                "min-h-[48px] md:min-h-[44px] border border-border/50 bg-card/50",
                 "transition-all duration-200 ease-in-out",
-                "hover:bg-card hover:border-blue-500/50 hover:-translate-y-1.5 hover:shadow-xl hover:shadow-blue-500/10",
+                "hover:bg-card hover:border-blue-500/50 md:hover:-translate-y-1.5 md:hover:shadow-xl hover:shadow-blue-500/10",
                 "will-change-transform",
                 "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500",
                 "active:scale-95 cursor-pointer"

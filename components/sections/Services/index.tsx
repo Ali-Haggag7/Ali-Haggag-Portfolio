@@ -80,7 +80,7 @@ export default function Services() {
                                 aria-pressed={active}
                                 className={cn(
                                     "inline-flex min-h-[44px] items-center rounded-full border px-4 text-sm font-semibold",
-                                    "transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+                                    "transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring cursor-pointer",
                                     !active &&
                                         "border-border bg-card text-muted-foreground hover:text-foreground hover:border-foreground/30"
                                 )}

@@ -1,7 +1,8 @@
 "use client";
 
-import { useState, useMemo, useCallback, useEffect } from "react";
-import { Activity, ShieldAlert, FolderGit2, ListChecks } from "lucide-react";
+import { useState, useMemo, useCallback, useEffect, useRef } from "react";
+import { Activity, ShieldAlert, FolderGit2, ListChecks, ChevronDown, ArrowDown } from "lucide-react";
+import { useInView } from "framer-motion";
 import { scarsData, scarCategories } from "./scars.data";
 import { useStableMap } from "@/hooks/useStableMap";
 import { CategoryFilter } from "./CategoryFilter";
@@ -12,6 +13,10 @@ export default function BattleScars() {
     const searchParams = useSearchParams();
     const [activeCategory, setActiveCategory] = useState("All");
     const [expandedId, setExpandedId] = useState<string | null>(scarsData[0].id);
+
+    const [showAllCards, setShowAllCards] = useState(false);
+    const containerRef = useRef<HTMLDivElement>(null);
+    const isInView = useInView(containerRef, { margin: "0px 0px -200px 0px" });
 
     // isMobile computed ONCE here and passed down as a prop. SSR-safe: defaults
     // to false on the server, syncs after mount to avoid hydration mismatch.
@@ -32,6 +37,7 @@ export default function BattleScars() {
             if (targetScar) {
                 setExpandedId(scarIdParam);
                 setActiveCategory("All");
+                setShowAllCards(true);
 
                 setTimeout(() => {
                     const cardElement = document.getElementById(`scar-card-${scarIdParam}`);
@@ -78,6 +84,7 @@ export default function BattleScars() {
     const handleCategoryChange = useCallback((category: string) => {
         setActiveCategory(category);
         setExpandedId(null);
+        setShowAllCards(false);
     }, []);
 
     const toggle = useCallback(
@@ -87,6 +94,10 @@ export default function BattleScars() {
 
     // Stable per-card handlers — prevents memo bail-out on expandedId changes
     const getToggleHandler = useStableMap(toggle);
+
+    const INITIAL_CARDS = 4;
+    const needsExpansion = filteredScars.length > INITIAL_CARDS;
+    const visibleScars = showAllCards ? filteredScars : filteredScars.slice(0, INITIAL_CARDS);
 
     return (
         <section
@@ -114,29 +125,26 @@ export default function BattleScars() {
                 </p>
             </div>
 
-            {/* Post-mortem stats bar */}
-            <dl className="grid grid-cols-3 gap-3 md:gap-4 mb-10">
-                <div className="flex flex-col items-center justify-center rounded-2xl border border-border bg-card/60 py-4 px-2 text-center">
-                    <ListChecks className="w-5 h-5 mb-2 text-muted-foreground" aria-hidden="true" />
-                    <dt className="text-[11px] font-mono uppercase tracking-wider text-muted-foreground order-2">Total Scars</dt>
-                    <dd className="text-2xl md:text-3xl font-extrabold text-foreground order-1 leading-none mb-1">{stats.total}</dd>
+            {/* Post-mortem stats bar - iOS Native Style on Mobile */}
+            <dl className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4 mb-8 md:mb-10">
+                <div className="flex flex-col items-center justify-center rounded-[24px] border border-border/50 bg-background/40 backdrop-blur-xl p-5 text-center shadow-sm">
+                    <ListChecks className="w-5 h-5 mb-2 text-muted-foreground/80" aria-hidden="true" />
+                    <dt className="text-[10px] font-semibold tracking-widest text-muted-foreground uppercase order-2 mt-1">Total Scars</dt>
+                    <dd className="text-3xl font-semibold tracking-tighter text-foreground order-1 leading-none">{stats.total}</dd>
                 </div>
 
-                <div className="flex flex-col items-center justify-center rounded-2xl border bg-card/60 py-4 px-2 text-center"
-                     style={{ borderColor: "var(--scar-critical)" }}>
-                    <ShieldAlert className="w-5 h-5 mb-2" style={{ color: "var(--scar-critical)" }} aria-hidden="true" />
-                    <dt className="text-[11px] font-mono uppercase tracking-wider text-muted-foreground order-2">Critical</dt>
-                    <dd className="text-2xl md:text-3xl font-extrabold order-1 leading-none mb-1" style={{ color: "var(--scar-critical)" }}>
-                        {stats.critical}
-                    </dd>
+                <div className="flex flex-col items-center justify-center rounded-[24px] border border-red-500/20 bg-red-500/5 backdrop-blur-xl p-5 text-center shadow-sm">
+                    <ShieldAlert className="w-5 h-5 mb-2 text-red-500/80" aria-hidden="true" />
+                    <dt className="text-[10px] font-semibold tracking-widest text-red-500/80 uppercase order-2 mt-1">Critical</dt>
+                    <dd className="text-3xl font-semibold tracking-tighter text-red-500 order-1 leading-none">{stats.critical}</dd>
                 </div>
 
-                <div className="flex flex-col items-center justify-center rounded-2xl border border-border bg-card/60 py-4 px-2 text-center">
-                    <FolderGit2 className="w-5 h-5 mb-2 text-muted-foreground" aria-hidden="true" />
-                    <dt className="text-[11px] font-mono uppercase tracking-wider text-muted-foreground order-2">Most Affected</dt>
-                    <dd className="text-sm md:text-base font-bold text-foreground order-1 leading-tight mb-1">
+                <div className="flex flex-col items-center justify-center rounded-[24px] border border-border/50 bg-background/40 backdrop-blur-xl p-5 text-center shadow-sm col-span-2 md:col-span-1">
+                    <FolderGit2 className="w-5 h-5 mb-2 text-muted-foreground/80" aria-hidden="true" />
+                    <dt className="text-[10px] font-semibold tracking-widest text-muted-foreground uppercase order-2 mt-1">Most Affected</dt>
+                    <dd className="text-lg font-semibold tracking-tight text-foreground order-1 leading-tight flex flex-col items-center gap-0.5">
                         {stats.mostAffected}
-                        <span className="block text-[11px] font-mono font-normal text-muted-foreground">
+                        <span className="text-[11px] font-normal text-muted-foreground">
                             {stats.mostAffectedCount} scars
                         </span>
                     </dd>
@@ -149,17 +157,53 @@ export default function BattleScars() {
                 onSelect={handleCategoryChange}
             />
 
-            <div className="space-y-4 min-h-[400px]">
-                {filteredScars.map((scar, index) => (
-                    <ScarCard
-                        key={scar.id}
-                        scar={scar}
-                        index={index}
-                        isExpanded={expandedId === scar.id}
-                        onToggle={getToggleHandler(scar.id)}
-                        isMobile={isMobile}
-                    />
-                ))}
+            <div ref={containerRef} className="relative min-h-[400px]">
+                {/* Fixed Skip Button (Visible only when scrolling through expanded list) */}
+                {showAllCards && needsExpansion && isInView && (
+                    <div className="fixed bottom-24 md:bottom-28 left-0 z-50 w-full flex justify-center pointer-events-none animate-in slide-in-from-bottom-8 fade-in duration-300">
+                        <button 
+                            type="button"
+                            onClick={() => {
+                                const nextSection = document.getElementById("timeline");
+                                if (nextSection) {
+                                    nextSection.scrollIntoView({ behavior: "smooth" });
+                                }
+                            }}
+                            className="pointer-events-auto cursor-pointer bg-foreground/90 backdrop-blur-xl border border-border/50 px-4 py-2 rounded-full text-xs font-semibold shadow-xl hover:bg-foreground active:scale-95 text-background flex items-center gap-1.5 transition-all"
+                            aria-label="Skip to Next Section"
+                            title="Skip to next section"
+                        >
+                            <ArrowDown className="w-3.5 h-3.5 animate-bounce" />
+                            <span>Skip</span>
+                        </button>
+                    </div>
+                )}
+
+                <div className="space-y-4">
+                    {visibleScars.map((scar, index) => (
+                        <ScarCard
+                            key={scar.id}
+                            scar={scar}
+                            index={index}
+                            isExpanded={expandedId === scar.id}
+                            onToggle={getToggleHandler(scar.id)}
+                            isMobile={isMobile}
+                        />
+                    ))}
+                </div>
+
+                {/* Smart Fade Overlay */}
+                {needsExpansion && !showAllCards && (
+                    <div className="absolute bottom-0 left-0 w-full h-[280px] bg-gradient-to-t from-background via-background/90 to-transparent flex items-end justify-center pb-4 z-10 pointer-events-none rounded-b-[32px]">
+                        <button
+                            type="button"
+                            onClick={() => setShowAllCards(true)}
+                            className="pointer-events-auto cursor-pointer bg-card border border-border/50 backdrop-blur-xl px-6 py-3 rounded-full font-bold text-sm shadow-[0_8px_30px_rgb(0,0,0,0.12)] hover:bg-muted transition-all active:scale-95 flex items-center gap-2 text-foreground"
+                        >
+                            View all {filteredScars.length} Scars <ChevronDown className="w-4 h-4 ml-1" />
+                        </button>
+                    </div>
+                )}
             </div>
         </section>
     );

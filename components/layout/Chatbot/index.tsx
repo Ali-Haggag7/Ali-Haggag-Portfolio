@@ -242,7 +242,7 @@ export default memo(function Chatbot() {
     return (
         <section
             aria-label="AI Assistant"
-            className="fixed bottom-4 left-4 md:left-auto md:right-6 md:bottom-6 z-40 flex flex-col items-start md:items-end pointer-events-none"
+            className="fixed bottom-4 left-4 md:left-auto md:right-6 md:bottom-6 z-40 flex flex-col items-start md:items-end pointer-events-none fixed-right-compensate"
         >
             {/* ── Chat window ─────────────────────────────────────────────────────
           Always mounted — visibility via opacity/transform/pointerEvents.

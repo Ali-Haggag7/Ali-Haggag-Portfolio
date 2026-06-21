@@ -188,7 +188,7 @@ export function ServiceCard({
                         aria-expanded={expanded}
                         aria-controls={detailId}
                         className={cn(
-                            "mt-5 inline-flex min-h-[44px] w-fit items-center gap-1.5 rounded-lg px-3 text-sm font-semibold",
+                            "mt-5 inline-flex min-h-[44px] w-fit items-center gap-1.5 rounded-lg px-3 text-sm font-semibold cursor-pointer",
                             "text-blue-600 dark:text-blue-400",
                             "transition-colors duration-200 hover:bg-muted/60 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                         )}

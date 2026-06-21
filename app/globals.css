@@ -546,6 +546,14 @@
   overflow: hidden;
 }
 
+html.modal-open {
+  padding-right: var(--scrollbar-width, 0px);
+}
+
+html.modal-open .fixed-right-compensate {
+  margin-right: var(--scrollbar-width, 0px);
+}
+
 /* Glow divs — will-change promotes to compositor layer so they never repaint on scroll.
    The gradient rasterizes once; the GPU composites it from there. */
 .services-glow {

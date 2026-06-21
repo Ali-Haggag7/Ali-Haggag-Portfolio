@@ -1,29 +1,29 @@
 // ContactSection.tsx
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, type Variants, type MotionProps } from "framer-motion";
 import { MagneticButton } from "./MagneticButton";
 import { Suspense } from "react";
 import { GitHubStatsPanel } from "./GitHubStatsPanel";
 import { useIsMobile } from "@/hooks/useIsMobile";
 import { Cpu, Terminal, Shield, Zap } from "lucide-react";
 
-const fadeUp = {
+const fadeUp: Variants = {
     hidden: { opacity: 0, y: 20 },
     visible: { opacity: 1, y: 0 },
 };
 
-const fadeUpFar = {
+const fadeUpFar: Variants = {
     hidden: { opacity: 0, y: 30 },
     visible: { opacity: 1, y: 0 },
 };
 
-const scaleIn = {
+const scaleIn: Variants = {
     hidden: { opacity: 0, scale: 0.9 },
     visible: { opacity: 1, scale: 1 },
 };
 
-const rightVariant = {
+const rightVariant: Variants = {
     hidden: { opacity: 0, x: 30 },
     visible: {
         opacity: 1,
@@ -54,12 +54,20 @@ export default function ContactSection({ statsPanel }: { statsPanel: React.React
     const isMobile = useIsMobile();
 
     // Helper: only attach motion animation props off mobile.
+    // On mobile we return `{ initial: false }` so Framer Motion skips the
+    // "hidden" state entirely — preventing elements from being stuck at
+    // opacity:0 when isMobile flips from false→true after SSR hydration.
     const anim = (
-        variants: Record<string, unknown>,
-        extra?: Record<string, unknown>
-    ) =>
+        variants: Variants,
+        extra?: Omit<MotionProps, "variants">
+    ): MotionProps =>
         isMobile
-            ? {}
+            ? {
+                  variants,
+                  initial: false as const,
+                  animate: "visible" as const,
+                  transition: { duration: 0 },
+              }
             : {
                   variants,
                   initial: "hidden" as const,

@@ -6,7 +6,7 @@ import { useEffect, useState, useCallback, useMemo, memo } from "react";
 import { cn } from "@/lib/utils";
 
 // Static classes computed once at module load — never re-allocated.
-const WRAPPER_CLASS = "fixed top-4 right-4 md:top-6 md:right-6 z-[100]";
+const WRAPPER_CLASS = "fixed top-4 right-4 md:top-6 md:right-6 z-[100] fixed-right-compensate";
 
 const BUTTON_CLASS = cn(
     "group relative flex h-14 w-14 items-center justify-center rounded-full overflow-hidden",

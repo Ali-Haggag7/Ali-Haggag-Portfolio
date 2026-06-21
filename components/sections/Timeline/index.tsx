@@ -94,7 +94,7 @@ export default function Timeline() {
                             key={id}
                             type="button"
                             onClick={() => jumpTo(id)}
-                            className="inline-flex min-h-[44px] items-center rounded-full border border-border bg-card px-4 text-sm font-mono font-semibold text-muted-foreground transition-colors duration-200 hover:text-foreground hover:border-foreground/30 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                            className="inline-flex min-h-[44px] items-center rounded-full border border-border bg-card px-4 text-sm font-mono font-semibold text-muted-foreground transition-colors duration-200 hover:text-foreground hover:border-foreground/30 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring cursor-pointer"
                         >
                             {year}
                         </button>
