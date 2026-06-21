@@ -182,6 +182,29 @@
     /* Project live indicator */
     --live-dot: var(--tl-accent-emerald);
 
+    /* Contact section accents (dark) — pixel-match to original Tailwind shades */
+    --color-accent: #3b82f6;
+    --color-accent-secondary: #22d3ee;
+    --color-accent-secondary-light: #4ade80;
+    --color-live: #22c55e;
+    --color-live-light: #4ade80;
+
+    /* GitHub language map colors (theme-independent brand colors) */
+    --lang-typescript: #3178C6;
+    --lang-javascript: #F7DF1E;
+    --lang-css: #A855F7;
+    --lang-html: #E34F26;
+    --lang-python: #3776AB;
+    --lang-mdx: #4B5563;
+    --lang-fallback: #6B7280;
+
+    /* Contribution heatmap intensity steps — interpolated from the blue accent */
+    --heatmap-0: hsl(var(--accent-blue) / 0.08);
+    --heatmap-1: hsl(var(--accent-blue) / 0.3);
+    --heatmap-2: hsl(var(--accent-blue) / 0.5);
+    --heatmap-3: hsl(var(--accent-blue) / 0.72);
+    --heatmap-4: hsl(var(--accent-blue) / 1);
+
     /* Namespaced — avoids collision with third-party --gap / --duration */
     --marquee-gap: 1rem;
     --marquee-duration: 40s;
