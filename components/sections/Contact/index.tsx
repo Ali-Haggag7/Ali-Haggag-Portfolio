@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { MagneticButton } from "./MagneticButton";
 import { Suspense } from "react";
 import { GitHubStatsPanel } from "./GitHubStatsPanel";
+import { useIsMobile } from "@/hooks/useIsMobile";
 
 const fadeUp = {
     hidden: { opacity: 0, y: 20 },
@@ -47,6 +48,25 @@ function StatsSkeleton() {
 }
 
 export default function ContactSection({ statsPanel }: { statsPanel: React.ReactNode }) {
+    // This client component sits above a Suspense-fed server panel and cannot be
+    // prop-drilled isMobile, so it reads the shared hook directly.
+    const isMobile = useIsMobile();
+
+    // Helper: only attach motion animation props off mobile.
+    const anim = (
+        variants: Record<string, unknown>,
+        extra?: Record<string, unknown>
+    ) =>
+        isMobile
+            ? {}
+            : {
+                  variants,
+                  initial: "hidden" as const,
+                  whileInView: "visible" as const,
+                  viewport,
+                  ...extra,
+              };
+
     return (
         <section
             id="contact"
@@ -56,43 +76,48 @@ export default function ContactSection({ statsPanel }: { statsPanel: React.React
 
             <div className="container mx-auto px-4 flex flex-col lg:flex-row items-center justify-between gap-16 relative z-10">
 
-                {/* ── Left column ── */}
                 <div className="w-full lg:w-1/2 flex flex-col items-center text-center lg:items-start lg:text-left">
 
                     <motion.div
-                        variants={fadeUp}
-                        initial="hidden"
-                        whileInView="visible"
-                        viewport={viewport}
-                        className="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-600 dark:text-blue-400 mb-8 text-sm font-semibold tracking-wide"
+                        {...anim(fadeUp)}
+                        className="inline-flex items-center gap-3 px-4 py-2 rounded-full mb-8 text-sm font-semibold tracking-wide border"
+                        style={{
+                            backgroundColor: "hsl(var(--accent-blue) / 0.1)",
+                            borderColor: "hsl(var(--accent-blue) / 0.2)",
+                            color: "var(--color-accent)",
+                        }}
                     >
                         <span className="relative flex h-2.5 w-2.5" aria-hidden="true">
-                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75" />
-                            <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-blue-500" />
+                            <span
+                                className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75"
+                                style={{ backgroundColor: "var(--color-live-light)" }}
+                            />
+                            <span
+                                className="relative inline-flex rounded-full h-2.5 w-2.5"
+                                style={{ backgroundColor: "var(--color-live)" }}
+                            />
                         </span>
                         Available for Remote Opportunities
                     </motion.div>
 
                     <motion.h2
-                        variants={fadeUpFar}
-                        initial="hidden"
-                        whileInView="visible"
-                        viewport={viewport}
-                        transition={{ delay: 0.1 }}
-                        className="text-5xl md:text-7xl font-extrabold text-foreground tracking-tighter mb-6 leading-[1.1]"
+                        {...anim(fadeUpFar, { transition: { delay: 0.1 } })}
+                        className="text-4xl min-[380px]:text-5xl md:text-7xl font-extrabold text-foreground tracking-tighter mb-6 leading-[1.1]"
                     >
                         Working <br />
-                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-cyan-400">
+                        <span
+                            className="text-transparent bg-clip-text"
+                            style={{
+                                backgroundImage:
+                                    "linear-gradient(to right, var(--color-accent), var(--color-accent-secondary))",
+                            }}
+                        >
                             Worldwide.
                         </span>
                     </motion.h2>
 
                     <motion.p
-                        variants={fadeUp}
-                        initial="hidden"
-                        whileInView="visible"
-                        viewport={viewport}
-                        transition={{ delay: 0.2 }}
+                        {...anim(fadeUp, { transition: { delay: 0.2 } })}
                         className="text-muted-foreground text-lg md:text-xl mb-10 max-w-lg leading-relaxed font-medium"
                     >
                         Based in Egypt 🇪🇬. Architecting high-performance MERN applications,
@@ -100,25 +125,15 @@ export default function ContactSection({ statsPanel }: { statsPanel: React.React
                         globe. Distance is just a detail.
                     </motion.p>
 
-                    <motion.div
-                        variants={scaleIn}
-                        initial="hidden"
-                        whileInView="visible"
-                        viewport={viewport}
-                        transition={{ delay: 0.3 }}
-                    >
+                    <motion.div {...anim(scaleIn, { transition: { delay: 0.3 } })}>
                         <MagneticButton href="mailto:ali.haggag2005@gmail.com">
-                            Let's Build Together
+                            Let&apos;s Build Together
                         </MagneticButton>
                     </motion.div>
                 </div>
 
-                {/* ── Right column — GitHub Stats ── */}
                 <motion.div
-                    variants={rightVariant}
-                    initial="hidden"
-                    whileInView="visible"
-                    viewport={viewport}
+                    {...anim(rightVariant)}
                     className="w-full lg:w-1/2 flex items-start justify-center mt-10 lg:mt-0"
                 >
                     <div className="w-full max-w-md">
