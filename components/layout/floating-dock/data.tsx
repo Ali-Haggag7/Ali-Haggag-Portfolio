@@ -17,13 +17,13 @@ export interface DockItem {
 
 // Defined OUTSIDE any component — allocated once, never re-allocated.
 export const DOCK_ITEMS: DockItem[] = [
-    { title: "Home", Icon: Home, iconClassName: "group-hover:text-foreground", href: "#", glowColor: "#888888" },
-    { title: "Projects", Icon: Terminal, iconClassName: "group-hover:text-blue-500   text-blue-500/80", href: "#projects", glowColor: "#3B82F6" },
-    { title: "Journey", Icon: Briefcase, iconClassName: "group-hover:text-green-500  text-green-500/80", href: "#timeline", glowColor: "#22C55E" },
-    { title: "Services", Icon: Layers, iconClassName: "group-hover:text-yellow-500 text-yellow-500/80", href: "#services", glowColor: "#EAB308" },
-    { title: "Contact", Icon: Mail, iconClassName: "group-hover:text-red-500    text-red-500/80", href: "#contact", glowColor: "#EF4444" },
-    { title: "GitHub", Icon: Github, iconClassName: "group-hover:text-foreground", href: "https://github.com/Ali-Haggag7", glowColor: "#888888" },
-    { title: "LinkedIn", Icon: Linkedin, iconClassName: "group-hover:text-[#0A66C2]  text-[#0A66C2]/80", href: "https://www.linkedin.com/in/ali-haggag7/", glowColor: "#0A66C2" },
+    { title: "Home", Icon: Home, iconClassName: "group-hover:text-foreground", href: "#", glowColor: "hsl(var(--muted-foreground))" },
+    { title: "Projects", Icon: Terminal, iconClassName: "group-hover:text-[hsl(var(--accent-blue))] text-[hsl(var(--accent-blue))]/80", href: "#projects", glowColor: "hsl(var(--accent-blue))" },
+    { title: "Journey", Icon: Briefcase, iconClassName: "group-hover:text-[hsl(var(--accent-emerald))] text-[hsl(var(--accent-emerald))]/80", href: "#timeline", glowColor: "hsl(var(--accent-emerald))" },
+    { title: "Services", Icon: Layers, iconClassName: "group-hover:text-[var(--tl-accent-yellow)] text-[var(--tl-accent-yellow)]/80", href: "#services", glowColor: "var(--tl-accent-yellow)" },
+    { title: "Contact", Icon: Mail, iconClassName: "group-hover:text-[var(--scar-critical)] text-[var(--scar-critical)]/80", href: "#contact", glowColor: "var(--scar-critical)" },
+    { title: "GitHub", Icon: Github, iconClassName: "group-hover:text-foreground", href: "https://github.com/Ali-Haggag7", glowColor: "hsl(var(--muted-foreground))" },
+    { title: "LinkedIn", Icon: Linkedin, iconClassName: "group-hover:text-[var(--brand-linkedin)] text-[var(--brand-linkedin)]/80", href: "https://www.linkedin.com/in/ali-haggag7/", glowColor: "var(--brand-linkedin)" },
 ];
 
 // Kept as a standalone utility — no closure over component state,

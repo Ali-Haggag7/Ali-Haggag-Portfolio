@@ -209,6 +209,9 @@
     --heatmap-3: hsl(var(--accent-blue) / 0.72);
     --heatmap-4: hsl(var(--accent-blue) / 1);
 
+    /* Brand logo colors */
+    --brand-linkedin: #0a66c2;
+
     /* Namespaced — avoids collision with third-party --gap / --duration */
     --marquee-gap: 1rem;
     --marquee-duration: 40s;

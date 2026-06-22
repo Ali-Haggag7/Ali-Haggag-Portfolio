@@ -132,9 +132,9 @@ const IconContainer = memo(function IconContainer({
     // not on every render.
     const glowStyle = useMemo(
         () => ({
-            "--glow-bg": `${glowColor}15`,
+            "--glow-bg": `color-mix(in srgb, ${glowColor} 15%, transparent)`,
             "--glow-border": glowColor,
-            "--glow-shadow": `0 10px 20px -5px ${glowColor}50`,
+            "--glow-shadow": `0 10px 20px -5px color-mix(in srgb, ${glowColor} 50%, transparent)`,
             // Promote to GPU layer before animation starts — eliminates first-hover
             // layer-promotion jank.
             willChange: "transform, width, height",
@@ -160,6 +160,7 @@ const IconContainer = memo(function IconContainer({
             target={isExternal ? "_blank" : undefined}
             rel={isExternal ? "noopener noreferrer" : undefined}
             onClick={handleClick}
+            aria-label={title}
         >
             <motion.div
                 ref={ref}

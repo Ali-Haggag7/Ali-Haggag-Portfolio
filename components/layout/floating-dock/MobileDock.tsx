@@ -44,7 +44,7 @@ const MobileNavItem = memo(function MobileNavItem({
 
     // Glow shadow computed once per glowColor — not per render.
     const shadowStyle = useMemo(
-        () => ({ boxShadow: `0 4px 20px -5px ${glowColor}40` }),
+        () => ({ boxShadow: `0 4px 20px -5px color-mix(in srgb, ${glowColor} 25%, transparent)` }),
         [glowColor],
     );
 
