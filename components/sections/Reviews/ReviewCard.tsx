@@ -3,6 +3,7 @@
 import { cn } from "@/lib/utils";
 import { Quote } from "lucide-react";
 import { Review } from "./reviews.data";
+import Image from "next/image";
 
 interface ReviewCardProps extends Review {
     onClick: () => void;
@@ -21,10 +22,10 @@ export function ReviewCard({ img, name, username, body, onClick }: ReviewCardPro
             <Quote className="absolute top-4 right-4 h-12 w-12 text-foreground/[0.03] dark:text-white/[0.02] rotate-180 transition-transform duration-500 group-hover:scale-125 group-hover:text-blue-500/10 transform-gpu will-change-transform" />
 
             <div className="flex flex-row items-center gap-4 relative z-10">
-                <img
+                <Image
                     className="rounded-full border-2 border-background shadow-md transition-transform duration-500 group-hover:scale-110 transform-gpu will-change-transform"
-                    width="44"
-                    height="44"
+                    width={44}
+                    height={44}
                     alt={`${name}'s avatar`}
                     src={img}
                 />

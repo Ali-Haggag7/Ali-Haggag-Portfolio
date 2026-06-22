@@ -654,3 +654,9 @@ html.modal-open .fixed-right-compensate {
     animation: none !important;
   }
 }
+
+@media (max-width: 768px) {
+  .animate-mesh-spin {
+    animation: none !important;
+  }
+}

@@ -1,12 +1,10 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Cairo, Outfit } from "next/font/google";
+import { Cairo, Outfit } from "next/font/google";
 import { ThemeProvider } from "@/providers/theme-provider";
 import CustomEffects from "@/components/ui/custom-effects";
 import PwaRegister from "./PwaRegister";
 import "./globals.css";
 
-const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
-const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"] });
 const cairo = Cairo({ variable: "--font-cairo", subsets: ["arabic"] });
 const outfit = Outfit({ variable: "--font-outfit", subsets: ["latin"] });
 
@@ -43,7 +41,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
          * next-themes handles class toggling after hydration via ThemeProvider.
          */}
       </head>
-      <body className={`${geistSans.variable} ${geistMono.variable} ${cairo.variable} ${outfit.variable} antialiased`}>
+      <body className={`${cairo.variable} ${outfit.variable} antialiased`}>
         <ThemeProvider
           attribute="class"
           defaultTheme="dark"

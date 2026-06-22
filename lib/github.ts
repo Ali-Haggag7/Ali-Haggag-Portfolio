@@ -51,6 +51,50 @@ function getFallbackStats(): GitHubStats {
     };
 }
 
+interface GraphQLRepoNode {
+    name: string;
+    isFork: boolean;
+    stargazerCount: number;
+    languages: {
+        edges: {
+            size: number;
+            node: {
+                name: string;
+            };
+        }[];
+    };
+}
+
+interface GraphQLContributionsCollection {
+    totalCommitContributions: number;
+    restrictedContributionsCount: number;
+    totalIssueContributions: number;
+    totalPullRequestContributions: number;
+    totalPullRequestReviewContributions: number;
+    contributionCalendar: {
+        totalContributions: number;
+        weeks: {
+            contributionDays: {
+                contributionCount: number;
+                date: string;
+            }[];
+        }[];
+    };
+}
+
+interface GraphQLResponse {
+    data?: {
+        user?: {
+            repositories?: {
+                totalCount: number;
+                nodes: GraphQLRepoNode[];
+            };
+            contributionsCollection?: GraphQLContributionsCollection;
+        };
+    };
+    errors?: { message: string }[];
+}
+
 export async function getGitHubStats(): Promise<GitHubStats> {
     try {
         const headers = {
@@ -58,76 +102,28 @@ export async function getGitHubStats(): Promise<GitHubStats> {
             "Content-Type": "application/json",
         };
 
-        const userRes = await fetch("https://api.github.com/users/Ali-Haggag7", {
-            headers,
-            next: { revalidate: 3600 },
-        });
-        if (!userRes.ok) {
-            console.error(`GitHub User API error: Status ${userRes.status} ${userRes.statusText}`);
-            const errorText = await userRes.text().catch(() => "");
-            console.error("GitHub User API response body:", errorText);
-            return getFallbackStats();
-        }
-        const user = await userRes.json();
-        if (!user || user.message) return getFallbackStats();
-
-        const reposRes = await fetch(
-            "https://api.github.com/users/Ali-Haggag7/repos?per_page=100",
-            { headers, next: { revalidate: 3600 } }
-        );
-        if (!reposRes.ok) {
-            console.error(`GitHub Repos API error: Status ${reposRes.status} ${reposRes.statusText}`);
-            const errorText = await reposRes.text().catch(() => "");
-            console.error("GitHub Repos API response body:", errorText);
-            return getFallbackStats();
-        }
-        const repos = await reposRes.json();
-        if (!Array.isArray(repos)) return getFallbackStats();
-
-        const totalStars = repos.reduce(
-            (acc: number, r: { stargazers_count: number }) => acc + r.stargazers_count,
-            0
-        );
-
-        const langMap: Record<string, number> = {};
-        const ownRepos = repos.filter((r: { fork: boolean }) => !r.fork);
-
-        const langResults = await Promise.all(
-            ownRepos.map((repo: { languages_url: string }) =>
-                fetch(repo.languages_url, {
-                    headers,
-                    next: { revalidate: 3600 },
-                }).then(async (r) => {
-                    if (!r.ok) {
-                        console.error(`GitHub Languages API error for ${repo.languages_url}: Status ${r.status} ${r.statusText}`);
-                        return {};
-                    }
-                    return r.json().catch(() => ({}));
-                })
-            )
-        );
-
-        for (const langData of langResults) {
-            for (const [lang, bytes] of Object.entries(langData)) {
-                langMap[lang] = (langMap[lang] || 0) + (bytes as number);
-            }
-        }
-
-        const totalBytes = Object.values(langMap).reduce((a, b) => a + b, 0);
-        const topLanguages = Object.entries(langMap)
-            .sort((a, b) => b[1] - a[1])
-            .slice(0, 4)
-            .map(([name, bytes]) => ({
-                name,
-                percentage: Math.round((bytes / totalBytes) * 100),
-            }));
-
         const graphqlRes = await fetch("https://api.github.com/graphql", {
             method: "POST",
             headers,
             body: JSON.stringify({
-                query: `{
+                query: `query {
                     user(login: "Ali-Haggag7") {
+                        repositories(first: 100, ownerAffiliations: [OWNER], privacy: PUBLIC) {
+                            totalCount
+                            nodes {
+                                name
+                                isFork
+                                stargazerCount
+                                languages(first: 10) {
+                                    edges {
+                                        size
+                                        node {
+                                            name
+                                        }
+                                    }
+                                }
+                            }
+                        }
                         contributionsCollection(
                             from: "2025-12-31T22:00:00Z"
                             to: "2026-12-31T21:59:59Z"
@@ -160,13 +156,47 @@ export async function getGitHubStats(): Promise<GitHubStats> {
             return getFallbackStats();
         }
 
-        const gql = await graphqlRes.json();
+        const gql: GraphQLResponse = await graphqlRes.json();
         if (gql?.errors) {
             console.error("GitHub GraphQL query errors:", JSON.stringify(gql.errors, null, 2));
             return getFallbackStats();
         }
 
-        const collection = gql?.data?.user?.contributionsCollection;
+        const user = gql?.data?.user;
+        if (!user) return getFallbackStats();
+
+        const nodes = user.repositories?.nodes || [];
+        const totalStars = nodes.reduce(
+            (acc: number, r: GraphQLRepoNode) => acc + r.stargazerCount,
+            0
+        );
+
+        const langMap: Record<string, number> = {};
+        const ownRepos = nodes.filter((r: GraphQLRepoNode) => !r.isFork);
+
+        for (const repo of ownRepos) {
+            const edges = repo.languages?.edges || [];
+            for (const edge of edges) {
+                const langName = edge.node?.name;
+                const size = edge.size || 0;
+                if (langName) {
+                    langMap[langName] = (langMap[langName] || 0) + size;
+                }
+            }
+        }
+
+        const totalBytes = Object.values(langMap).reduce((a, b) => a + b, 0);
+        const topLanguages = totalBytes > 0
+            ? Object.entries(langMap)
+                .sort((a, b) => b[1] - a[1])
+                .slice(0, 4)
+                .map(([name, bytes]) => ({
+                    name,
+                    percentage: Math.round((bytes / totalBytes) * 100),
+                }))
+            : [];
+
+        const collection = user.contributionsCollection;
 
         const totalCommits =
             (collection?.totalCommitContributions ?? 0) +
@@ -175,9 +205,9 @@ export async function getGitHubStats(): Promise<GitHubStats> {
         const contributions2026 =
             collection?.contributionCalendar?.totalContributions ?? 0;
 
-        const days: { date: string; count: number }[] =
+        const days: ContributionDay[] =
             collection?.contributionCalendar?.weeks?.flatMap(
-                (w: { contributionDays: { date: string; contributionCount: number }[] }) =>
+                (w) =>
                     w.contributionDays.map((d) => ({
                         date: d.date,
                         count: d.contributionCount,
@@ -215,7 +245,7 @@ export async function getGitHubStats(): Promise<GitHubStats> {
         return {
             totalStars,
             totalCommits,
-            totalRepos: user.public_repos ?? 10,
+            totalRepos: user.repositories?.totalCount ?? nodes.length ?? 10,
             contributions2026,
             currentStreak,
             longestStreak,
