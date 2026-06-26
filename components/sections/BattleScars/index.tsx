@@ -14,8 +14,12 @@ export default function BattleScars() {
     const [activeCategory, setActiveCategory] = useState("All");
     const [expandedId, setExpandedId] = useState<string | null>(scarsData[0].id);
 
-    const [showAllCards, setShowAllCards] = useState(false);
+    const [revealStage, setRevealStage] = useState<0 | 1 | 2>(0);
+    const sectionRef = useRef<HTMLElement>(null);
     const containerRef = useRef<HTMLDivElement>(null);
+    const progressTextRef = useRef<HTMLSpanElement>(null);
+    const activeIndicesRef = useRef<Set<number>>(new Set());
+
     const isInView = useInView(containerRef, { margin: "0px 0px -200px 0px" });
 
     // isMobile computed ONCE here and passed down as a prop. SSR-safe: defaults
@@ -37,7 +41,7 @@ export default function BattleScars() {
             if (targetScar) {
                 setExpandedId(scarIdParam);
                 setActiveCategory("All");
-                setShowAllCards(true);
+                setRevealStage(2);
 
                 setTimeout(() => {
                     const cardElement = document.getElementById(`scar-card-${scarIdParam}`);
@@ -58,6 +62,17 @@ export default function BattleScars() {
         () => activeCategory === "All" ? scarsData : scarsData.filter((s) => s.category === activeCategory),
         [activeCategory]
     );
+
+    // Compute category counts (Total and per-category counts)
+    const categoryCounts = useMemo(() => {
+        const counts: Record<string, number> = {
+            All: scarsData.length,
+        };
+        for (const s of scarsData) {
+            counts[s.category] = (counts[s.category] ?? 0) + 1;
+        }
+        return counts;
+    }, []);
 
     // Stats bar metrics — computed once from the full dataset (not the filtered view).
     const stats = useMemo(() => {
@@ -84,7 +99,7 @@ export default function BattleScars() {
     const handleCategoryChange = useCallback((category: string) => {
         setActiveCategory(category);
         setExpandedId(null);
-        setShowAllCards(false);
+        setRevealStage(0);
     }, []);
 
     const toggle = useCallback(
@@ -95,12 +110,71 @@ export default function BattleScars() {
     // Stable per-card handlers — prevents memo bail-out on expandedId changes
     const getToggleHandler = useStableMap(toggle);
 
-    const INITIAL_CARDS = 4;
-    const needsExpansion = filteredScars.length > INITIAL_CARDS;
-    const visibleScars = showAllCards ? filteredScars : filteredScars.slice(0, INITIAL_CARDS);
+    const visibleCount = useMemo(() => {
+        if (revealStage === 0) return 3;
+        if (revealStage === 1) return 10;
+        return filteredScars.length;
+    }, [revealStage, filteredScars.length]);
+
+    const visibleScars = useMemo(() => {
+        return filteredScars.slice(0, visibleCount);
+    }, [filteredScars, visibleCount]);
+
+    const hasMoreToReveal = filteredScars.length > visibleCount;
+
+    const handleReveal = useCallback(() => {
+        setRevealStage((prev) => {
+            if (prev === 0) {
+                return filteredScars.length <= 10 ? 2 : 1;
+            }
+            return 2;
+        });
+    }, [filteredScars.length]);
+
+    // Reading progress tracker (desktop only, updates DOM directly to avoid rerenders)
+    useEffect(() => {
+        activeIndicesRef.current.clear();
+        if (revealStage < 1) {
+            return;
+        }
+
+        const cardElements = containerRef.current?.querySelectorAll('[id^="scar-card-"]');
+        if (!cardElements || cardElements.length === 0) return;
+
+        const observer = new IntersectionObserver(
+            (entries) => {
+                entries.forEach((entry) => {
+                    const indexAttr = entry.target.getAttribute("data-index");
+                    if (!indexAttr) return;
+                    const idx = parseInt(indexAttr, 10);
+                    if (entry.isIntersecting) {
+                        activeIndicesRef.current.add(idx);
+                    } else {
+                        activeIndicesRef.current.delete(idx);
+                    }
+                });
+
+                if (activeIndicesRef.current.size > 0) {
+                    const maxIdx = Math.max(...activeIndicesRef.current);
+                    const currentProgress = maxIdx + 1;
+                    if (progressTextRef.current) {
+                        progressTextRef.current.textContent = `Viewing: ${currentProgress} / ${filteredScars.length} incidents`;
+                    }
+                }
+            },
+            {
+                rootMargin: "-10% 0px -10% 0px",
+                threshold: 0.1,
+            }
+        );
+
+        cardElements.forEach((el) => observer.observe(el));
+        return () => observer.disconnect();
+    }, [revealStage, filteredScars]);
 
     return (
         <section
+            ref={sectionRef}
             id="battle-scars"
             aria-labelledby="battle-scars-title"
             className="py-24 px-4 md:px-8 w-full max-w-5xl mx-auto"
@@ -155,16 +229,17 @@ export default function BattleScars() {
                 categories={scarCategories}
                 activeCategory={activeCategory}
                 onSelect={handleCategoryChange}
+                categoryCounts={categoryCounts}
             />
 
             <div ref={containerRef} className="relative min-h-[400px]">
                 {/* Fixed Skip Button (Visible only when scrolling through expanded list) */}
-                {showAllCards && needsExpansion && isInView && (
+                {revealStage === 2 && filteredScars.length > 3 && isInView && (
                     <div className="fixed bottom-8 md:bottom-28 left-0 z-50 w-full flex justify-center pointer-events-none animate-in slide-in-from-bottom-8 fade-in duration-300">
                         <button 
                             type="button"
                             onClick={() => {
-                                const nextSection = document.getElementById("timeline");
+                                const nextSection = sectionRef.current?.nextElementSibling;
                                 if (nextSection) {
                                     nextSection.scrollIntoView({ behavior: "smooth" });
                                 }
@@ -193,18 +268,55 @@ export default function BattleScars() {
                 </div>
 
                 {/* Smart Fade Overlay */}
-                {needsExpansion && !showAllCards && (
+                {hasMoreToReveal && revealStage < 2 && (
                     <div className="absolute bottom-0 left-0 w-full h-[280px] bg-gradient-to-t from-background via-background/90 to-transparent flex items-end justify-center pb-4 z-10 pointer-events-none rounded-b-[32px]">
                         <button
                             type="button"
-                            onClick={() => setShowAllCards(true)}
+                            onClick={handleReveal}
                             className="pointer-events-auto cursor-pointer bg-card border border-border/50 backdrop-blur-xl px-6 py-3 rounded-full font-bold text-sm shadow-[0_8px_30px_rgb(0,0,0,0.12)] hover:bg-muted transition-all active:scale-95 flex items-center gap-2 text-foreground"
                         >
-                            View all {filteredScars.length} Scars <ChevronDown className="w-4 h-4 ml-1" />
+                            {revealStage === 0 ? (
+                                <>
+                                    Show {Math.min(7, filteredScars.length - 3)} more <ChevronDown className="w-4 h-4 ml-1" />
+                                </>
+                            ) : (
+                                <>
+                                    Show all ({filteredScars.length - 10} remaining) <ChevronDown className="w-4 h-4 ml-1" />
+                                </>
+                            )}
                         </button>
                     </div>
                 )}
             </div>
+
+            {/* Subtle Centered Continue Button at the bottom (after all cards loaded) */}
+            {revealStage === 2 && (
+                <div className="mt-8 flex justify-center">
+                    <button
+                        type="button"
+                        onClick={() => {
+                            const nextSection = sectionRef.current?.nextElementSibling;
+                            if (nextSection) {
+                                nextSection.scrollIntoView({ behavior: "smooth" });
+                            }
+                        }}
+                        className="cursor-pointer group flex flex-col items-center gap-1.5 text-xs font-mono font-medium tracking-wider text-muted-foreground hover:text-foreground transition-colors py-2 px-4"
+                        aria-label="Continue to next section"
+                    >
+                        <span>Continue</span>
+                        <ArrowDown className="w-4 h-4 animate-bounce text-muted-foreground group-hover:text-foreground transition-colors" />
+                    </button>
+                </div>
+            )}
+
+            {/* Desktop-only sticky reading progress indicator */}
+            {revealStage >= 1 && (
+                <div className="hidden md:block fixed bottom-8 right-8 z-40 rounded-full border border-border bg-card/90 backdrop-blur-xl px-4 py-2 text-xs font-mono font-medium shadow-lg text-foreground">
+                    <span ref={progressTextRef}>
+                        Viewing: {Math.min(visibleCount, filteredScars.length)} / {filteredScars.length} incidents
+                    </span>
+                </div>
+            )}
         </section>
     );
 }

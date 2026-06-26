@@ -2,7 +2,7 @@
 
 import { memo } from "react";
 import { motion, AnimatePresence, type Variants } from "framer-motion";
-import { ChevronDown, Eye, Crosshair, Wrench, Clock, Terminal } from "lucide-react";
+import { ChevronDown, Eye, Crosshair, Wrench, Clock, Terminal, ArrowDown, Lightbulb } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { Scar, Severity } from "./scars.data";
 
@@ -71,6 +71,35 @@ export const ScarCard = memo(function ScarCard({ scar, index, isExpanded, onTogg
                 </h4>
                 <p className="text-sm text-muted-foreground leading-relaxed">{scar.impact}</p>
 
+                {scar.metrics && Object.values(scar.metrics).some(Boolean) && (
+                    <div className="flex flex-wrap gap-2 mt-3.5">
+                        {scar.metrics.cpuReduction && (
+                            <span className="inline-flex items-center gap-1 px-2.5 py-1 text-[11px] font-mono font-medium bg-muted text-muted-foreground rounded border border-border">
+                                <ArrowDown className="w-3 h-3 text-[var(--scar-medium)] shrink-0" aria-hidden="true" />
+                                <span>CPU: {scar.metrics.cpuReduction}</span>
+                            </span>
+                        )}
+                        {scar.metrics.memorySaved && (
+                            <span className="inline-flex items-center gap-1 px-2.5 py-1 text-[11px] font-mono font-medium bg-muted text-muted-foreground rounded border border-border">
+                                <ArrowDown className="w-3 h-3 text-[var(--scar-medium)] shrink-0" aria-hidden="true" />
+                                <span>RAM: {scar.metrics.memorySaved}</span>
+                            </span>
+                        )}
+                        {scar.metrics.latencyImprovement && (
+                            <span className="inline-flex items-center gap-1 px-2.5 py-1 text-[11px] font-mono font-medium bg-muted text-muted-foreground rounded border border-border">
+                                <ArrowDown className="w-3 h-3 text-[var(--scar-medium)] shrink-0" aria-hidden="true" />
+                                <span>Latency: {scar.metrics.latencyImprovement}</span>
+                            </span>
+                        )}
+                        {scar.metrics.incidentsPrevented && (
+                            <span className="inline-flex items-center gap-1 px-2.5 py-1 text-[11px] font-mono font-medium bg-muted text-muted-foreground rounded border border-border">
+                                <ArrowDown className="w-3 h-3 text-[var(--scar-medium)] shrink-0" aria-hidden="true" />
+                                <span>Incidents Blocked: {scar.metrics.incidentsPrevented}</span>
+                            </span>
+                        )}
+                    </div>
+                )}
+
                 {scar.codeSnippet && (
                     <div className="mt-5 rounded-xl overflow-hidden border" style={{ borderColor: "var(--scar-code-border)" }}>
                         <div
@@ -93,6 +122,42 @@ export const ScarCard = memo(function ScarCard({ scar, index, isExpanded, onTogg
                     </div>
                 )}
 
+                {scar.investigationFlow && scar.investigationFlow.length > 0 && (
+                    <div className="mt-5">
+                        <h4 className="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-3">
+                            Investigation Flow
+                        </h4>
+                        <div className="relative border-l border-[var(--scar-medium)]/40 ml-2 pl-4 space-y-3.5">
+                            {scar.investigationFlow.map((step, idx) => (
+                                <div key={idx} className="relative">
+                                    <span 
+                                        className="absolute -left-[21.5px] top-1 w-2.5 h-2.5 rounded-full border-2 border-[var(--scar-medium)] bg-background"
+                                        aria-hidden="true"
+                                    />
+                                    <div className="text-xs font-mono">
+                                        <span className="text-[var(--scar-medium)] font-bold mr-1.5 uppercase tracking-wider text-[10px]">{step.label}</span>
+                                        <span className="text-foreground/90 leading-relaxed">{step.value}</span>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                )}
+
+                {scar.lessonLearned && (
+                    <div className="mt-5 p-4 rounded-xl border border-border/80 bg-muted/5 flex items-start gap-3">
+                        <Lightbulb className="w-5 h-5 text-[var(--scar-medium)] shrink-0 mt-0.5" aria-hidden="true" />
+                        <div>
+                            <h5 className="text-xs font-bold uppercase tracking-wider text-foreground/95 mb-1">
+                                Lesson Learned
+                            </h5>
+                            <p className="text-sm italic text-muted-foreground leading-relaxed">
+                                {scar.lessonLearned}
+                            </p>
+                        </div>
+                    </div>
+                )}
+
                 <div className="mt-5 flex items-center gap-2 text-xs font-mono text-muted-foreground">
                     <Clock className="w-3.5 h-3.5" aria-hidden="true" />
                     <span className="uppercase tracking-wider">Time to solve:</span>
@@ -105,6 +170,7 @@ export const ScarCard = memo(function ScarCard({ scar, index, isExpanded, onTogg
     return (
         <div
             id={`scar-card-${scar.id}`}
+            data-index={index}
             className={cn(
                 "group relative rounded-2xl border overflow-hidden",
                 "transition-[border-color,background-color,box-shadow] duration-200",

@@ -36,6 +36,17 @@ export type Scar = {
     impact: string;
     // Optional short before/after or key fix snippet (2-6 lines)
     codeSnippet?: string;
+    // Quantitative outcome metrics (rendered as compact pills)
+    metrics?: {
+        cpuReduction?: string;
+        memorySaved?: string;
+        latencyImprovement?: string;
+        incidentsPrevented?: string;
+    };
+    // Post-incident takeaway
+    lessonLearned?: string;
+    // Evidence-driven investigation chain (no fabricated timestamps)
+    investigationFlow?: { label: string; value: string }[];
 };
 
 export const scarsData: Scar[] = [
@@ -66,6 +77,17 @@ if (numClients === 0) {
   match.stop();          // halt the physics loop
   this.destroyEngine(matchId); // free it from RAM
 }`,
+        metrics: {
+            cpuReduction: "100% → baseline",
+            memorySaved: "Hundreds of dead matches freed",
+        },
+        lessonLearned: "WebSocket disconnect is not the same as session cleanup — always tie resource lifecycle to active client count, not connection events.",
+        investigationFlow: [
+            { label: "Observed", value: "CPU pinned at 100% under sustained play" },
+            { label: "Traced", value: "MOVE_FAST commands printing for disconnected players" },
+            { label: "Root-caused", value: "MatchEngine loop surviving WebSocket disconnect" },
+            { label: "Implemented", value: "match.stop() + destroyEngine on numClients === 0" },
+        ],
     },
     {
         id: "sentry-dev-freeze",
@@ -92,6 +114,12 @@ export default withSentryConfig(nextConfig, {
 });
 // after
 export default nextConfig;`,
+        lessonLearned: "Never enable full-project source-map uploads in dev mode — always gate heavy instrumentation behind NODE_ENV checks.",
+        investigationFlow: [
+            { label: "Observed", value: "Dev server froze entire machine on boot" },
+            { label: "Isolated", value: "widenClientFileUpload + replayIntegration combo" },
+            { label: "Resolved", value: "Removed Sentry, restored direct nextConfig export" },
+        ],
     },
     {
         id: "redis-isready-poisoning",
@@ -117,6 +145,13 @@ export default nextConfig;`,
 });
 client.on('reconnecting', () => { this.isReady = false; });
 client.on('end', () => { this.isReady = false; });`,
+        lessonLearned: "Distinguish transient errors from genuine disconnects — the 'error' event in ioredis is not a disconnect signal.",
+        investigationFlow: [
+            { label: "Observed", value: "Password reset emails silently not sending" },
+            { label: "Traced", value: "Redis write silently dropped due to isReady === false" },
+            { label: "Root-caused", value: "isReady poisoned by transient error events" },
+            { label: "Implemented", value: "Moved isReady=false to reconnecting/end events only" },
+        ],
     },
     {
         id: "smtp-to-resend",
@@ -142,6 +177,13 @@ client.on('end', () => { this.isReady = false; });`,
 import { Resend } from 'resend';
 const resend = new Resend(process.env.RESEND_API_KEY);
 await resend.emails.send({ from, to, subject, html }); // HTTP, no SMTP port`,
+        lessonLearned: "Always verify outbound port availability on your hosting provider before choosing an email transport.",
+        investigationFlow: [
+            { label: "Observed", value: "All transactional emails silently dropped post-launch" },
+            { label: "Diagnosed", value: "DigitalOcean blocks outbound SMTP port 465" },
+            { label: "Implemented", value: "Replaced nodemailer with Resend HTTP SDK" },
+            { label: "Verified", value: "SPF, DKIM, and DMARC confirmed green" },
+        ],
     },
     {
         id: "redis-ipv6-docker",
@@ -167,6 +209,13 @@ await resend.emails.send({ from, to, subject, html }); // HTTP, no SMTP port`,
   family: 4,   // force IPv4 — IPv6 path was unreachable
   tls: {},     // explicit TLS handshake
 });`,
+        lessonLearned: "Container DNS resolution defaults differ from the host — always specify address family explicitly in network-sensitive configs.",
+        investigationFlow: [
+            { label: "Observed", value: "getaddrinfo ENOTFOUND in Docker, works locally" },
+            { label: "Hypothesized", value: "Container resolving hostname to unreachable IPv6" },
+            { label: "Verified", value: "Confirmed IPv6 resolution via DNS inspection" },
+            { label: "Implemented", value: "Forced family: 4 + explicit TLS on port 6379" },
+        ],
     },
     {
         id: "docker-context-bomb",
@@ -191,6 +240,14 @@ await resend.emails.send({ from, to, subject, html }); // HTTP, no SMTP port`,
 **/node_modules
 # pnpm install
 pnpm install --shamefully-hoist`,
+        metrics: {
+            memorySaved: "2.57 GB → 15 MB context",
+        },
+        investigationFlow: [
+            { label: "Observed", value: "2.57 GB build context sent to Docker daemon" },
+            { label: "Root-caused", value: ".dockerignore missing node_modules exclusion" },
+            { label: "Implemented", value: "Added **/node_modules glob + shamefully-hoist" },
+        ],
     },
     {
         id: "prisma-ghost-engine",
@@ -215,6 +272,12 @@ pnpm install --shamefully-hoist`,
 binaryTargets = ["native", "linux-musl", "linux-musl-openssl-3.0.x"]
 # Dockerfile runner stage
 RUN apk add --no-cache openssl`,
+        lessonLearned: "Prisma generates platform-specific query engines — always declare all deployment binary targets in schema.prisma.",
+        investigationFlow: [
+            { label: "Observed", value: "Container crashed on Prisma init despite clean boot" },
+            { label: "Root-caused", value: "Engine binary built for Windows, not Alpine musl" },
+            { label: "Implemented", value: "Added linux-musl targets + openssl in runner stage" },
+        ],
     },
     // ─────────────────────────────────────────────────────────────────────
     // Logic Arena — Engine / AliScript
@@ -242,6 +305,13 @@ RUN apk add --no-cache openssl`,
 // after: precedence levels
 parseAddition()  // handles + and -
   -> parseMultiply()  // handles *, /, % (binds tighter)`,
+        lessonLearned: "Never assume left-to-right evaluation is sufficient — build a proper precedence tower from day one in any expression parser.",
+        investigationFlow: [
+            { label: "Observed", value: "2 + 3 * 4 evaluated to 20 instead of 14" },
+            { label: "Root-caused", value: "All binary operators had equal precedence" },
+            { label: "Implemented", value: "Precedence tower: OR → AND → cmp → add → mul → unary" },
+            { label: "Verified", value: "All edge-case math expressions pass" },
+        ],
     },
     {
         id: "fov-fire-hack",
@@ -265,6 +335,7 @@ parseAddition()  // handles + and -
         codeSnippet: `// combat-executor.ts
 const target = robot.visibleEntities.robots[0];
 if (!target) return; // outside cone: no energy, no cooldown`,
+        lessonLearned: "If two systems query the same concept (visibility), they must share the same data source — never let parallel lookups diverge.",
     },
     {
         id: "entity-interpolation-buffer",
@@ -290,6 +361,14 @@ InterpolationBuffer.clear();      // flush stale snapshots
 // back button
 socket.emit('leaveMatch', id);
 router.push('/dashboard');        // emit BEFORE unmount`,
+        lessonLearned: "Module-level singletons must expose a clear() method — stale state across navigation is a silent killer in SPAs.",
+        investigationFlow: [
+            { label: "Observed", value: "Ghost robots appearing after rapid arena switching" },
+            { label: "Traced", value: "InterpolationBuffer retaining previous session snapshots" },
+            { label: "Identified", value: "Stale socketUserId rejected by server silently" },
+            { label: "Identified", value: "Next.js <Link> unmounts before leaveMatch fires" },
+            { label: "Implemented", value: "clear() on mount/unmount + router.push after emit" },
+        ],
     },
     {
         id: "webgl-context-log-spam",
@@ -312,6 +391,7 @@ router.push('/dashboard');        // emit BEFORE unmount`,
             "Random tab freezes eliminated; the arena holds a stable WebGL context across long matches.",
         codeSnippet: `// inside useFrame (runs 60x/sec)
 // console.log('delta', delta); // <- removed: heap + GC bomb`,
+        lessonLearned: "Never leave logging in a render loop — even one console.log at 60fps creates enough GC pressure to lose a WebGL context.",
     },
     {
         id: "texture-cache-disposal",
@@ -335,6 +415,12 @@ router.push('/dashboard');        // emit BEFORE unmount`,
         codeSnippet: `// before: mesh.material.dispose() on unmount (corrupts cache)
 // after: let React handle teardown
 <primitive key={clonedScene.uuid} object={clonedScene} />`,
+        lessonLearned: "Never manually dispose shared GPU resources cached by a loader — let React's key-based reconciliation handle teardown.",
+        investigationFlow: [
+            { label: "Observed", value: "Models invisible or canvas crashed after room switch" },
+            { label: "Root-caused", value: "dispose() corrupted useGLTF's shared texture cache" },
+            { label: "Implemented", value: "Removed dispose calls, used React key for lifecycle" },
+        ],
     },
     {
         id: "docker-workspace-resolution",
@@ -360,6 +446,13 @@ RUN pnpm --filter @logic-arena/logic-parser run build
 RUN pnpm --filter @logic-arena/engine run build
 // tsconfig.json
 "@logic-arena/engine/*": ["../../packages/engine/src/*"]`,
+        lessonLearned: "Docker builds don't have pnpm workspace symlinks — compile shared packages before dependents and copy the root tsconfig.",
+        investigationFlow: [
+            { label: "Observed", value: "Production crash: Cannot find module @logic-arena/engine" },
+            { label: "Root-caused", value: "Docker lacks pnpm symlinks + wrong build order" },
+            { label: "Identified", value: "Missing root tsconfig.json in build layer" },
+            { label: "Implemented", value: "Sequential shared package builds + tsconfig copy" },
+        ],
     },
     {
         id: "logic-arena-pathfinding",
@@ -384,6 +477,7 @@ RUN pnpm --filter @logic-arena/engine run build
 const COST = { OPEN: 1.0, TRAP: 3.0, LAVA: 5.0 };
 // consume waypoint if within half a cell -> breaks self-loop
 if (dist(robot, wp) < CELL / 2) path.shift();`,
+        lessonLearned: "Binary pass/block pathfinding can't handle hazard zones — use weighted costs and consume waypoints within a proximity threshold to prevent self-loops.",
     },
     {
         id: "logic-arena-compiler",
@@ -408,6 +502,12 @@ if (dist(robot, wp) < CELL / 2) path.shift();`,
 function evalNode(node, ops) {
   if (++ops.count > MAX_OPERATIONS_PER_TICK) throw new TLE();
 }`,
+        lessonLearned: "Wall-clock time limits are hardware-dependent — use operation counting for deterministic, documentable execution limits.",
+        investigationFlow: [
+            { label: "Observed", value: "Same script passed on gaming PC, failed on low-end laptop" },
+            { label: "Root-caused", value: "MAX_TICK_DURATION_MS was wall-clock dependent" },
+            { label: "Implemented", value: "Platform-agnostic 2,000 ops/tick quota" },
+        ],
     },
     // ─────────────────────────────────────────────────────────────────────
     // Flurry — Real-time / PWA
@@ -431,6 +531,10 @@ function evalNode(node, ops) {
             "Managing unpredictable connection states and achieving near-zero latency for P2P audio/video calls without heavy third-party overhead required custom signaling and ICE candidate negotiation.",
         impact:
             "Achieved <50ms latency for seamless voice/video calls and instant status sync across varying network conditions.",
+        metrics: {
+            latencyImprovement: "<50ms P2P latency",
+        },
+        lessonLearned: "WebRTC needs a reliable signaling orchestrator — offload handshakes to Socket.io and let the media flow peer-to-peer.",
     },
     {
         id: "offline-sync",
@@ -451,6 +555,7 @@ function evalNode(node, ops) {
             "Users experienced freezes and data loss during intermittent connectivity. The fix queues user actions in IndexedDB and replays them through durable background functions when the network returns, surfacing them instantly in an Optimistic UI.",
         impact:
             "100% message delivery guarantee. Offline actions reflect instantly and sync seamlessly with no manual retries.",
+        lessonLearned: "Offline-first is not a feature toggle — it requires a durable queue, background replay, and optimistic UI from the ground up.",
     },
     // ─────────────────────────────────────────────────────────────────────
     // Cybership / Blog Pro / CS Arena
@@ -478,6 +583,10 @@ function evalNode(node, ops) {
   price: z.number(), currency: z.string(), eta: z.string(),
 });
 const rate = CarrierRate.parse(external); // throws at the boundary`,
+        metrics: {
+            incidentsPrevented: "Zero runtime crashes from external APIs",
+        },
+        lessonLearned: "Never trust external API shapes in the domain layer — validate and normalize at the boundary with runtime schema enforcement.",
     },
     {
         id: "cascading-filters-race",
@@ -498,6 +607,7 @@ const rate = CarrierRate.parse(external); // throws at the boundary`,
             "Complex multi-level filtering caused UI jank and race conditions in the router when clearing multiple dependent states. Marking the state-sync as a transition keeps the interface responsive while the URL updates in the background.",
         impact:
             "Glitch-free, zero-latency filtering even with deep-nested category queries.",
+        lessonLearned: "Heavy URL state-sync belongs in a transition — never block the main UI thread for router updates.",
     },
     {
         id: "api-fortress",
@@ -518,6 +628,10 @@ const rate = CarrierRate.parse(external); // throws at the boundary`,
             "Protecting full-stack applications from common vulnerabilities without killing performance required defense in depth. RBAC guards, secure HTTP headers, and rate limiting were combined into one cohesive pipeline.",
         impact:
             "Blocked 100% of basic automated exploits during testing and ensured zero unauthorized data access in production.",
+        metrics: {
+            incidentsPrevented: "100% of automated exploits blocked",
+        },
+        lessonLearned: "Security is a pipeline, not a checkbox — layer authentication, headers, and rate limiting into a single cohesive middleware chain.",
     },
     {
         id: "graphql-lying-zeros",
@@ -550,6 +664,79 @@ if (gql?.errors) {
   console.error("GraphQL query errors:", gql.errors);
   return getFallbackStats();
 }`,
+        lessonLearned: "Optional chaining on API responses hides auth failures — always check HTTP status and error arrays before accessing data.",
+        investigationFlow: [
+            { label: "Observed", value: "GitHub stats showing 0 for commits, contributions, streak" },
+            { label: "Diagnosed", value: "GraphQL returned 401, REST succeeded from cache" },
+            { label: "Root-caused", value: "Optional chaining silenced undefined into 0" },
+            { label: "Implemented", value: "Strict .ok checks + gql.errors guard + token rotation" },
+        ],
+    },
+    // ─────────────────────────────────────────────────────────────────────
+    // Flurry — Infrastructure / Networking
+    // ─────────────────────────────────────────────────────────────────────
+    {
+        id: "isp-mongodb-blockade",
+        category: "Infrastructure",
+        icon: WifiOff,
+        title: "The ISP MongoDB Blockade",
+        project: "Flurry v1.0.0",
+        severity: "critical",
+        timeToSolve: "1 day",
+        badges: ["MongoDB Atlas", "DigitalOcean", "Port 27017", "Networking"],
+        symptom:
+            "MongoDB Atlas connection timed out on both local dev (Egyptian ISP) and on a production DigitalOcean Frankfurt Droplet — despite 0.0.0.0/0 sitting Active in the Atlas IP whitelist.",
+        rootCause:
+            "Port 27017 was silently firewalled mid-flight. `nc -zv` to the Atlas cluster hung indefinitely (no refusal, no success) on both machines, confirming that packets were being dropped by the ISP and DigitalOcean's network layer before ever reaching Atlas.",
+        solution:
+            "Abandoned Atlas for the Droplet and installed MongoDB Community 7.0 locally, capping WiredTiger cache at 0.25 GB to protect the co-hosted Logic Arena app. MONGO_URL pointed to 127.0.0.1 — zero network hops, zero blockades.",
+        problem:
+            "After months offline the Flurry backend needed to be moved from a dead Sevalla host to a live DigitalOcean Droplet. MongoDB Atlas was the obvious database choice — 0.0.0.0/0 was already Active in Network Access. But `npm run dev` crashed instantly with 'Could not connect to any servers in your MongoDB Atlas cluster.' The Atlas error message blamed the IP whitelist, which was a red herring. Testing connectivity with `nc -zv <atlas-shard-host> 27017` hung indefinitely on both the local machine (Egyptian ISP) and the Frankfurt Droplet — meaning the TCP SYN went out but no SYN-ACK ever came back. The packets were being silently dropped somewhere between client and Atlas. Standard ports like 443 worked fine; only 27017 was affected. With Atlas unreachable from two completely different networks, a local MongoDB instance was the only viable path.",
+        impact:
+            "Zero network dependency for the database layer. MongoDB runs on 127.0.0.1:27017 on the Droplet, using only 91 MB RAM at idle — well within the 2 GB budget shared with Logic Arena.",
+        codeSnippet: `# diagnosis — nc hung with no output:
+nc -zv -w 5 ac-xxx.enkxihs.mongodb.net 27017
+# (no output — packet dropped mid-flight)
+
+# fix — local MongoDB, no network hops:
+MONGO_URL=mongodb://127.0.0.1:27017/flurry-dev`,
+        metrics: {
+            memorySaved: "91 MB RAM at idle",
+        },
+        lessonLearned: "When two independent networks both fail to reach the same port, the problem is upstream infrastructure — not your config.",
+        investigationFlow: [
+            { label: "Observed", value: "Atlas connection timeout on both ISP and Droplet" },
+            { label: "Verified", value: "nc -zv hung — TCP SYN sent, no SYN-ACK returned" },
+            { label: "Eliminated", value: "IP whitelist confirmed 0.0.0.0/0 — red herring" },
+            { label: "Diagnosed", value: "Port 27017 silently firewalled by ISP + DO network" },
+            { label: "Implemented", value: "Local MongoDB on 127.0.0.1, capped WiredTiger cache" },
+        ],
+    },
+    {
+        id: "localhost-ipv6-trap",
+        category: "Infrastructure",
+        icon: Network,
+        title: "The localhost IPv6 Trap",
+        project: "Flurry v1.0.0",
+        severity: "high",
+        timeToSolve: "2 hours",
+        badges: ["MongoDB", "IPv6", "Node.js", "Windows"],
+        symptom:
+            "Server crashed on every startup with 'ECONNREFUSED ::1:27017' even though `mongod` was visibly running in Task Manager and listening on port 27017.",
+        rootCause:
+            "Node.js on Windows resolves 'localhost' to ::1 (IPv6 loopback) before 127.0.0.1 (IPv4). MongoDB was bound to IPv4 only, so the IPv6 connection attempt was immediately refused — yet the error message made it look like MongoDB itself was down.",
+        solution:
+            "Replaced 'localhost' with '127.0.0.1' in MONGO_URL. One IP address swap, two hours lost.",
+        problem:
+            "After installing MongoDB locally to work around the Atlas port blockade, the server kept crashing with 'ECONNREFUSED ::1:27017'. Task Manager confirmed mongod was running. `Test-NetConnection -ComputerName 127.0.0.1 -Port 27017` succeeded. `Test-NetConnection -ComputerName localhost -Port 27017` failed. Node.js on Windows follows the OS's hosts file which maps 'localhost' to ::1 (IPv6) first. MongoDB Community's default config binds only to 127.0.0.1 (IPv4), so the connection to ::1 was refused before it even tried IPv4. The .env had `MONGO_URL=mongodb://localhost:27017/flurry-dev` — perfectly valid on Linux, a silent trap on Windows.",
+        impact:
+            "Lesson: always use explicit IPs in connection strings for local development. '127.0.0.1' is unambiguous; 'localhost' is a DNS lookup that your OS can answer however it likes.",
+        codeSnippet: `# .env — before (resolves to ::1 on Windows):
+MONGO_URL=mongodb://localhost:27017/flurry-dev
+
+# .env — after (unambiguous IPv4):
+MONGO_URL=mongodb://127.0.0.1:27017/flurry-dev`,
+        lessonLearned: "Never trust localhost resolution — 127.0.0.1 is unambiguous, 'localhost' is a DNS lookup your OS can answer however it likes.",
     },
 ];
 

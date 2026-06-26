@@ -8,9 +8,10 @@ interface Props {
     categories: string[];
     activeCategory: string;
     onSelect: (category: string) => void;
+    categoryCounts: Record<string, number>;
 }
 
-export const CategoryFilter = memo(function CategoryFilter({ categories, activeCategory, onSelect }: Props) {
+export const CategoryFilter = memo(function CategoryFilter({ categories, activeCategory, onSelect, categoryCounts }: Props) {
     const getHandler = useStableMap(onSelect);
 
     return (
@@ -21,6 +22,7 @@ export const CategoryFilter = memo(function CategoryFilter({ categories, activeC
         >
             {categories.map((category) => {
                 const isActive = activeCategory === category;
+                const count = categoryCounts[category] ?? 0;
                 return (
                     <button
                         key={category}
@@ -31,11 +33,11 @@ export const CategoryFilter = memo(function CategoryFilter({ categories, activeC
                             "flex-shrink-0 snap-center px-4 py-2.5 rounded-full text-[13px] font-semibold border cursor-pointer",
                             "transition-all duration-200",
                             isActive
-                                ? "bg-blue-600 text-white border-transparent shadow-md shadow-blue-500/20"
+                                ? "bg-[hsl(var(--accent-blue))] text-white border-transparent shadow-md shadow-[hsl(var(--accent-blue))]/20"
                                 : "bg-background/40 backdrop-blur-xl text-muted-foreground border-border/50 hover:bg-muted/80 hover:text-foreground"
                         )}
                     >
-                        {category}
+                        {category} <span className="opacity-70 font-normal">({count})</span>
                     </button>
                 );
             })}
