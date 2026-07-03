@@ -6,7 +6,6 @@ import {
     useEffect,
     useRef,
     memo,
-    type RefObject,
 } from "react";
 import { Activity } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -17,12 +16,12 @@ import { ProjectFeature, PILL_CATEGORY_VAR } from "./projects.data";
 const CARD_PILL_LIMIT = 4;
 
 // Custom hook to detect mobile view using ResizeObserver for better performance and responsiveness
-function useIsMobile(): RefObject<boolean> {
-    const isMobileRef = useRef<boolean>(false);
+function useIsMobile(): boolean {
+    const [isMobile, setIsMobile] = useState<boolean>(false);
 
     useEffect(() => {
         const updateMode = () => {
-            isMobileRef.current = window.innerWidth <= 768;
+            setIsMobile(window.innerWidth <= 768);
         };
 
         updateMode();
@@ -32,7 +31,7 @@ function useIsMobile(): RefObject<boolean> {
         return () => observer.disconnect();
     }, []);
 
-    return isMobileRef;
+    return isMobile;
 }
 
 export const BentoCard = memo(function BentoCard({
@@ -47,45 +46,28 @@ export const BentoCard = memo(function BentoCard({
     const [isActive, setIsActive] = useState(false);
     const cardRef = useRef<HTMLButtonElement>(null);
     const videoRef = useRef<HTMLVideoElement>(null);
-    const isMobileRef = useIsMobile();
+    const isMobile = useIsMobile();
 
     // Control the video based on the isActive state and whether we're on mobile or not
     useEffect(() => {
         const video = videoRef.current;
         if (!video) return;
 
-        if (isActive) {
+        if (isActive && !isMobile) {
             video.currentTime = 0;
             video.play().catch(() => { });
         } else {
             video.pause();
         }
-    }, [isActive]);
-
-    useEffect(() => {
-        const card = cardRef.current;
-        if (!card) return;
-
-        const observer = new IntersectionObserver(
-            ([entry]) => {
-                if (isMobileRef.current) {
-                    setIsActive(entry.isIntersecting);
-                }
-            },
-            { threshold: 0.6 }
-        );
-
-        observer.observe(card);
-        return () => observer.disconnect();
-    }, [isMobileRef]);
+    }, [isActive, isMobile]);
 
     const handleMouseEnter = useCallback(() => {
-        if (!isMobileRef.current) setIsActive(true);
-    }, [isMobileRef]);
+        if (!isMobile) setIsActive(true);
+    }, [isMobile]);
 
     const handleMouseLeave = useCallback(() => {
-        if (!isMobileRef.current) setIsActive(false);
-    }, [isMobileRef]);
+        if (!isMobile) setIsActive(false);
+    }, [isMobile]);
 
     const {
         name,
@@ -143,7 +125,7 @@ export const BentoCard = memo(function BentoCard({
                     ) : null}
                 </div>
 
-                {videoSrc && (
+                {!isMobile && videoSrc && (
                     <video
                         ref={videoRef}
                         src={videoSrc}

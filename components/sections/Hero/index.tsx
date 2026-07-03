@@ -92,7 +92,9 @@ export default function HeroSection() {
 
     const stars = useMemo(() => {
         if (!mounted) return [];
-        return Array.from({ length: 50 }, (_, i) => ({
+        const isMobile = window.innerWidth <= 768;
+        const count = isMobile ? 15 : 50;
+        return Array.from({ length: count }, (_, i) => ({
             id: i,
             top: Math.random() * 100,
             left: Math.random() * 100,
@@ -114,14 +116,14 @@ export default function HeroSection() {
             {/* Animated Mesh Gradient Background */}
             <div className="absolute inset-0 overflow-hidden pointer-events-none -z-20 opacity-30 dark:opacity-40">
                 <div 
-                    className="absolute -top-1/4 -left-1/4 w-[80%] h-[80%] rounded-full blur-[120px] mix-blend-screen animate-mesh-spin"
+                    className="absolute -top-1/4 -left-1/4 w-[80%] h-[80%] rounded-full blur-[40px] md:blur-[120px] mix-blend-screen animate-mesh-spin"
                     style={{
                         background: "radial-gradient(circle, var(--tl-accent-blue) 0%, transparent 70%)",
                         animationDuration: "25s",
                     }}
                 />
                 <div 
-                    className="absolute -bottom-1/4 -right-1/4 w-[80%] h-[80%] rounded-full blur-[120px] mix-blend-screen animate-mesh-spin"
+                    className="absolute -bottom-1/4 -right-1/4 w-[80%] h-[80%] rounded-full blur-[40px] md:blur-[120px] mix-blend-screen animate-mesh-spin"
                     style={{
                         background: "radial-gradient(circle, var(--tl-accent-purple) 0%, transparent 70%)",
                         animationDuration: "35s",

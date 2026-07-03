@@ -64,7 +64,7 @@ const SkillCategory = memo(function SkillCategory({
                 "group relative flex flex-col gap-5 border border-border/50 overflow-hidden",
                 "transition-[border-color,box-shadow] duration-300 w-full max-w-full",
                 // iOS Native glassmorphism on mobile, standard card on desktop
-                "bg-card/40 backdrop-blur-xl rounded-[24px] p-5 shadow-sm",
+                "bg-card/85 rounded-[24px] p-5 shadow-sm",
                 "md:bg-card/80 md:backdrop-blur-none md:rounded-3xl md:p-6 md:w-fit md:shadow-none",
                 styles.border,
                 "md:hover:shadow-xl",
