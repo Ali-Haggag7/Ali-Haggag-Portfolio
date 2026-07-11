@@ -2,11 +2,12 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { Send, CheckCircle2, Loader2 } from "lucide-react";
+import { Send, CheckCircle2, Loader2, XCircle } from "lucide-react";
 
 export function NewsletterForm() {
     const [email, setEmail] = useState("");
-    const [status, setStatus] = useState<"idle" | "loading" | "success">("idle");
+    const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
+    const [errorMessage, setErrorMessage] = useState("");
     // Track pending timeouts so we can clear them on unmount.
     const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -17,17 +18,38 @@ export function NewsletterForm() {
         };
     }, []);
 
-    const handleSubscribe = (e: React.FormEvent) => {
+    const handleSubscribe = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!email || status === "loading") return;
 
         setStatus("loading");
 
-        timeoutRef.current = setTimeout(() => {
-            setStatus("success");
-            setEmail("");
+        try {
+            const res = await fetch("/api/subscribe", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ email }),
+            });
+
+            const data = await res.json();
+
+            if (res.ok) {
+                setStatus("success");
+                setEmail("");
+                timeoutRef.current = setTimeout(() => setStatus("idle"), 5000);
+            } else {
+                setStatus("error");
+                setErrorMessage(data.error || "حدث خطأ ما. حاول مرة أخرى.");
+                timeoutRef.current = setTimeout(() => setStatus("idle"), 5000);
+            }
+        } catch (err) {
+            console.error(err);
+            setStatus("error");
+            setErrorMessage("فشل الاتصال بالخادم.");
             timeoutRef.current = setTimeout(() => setStatus("idle"), 5000);
-        }, 1500);
+        }
     };
 
     return (
@@ -36,6 +58,11 @@ export function NewsletterForm() {
                 <div className="absolute inset-0 flex items-center justify-center gap-2 text-emerald-500 font-medium animate-in fade-in duration-300">
                     <CheckCircle2 className="w-5 h-5" aria-hidden="true" />
                     <span>Thanks for subscribing!</span>
+                </div>
+            ) : status === "error" ? (
+                <div className="absolute inset-0 flex items-center justify-center gap-2 text-rose-500 font-medium animate-in fade-in duration-300">
+                    <XCircle className="w-5 h-5" aria-hidden="true" />
+                    <span className="text-[12px]">{errorMessage}</span>
                 </div>
             ) : (
                 <form

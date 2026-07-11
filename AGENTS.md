@@ -13,5 +13,27 @@
 - Ensure date-based APIs (like GitHub contribution heatmaps) correctly filter out future dates relative to today's date to prevent display bugs.
 - On mobile/touch devices, ensure that any hover-based tooltips or custom popup displays are also triggerable via a tap/click event (representing a touch toggle of the hover state) to maintain feature parity with desktop.
 
-## Git & Version Control
-- NEVER perform Git commits (`git commit`) or pushes (`git push`) directly. The agent is only responsible for writing and modifying files in the workspace. Staging, committing, and pushing must be handled manually by the user.
+# 🚨 Strict AI Agent Guidelines
+
+Welcome! Before making any modifications or writing code in this repository, you must adhere strictly to the following rules set by the repository owner:
+
+---
+
+## 🚫 1. No Direct Commits/Pushes
+* **Do NOT** run any git commit or push commands directly on the user's terminal/workspace.
+* Your role is to write down the exact git commands in the chat for the user to review, copy, and run manually.
+
+## 🚫 2. No Web Browser Automation
+* **Do NOT** trigger any browser automation tools (e.g., Puppeteer, Playwright, or browser subagents) to test the UI.
+* Modify the code files directly, and the user will manually verify the results in their browser and provide feedback.
+
+## 🚫 3. Direct File Editing Only
+* **Do NOT** write temporary scripts (such as Python or Node.js scripts) to experiment with the code.
+* Edit the core project files (`index.html`, `style.css`, `js/app.js`, `js/ui.js`, `js/config.js`) directly and immediately.
+
+## 🚫 4. Minimize Terminal Commands
+* **Do NOT** launch any arbitrary terminal commands or local servers unless explicitly requested by the user.
+* Make the code edits directly, then summarize your changes briefly and clearly in the chat.
+
+## ✍️ 5. RTL Alignment for Arabic Responses
+* When communicating in Arabic, ensure your responses start with Right-to-Left (RTL) alignment so that the text is formatted cleanly and readable.
