@@ -141,8 +141,9 @@ export function ContributionHeatmap({ recentDays, lastSynced }: Props) {
                 className="grid gap-1"
                 style={{ gridTemplateColumns: `repeat(${COLS}, minmax(0, 1fr))` }}
             >
-                {cells.map((day) => {
+                {cells.map((day, idx) => {
                     const isTooltipActive = activeTooltip === day.date;
+                    const colIndex = idx % COLS;
                     return (
                         <div
                             key={day.date}
@@ -153,21 +154,30 @@ export function ContributionHeatmap({ recentDays, lastSynced }: Props) {
                             className="relative group aspect-square rounded-[2px]"
                             style={{ backgroundColor: intensityVar(day.count, max) }}
                         >
-                            {/* Custom Tooltip */}
+                            {/* Custom Tooltip Arrow */}
                             <div
                                 data-active={isTooltipActive}
-                                className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1.5 opacity-0 scale-95 pointer-events-none group-hover:opacity-100 group-hover:scale-100 data-[active=true]:opacity-100 data-[active=true]:scale-100 transition-all duration-150 ease-out origin-bottom z-50 flex flex-col items-center"
+                                className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-1.5 h-1.5 bg-popover border-r border-b border-border rotate-45 pointer-events-none opacity-0 scale-95 group-hover:opacity-100 group-hover:scale-100 data-[active=true]:opacity-100 data-[active=true]:scale-100 transition-all duration-150 ease-out origin-bottom z-50"
+                            />
+
+                            {/* Custom Tooltip Bubble */}
+                            <div
+                                data-active={isTooltipActive}
+                                className={`absolute bottom-full mb-2.5 pointer-events-none opacity-0 scale-95 group-hover:opacity-100 group-hover:scale-100 data-[active=true]:opacity-100 data-[active=true]:scale-100 transition-all duration-150 ease-out z-50 bg-popover/95 border border-border text-popover-foreground text-[10px] font-semibold px-2.5 py-1.5 rounded-md whitespace-nowrap shadow-xl flex items-center gap-1.5 backdrop-blur-sm ${
+                                    colIndex < 2
+                                        ? "left-0 origin-bottom-left"
+                                        : colIndex >= COLS - 2
+                                        ? "right-0 origin-bottom-right"
+                                        : "left-1/2 -translate-x-1/2 origin-bottom"
+                                }`}
                             >
-                                <div className="bg-popover/95 border border-border text-popover-foreground text-[10px] font-semibold px-2.5 py-1.5 rounded-md whitespace-nowrap shadow-xl flex items-center gap-1.5 backdrop-blur-sm">
-                                    <span
-                                        className="w-2 h-2 rounded-full aspect-square shrink-0"
-                                        style={{ backgroundColor: intensityVar(day.count, max) }}
-                                    />
-                                    <span>
-                                        {day.count} {day.count === 1 ? "contribution" : "contributions"} on {formatDate(day.date)}
-                                    </span>
-                                </div>
-                                <div className="w-1.5 h-1.5 bg-popover border-r border-b border-border rotate-45 -mt-[4px]" />
+                                <span
+                                    className="w-2 h-2 rounded-full aspect-square shrink-0"
+                                    style={{ backgroundColor: intensityVar(day.count, max) }}
+                                />
+                                <span>
+                                    {day.count} {day.count === 1 ? "contribution" : "contributions"} on {formatDate(day.date)}
+                                </span>
                             </div>
                         </div>
                     );
