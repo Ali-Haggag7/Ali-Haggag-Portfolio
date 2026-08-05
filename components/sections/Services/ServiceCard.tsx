@@ -75,11 +75,14 @@ export function ServiceCard({
     // The implementations detail body is shared between the Framer (desktop)
     // and CSS-transition (mobile) expansion paths.
     const detailBody = (
-        <div className="mt-5 border-t border-border/60 pt-4">
-            <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-2">
-                In production
-            </p>
-            <p className="text-muted-foreground text-sm leading-relaxed">
+        <div className="mt-5 rounded-xl border border-l-4 border-border border-l-[hsl(var(--accent-blue))] bg-muted/20 p-4 shadow-sm space-y-2 text-left">
+            <div className="flex items-center gap-2">
+                <span className="hud-tag" style={{ color: "hsl(var(--accent-blue))", backgroundColor: "hsl(var(--accent-blue) / 0.15)", borderColor: "hsl(var(--accent-blue) / 0.3)" }}>
+                    PROD SPEC
+                </span>
+                <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-[hsl(var(--accent-blue))]">Production Implementation</span>
+            </div>
+            <p className="text-xs md:text-sm font-medium text-foreground/90 leading-relaxed pl-0.5">
                 {service.implementations}
             </p>
         </div>
@@ -101,68 +104,64 @@ export function ServiceCard({
                 onMouseMove={handleMouseMove}
                 tabIndex={0}
                 className={cn(
-                    "group relative overflow-hidden h-full rounded-3xl border border-border/50 bg-card p-8 focus:outline-none cursor-default",
-                    "transition-all duration-300 ease-out",
-                    "hover:-translate-y-2 focus:-translate-y-2",
-                    "hover:shadow-2xl focus:shadow-2xl",
-                    "hover:border-blue-500/30 focus:border-blue-500/30",
-                    "dark:hover:shadow-blue-900/20 dark:focus:shadow-blue-900/20"
+                    "group relative overflow-hidden h-full rounded-2xl cyber-card cyber-card-interactive tactical-corner-reticles p-7 focus:outline-none cursor-default",
+                    "transition-all duration-400 ease-[cubic-bezier(0.16,1,0.3,1)]",
+                    "hover:-translate-y-1.5 focus:-translate-y-1.5",
+                    "hover:border-[hsl(var(--accent-blue)/0.5)] focus:border-[hsl(var(--accent-blue)/0.5)]"
                 )}
             >
                 {/* Spotlight overlay — driven by motion values, zero re-renders */}
                 <motion.div
-                    className="pointer-events-none absolute -inset-px opacity-0 transition-opacity duration-500 ease-out group-hover:opacity-100 group-focus:opacity-100"
+                    className="pointer-events-none absolute -inset-px opacity-0 transition-opacity duration-500 ease-out group-hover:opacity-100 group-focus:opacity-100 rounded-2xl"
                     style={{ background: spotlightBg }}
                 />
 
                 <div className="relative z-10 flex flex-col h-full">
                     {/* Category badge (top-left) — accent via CSS variable */}
-                    <span
-                        className="mb-4 inline-flex w-fit items-center rounded-full border px-3 py-1 text-xs font-semibold tracking-wide"
-                        style={{
-                            color: category.accent,
-                            borderColor: category.accent,
-                            backgroundColor: "color-mix(in srgb, transparent 88%, currentColor)",
-                        }}
-                    >
-                        {category.label}
-                    </span>
+                    <div className="mb-4 flex items-center justify-between">
+                        <span
+                            className="hud-tag"
+                            style={{
+                                color: category.accent,
+                                borderColor: "color-mix(in srgb, currentColor 30%, transparent)",
+                                backgroundColor: "color-mix(in srgb, transparent 88%, currentColor)",
+                            }}
+                        >
+                            <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ backgroundColor: category.accent }} />
+                            {category.label}
+                        </span>
+                    </div>
 
                     <div
                         className={cn(
-                            "mb-6 inline-flex h-14 w-14 items-center justify-center rounded-2xl",
-                            "bg-muted text-muted-foreground border border-border",
+                            "mb-5 inline-flex h-13 w-13 items-center justify-center rounded-xl",
+                            "bg-muted/80 text-foreground border border-border/80 shadow-sm",
                             "transition-all duration-300 ease-out",
-                            "group-hover:bg-gradient-to-br group-hover:from-blue-600 group-hover:to-cyan-500",
-                            "group-hover:text-white group-hover:scale-110",
-                            "group-hover:shadow-lg group-hover:shadow-blue-500/40",
-                            "group-hover:-rotate-6 group-hover:border-transparent",
-                            "group-focus:bg-gradient-to-br group-focus:from-blue-600 group-focus:to-cyan-500",
-                            "group-focus:text-white group-focus:scale-110",
-                            "group-focus:shadow-lg group-focus:shadow-blue-500/40",
-                            "group-focus:-rotate-6 group-focus:border-transparent"
+                            "group-hover:bg-[hsl(var(--accent-blue))] group-hover:text-white group-hover:scale-105",
+                            "group-hover:shadow-md group-hover:shadow-[hsl(var(--accent-blue)/0.3)]",
+                            "group-hover:border-transparent"
                         )}
                     >
-                        <Icon className="h-7 w-7" aria-hidden="true" />
+                        <Icon className="h-6 w-6" aria-hidden="true" />
                     </div>
 
-                    <h3 className="mb-3 text-2xl font-bold text-foreground transition-colors duration-300 group-hover:text-blue-600 group-focus:text-blue-600 dark:group-hover:text-blue-400 dark:group-focus:text-blue-400">
+                    <h3 className="mb-2 text-2xl font-bold font-display tracking-tight text-foreground transition-colors duration-300 group-hover:text-[hsl(var(--accent-blue))]">
                         {service.title}
                     </h3>
 
-                    <p className="text-muted-foreground text-base leading-relaxed">
+                    <p className="text-muted-foreground text-sm leading-relaxed mb-4">
                         {service.description}
                     </p>
 
                     {/* Metric badges row */}
                     {service.metrics.length > 0 && (
-                        <div className="mt-5 flex flex-wrap gap-2">
+                        <div className="mt-auto pt-2 flex flex-wrap gap-2">
                             {service.metrics.map((metric) => (
                                 <span
                                     key={metric.label}
-                                    className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-muted/40 px-2.5 py-1 text-xs"
+                                    className="inline-flex items-center gap-1.5 rounded-md border border-border/70 bg-muted/30 px-2.5 py-1 text-xs"
                                 >
-                                    <span className="text-muted-foreground">{metric.label}</span>
+                                    <span className="text-muted-foreground font-display text-[11px] uppercase tracking-wider">{metric.label}:</span>
                                     <span className="font-mono font-semibold text-foreground">
                                         {metric.value}
                                     </span>
@@ -173,11 +172,11 @@ export function ServiceCard({
 
                     {/* Tech stack pills row */}
                     {service.tech.length > 0 && (
-                        <div className="mt-3 flex flex-wrap gap-2">
+                        <div className="mt-3 flex flex-wrap gap-1.5">
                             {service.tech.map((tech) => (
                                 <span
                                     key={tech}
-                                    className="rounded-full border border-border bg-background/60 px-2.5 py-1 text-xs font-medium text-muted-foreground"
+                                    className="rounded-md border border-border/50 bg-background/80 px-2 py-0.5 text-[11px] font-mono text-muted-foreground"
                                 >
                                     {tech}
                                 </span>
@@ -192,8 +191,8 @@ export function ServiceCard({
                         aria-expanded={expanded}
                         aria-controls={detailId}
                         className={cn(
-                            "mt-5 inline-flex min-h-[44px] w-fit items-center gap-1.5 rounded-lg px-3 text-sm font-semibold cursor-pointer",
-                            "text-blue-600 dark:text-blue-400",
+                            "mt-5 inline-flex min-h-[44px] w-fit items-center gap-2 rounded-lg px-3 text-xs font-display font-semibold uppercase tracking-wider cursor-pointer",
+                            "text-[hsl(var(--accent-blue))]",
                             "transition-colors duration-200 hover:bg-muted/60 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                         )}
                     >
@@ -234,8 +233,8 @@ export function ServiceCard({
                     )}
                 </div>
 
-                {/* Scale on compositor thread — transform only, no layout cost */}
-                <div className="absolute bottom-0 left-0 h-1.5 w-full origin-left scale-x-0 bg-gradient-to-r from-blue-500 to-cyan-400 transition-transform duration-300 ease-out group-hover:scale-x-100 group-focus:scale-x-100 z-20" />
+                {/* Accent line on bottom */}
+                <div className="absolute bottom-0 left-0 h-1 w-full origin-left scale-x-0 bg-gradient-to-r from-[hsl(var(--accent-blue))] to-[hsl(var(--accent-purple))] transition-transform duration-300 ease-out group-hover:scale-x-100 group-focus:scale-x-100 z-20" />
             </div>
         </motion.div>
     );

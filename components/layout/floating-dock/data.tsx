@@ -4,7 +4,7 @@
 
 import {
     Home, Terminal, Briefcase, Mail,
-    Github, Linkedin, Layers, type LucideIcon,
+    Layers, FileText, Activity, Cpu, type LucideIcon,
 } from "lucide-react";
 
 export interface DockItem {
@@ -13,17 +13,19 @@ export interface DockItem {
     iconClassName: string;     // Tailwind classes baked in per item
     href: string;
     glowColor: string;
+    isModalTrigger?: boolean;
 }
 
 // Defined OUTSIDE any component — allocated once, never re-allocated.
 export const DOCK_ITEMS: DockItem[] = [
     { title: "Home", Icon: Home, iconClassName: "group-hover:text-foreground", href: "#", glowColor: "hsl(var(--muted-foreground))" },
     { title: "Projects", Icon: Terminal, iconClassName: "group-hover:text-[hsl(var(--accent-blue))] text-[hsl(var(--accent-blue))]/80", href: "#projects", glowColor: "hsl(var(--accent-blue))" },
-    { title: "Journey", Icon: Briefcase, iconClassName: "group-hover:text-[hsl(var(--accent-emerald))] text-[hsl(var(--accent-emerald))]/80", href: "#timeline", glowColor: "hsl(var(--accent-emerald))" },
+    { title: "Battle Scars", Icon: Activity, iconClassName: "group-hover:text-[var(--scar-high)] text-[var(--scar-high)]/90", href: "#battle-scars", glowColor: "var(--scar-high)" },
+    { title: "Skills", Icon: Cpu, iconClassName: "group-hover:text-[hsl(var(--accent-purple))] text-[hsl(var(--accent-purple))]/80", href: "#skills", glowColor: "hsl(var(--accent-purple))" },
+    { title: "Evolution", Icon: Briefcase, iconClassName: "group-hover:text-[hsl(var(--accent-emerald))] text-[hsl(var(--accent-emerald))]/80", href: "#evolution", glowColor: "hsl(var(--accent-emerald))" },
     { title: "Services", Icon: Layers, iconClassName: "group-hover:text-[var(--tl-accent-yellow)] text-[var(--tl-accent-yellow)]/80", href: "#services", glowColor: "var(--tl-accent-yellow)" },
+    { title: "Live CV", Icon: FileText, iconClassName: "group-hover:text-emerald-400 text-emerald-400/90 animate-pulse", href: "#live-cv", glowColor: "hsl(var(--accent-emerald))", isModalTrigger: true },
     { title: "Contact", Icon: Mail, iconClassName: "group-hover:text-[var(--scar-critical)] text-[var(--scar-critical)]/80", href: "#contact", glowColor: "var(--scar-critical)" },
-    { title: "GitHub", Icon: Github, iconClassName: "group-hover:text-foreground", href: "https://github.com/Ali-Haggag7", glowColor: "hsl(var(--muted-foreground))" },
-    { title: "LinkedIn", Icon: Linkedin, iconClassName: "group-hover:text-[var(--brand-linkedin)] text-[var(--brand-linkedin)]/80", href: "https://www.linkedin.com/in/ali-haggag7/", glowColor: "var(--brand-linkedin)" },
 ];
 
 // Kept as a standalone utility — no closure over component state,

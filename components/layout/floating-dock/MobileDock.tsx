@@ -24,22 +24,29 @@ const MobileNavItem = memo(function MobileNavItem({
     index,
     visible,
     onClose,
+    onOpenLiveCv,
 }: {
     item: DockItem;
     index: number;
     visible: boolean;
     onClose: () => void;
+    onOpenLiveCv?: () => void;
 }) {
-    const { Icon, iconClassName, href, glowColor, title } = item;
+    const { Icon, iconClassName, href, glowColor, title, isModalTrigger } = item;
     const isExternal = !href.startsWith("#");
 
-    // Stable click handler — depends only on href and isExternal,
-    // which are constant for the lifetime of this item.
+    // Stable click handler
     const handleClick = useCallback(
         (e: React.MouseEvent<HTMLAnchorElement>) => {
+            if (isModalTrigger) {
+                e.preventDefault();
+                onClose();
+                onOpenLiveCv?.();
+                return;
+            }
             if (!isExternal) smoothScrollTo(e, href, onClose);
         },
-        [isExternal, href, onClose],
+        [isExternal, href, isModalTrigger, onClose, onOpenLiveCv],
     );
 
     // Glow shadow computed once per glowColor — not per render.
@@ -85,19 +92,16 @@ const MobileNavItem = memo(function MobileNavItem({
 // ─── FloatingDockMobile ───────────────────────────────────────────────────────
 export const FloatingDockMobile = memo(function FloatingDockMobile({
     className,
+    onOpenLiveCv,
 }: {
     className?: string;
+    onOpenLiveCv?: () => void;
 }) {
     const [open, setOpen] = useState(false);
-
-    // Functional updater — avoids stale closure on rapid taps.
-    const toggleOpen = useCallback(() => setOpen((o) => !o), []);
-
-    // Passed as onClose to each item; stable reference via useCallback.
-    const closeMenu = useCallback(() => setOpen(false), []);
-
-    // Respect the OS "reduce motion" setting — accessibility + perf on low-end devices.
     const prefersReduced = useReducedMotion();
+
+    const toggleOpen = useCallback(() => setOpen((prev) => !prev), []);
+    const closeMenu = useCallback(() => setOpen(false), []);
 
     return (
         <div className={cn("relative block md:hidden z-50", className)}>
@@ -118,6 +122,7 @@ export const FloatingDockMobile = memo(function FloatingDockMobile({
                         index={idx}
                         visible={open}
                         onClose={closeMenu}
+                        onOpenLiveCv={onOpenLiveCv}
                     />
                 ))}
             </div>

@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useCallback, useRef, memo } from "react";
+import { useState, useCallback, useRef, memo, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import { AnimatePresence } from "framer-motion";
 import { projectsData, ProjectFeature } from "./projects.data";
 import { BentoCard } from "./BentoCard";
@@ -25,7 +26,22 @@ function useStableHandlers(onSelect: (f: ProjectFeature) => void) {
 }
 
 export default function ProjectsSection() {
+    const searchParams = useSearchParams();
     const [selectedProject, setSelectedProject] = useState<ProjectFeature | null>(null);
+
+    // Deep linking for ?project=<id>
+    useEffect(() => {
+        const projId = searchParams.get("project");
+        if (projId) {
+            const target = projectsData.find((p) => p.id === projId);
+            if (target) {
+                setSelectedProject(target);
+                setTimeout(() => {
+                    document.getElementById("projects")?.scrollIntoView({ behavior: "smooth" });
+                }, 300);
+            }
+        }
+    }, [searchParams]);
 
     const handleClose = useCallback(() => setSelectedProject(null), []);
 

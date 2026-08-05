@@ -1,17 +1,20 @@
 "use client";
 
 import { useState, useMemo, useCallback, useEffect, useRef } from "react";
-import { Activity, ShieldAlert, FolderGit2, ListChecks, ChevronDown, ArrowDown } from "lucide-react";
+import { Activity, ShieldAlert, FolderGit2, ListChecks, ChevronDown, ArrowDown, LayoutGrid, GitCommit } from "lucide-react";
 import { useInView } from "framer-motion";
 import { scarsData, scarCategories } from "./scars.data";
 import { useStableMap } from "@/hooks/useStableMap";
 import { CategoryFilter } from "./CategoryFilter";
 import { ScarCard } from "./ScarCard";
+import { ScarsTimelineView } from "./ScarsTimelineView";
 import { useSearchParams } from "next/navigation";
+import { cn } from "@/lib/utils";
 
 export default function BattleScars() {
     const searchParams = useSearchParams();
     const [activeCategory, setActiveCategory] = useState("All");
+    const [viewMode, setViewMode] = useState<"grid" | "timeline">("grid");
     const [expandedId, setExpandedId] = useState<string | null>(scarsData[0].id);
 
     const [revealStage, setRevealStage] = useState<0 | 1 | 2>(0);
@@ -179,23 +182,17 @@ export default function BattleScars() {
             aria-labelledby="battle-scars-title"
             className="py-24 px-4 md:px-8 w-full max-w-5xl mx-auto"
         >
-            <div className="text-center mb-10 animate-fade-in">
-                <div className="inline-flex items-center justify-center gap-2 mb-4">
-                    <span className="h-px w-8 bg-blue-500/40 block" aria-hidden="true" />
-                    <span className="text-blue-500 font-mono text-sm uppercase tracking-widest font-bold flex items-center gap-2">
-                        <Activity className="w-4 h-4" aria-hidden="true" />
-                        Engineering Logs
-                    </span>
-                    <span className="h-px w-8 bg-blue-500/40 block" aria-hidden="true" />
-                </div>
+            <div className="flex flex-col items-center text-center mb-10 max-w-3xl mx-auto animate-fade-in">
+                <p className="section-eyebrow mb-3">Engineering Logs</p>
                 <h2
                     id="battle-scars-title"
-                    className="text-3xl md:text-5xl font-extrabold text-foreground tracking-tight mb-4"
+                    className="section-title text-4xl md:text-5xl mb-3"
                 >
-                    Battle Scars
+                    Battle{" "}
+                    <span style={{ color: "hsl(var(--scar-critical))" }}>Scars</span>
                 </h2>
-                <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-                    Real engineering isn&apos;t just writing code. It&apos;s about the architectural decisions made when systems fail, latency spikes, and requirements evolve.
+                <p className="text-muted-foreground text-sm md:text-base leading-relaxed max-w-xl">
+                    Real engineering isn&apos;t just writing code. It&apos;s about the decisions made when systems fail, latency spikes, and requirements shift.
                 </p>
             </div>
 
@@ -225,6 +222,39 @@ export default function BattleScars() {
                 </div>
             </dl>
 
+            {/* View Mode Switcher */}
+            <div className="flex justify-center mb-6">
+                <div className="inline-flex items-center gap-1 rounded-full border border-border/80 bg-card p-1.5 shadow-sm">
+                    <button
+                        type="button"
+                        onClick={() => setViewMode("grid")}
+                        className={cn(
+                            "flex min-h-[44px] items-center gap-2 px-4 rounded-full text-xs font-mono font-bold transition-colors cursor-pointer",
+                            viewMode === "grid"
+                                ? "bg-blue-500/20 text-blue-400 border border-blue-500/40"
+                                : "text-muted-foreground hover:text-foreground"
+                        )}
+                    >
+                        <LayoutGrid className="h-3.5 w-3.5" aria-hidden="true" />
+                        Grid View
+                    </button>
+                    <button
+                        type="button"
+                        onClick={() => setViewMode("timeline")}
+                        className={cn(
+                            "flex min-h-[44px] items-center gap-2 px-4 rounded-full text-xs font-mono font-bold transition-colors cursor-pointer",
+                            viewMode === "timeline"
+                                ? "bg-purple-500/20 text-purple-400 border border-purple-500/40"
+                                : "text-muted-foreground hover:text-foreground"
+                        )}
+                    >
+                        <GitCommit className="h-3.5 w-3.5" aria-hidden="true" />
+                        Timeline View
+                    </button>
+                </div>
+            </div>
+
+            {/* Category Filter */}
             <CategoryFilter
                 categories={scarCategories}
                 activeCategory={activeCategory}
@@ -232,40 +262,43 @@ export default function BattleScars() {
                 categoryCounts={categoryCounts}
             />
 
-            <div ref={containerRef} className="relative min-h-[400px]">
-                {/* Fixed Skip Button (Visible only when scrolling through expanded list) */}
-                {revealStage === 2 && filteredScars.length > 3 && isInView && (
-                    <div className="fixed bottom-8 md:bottom-28 left-0 z-50 w-full flex justify-center pointer-events-none animate-in slide-in-from-bottom-8 fade-in duration-300">
-                        <button 
-                            type="button"
-                            onClick={() => {
-                                const nextSection = sectionRef.current?.nextElementSibling;
-                                if (nextSection) {
-                                    nextSection.scrollIntoView({ behavior: "smooth" });
-                                }
-                            }}
-                            className="pointer-events-auto cursor-pointer bg-foreground/90 backdrop-blur-xl border border-border/50 px-4 py-2 rounded-full text-xs font-semibold shadow-xl hover:bg-foreground active:scale-95 text-background flex items-center gap-1.5 transition-all"
-                            aria-label="Skip to Next Section"
-                            title="Skip to next section"
-                        >
-                            <ArrowDown className="w-3.5 h-3.5 animate-bounce" />
-                            <span>Skip</span>
-                        </button>
-                    </div>
-                )}
+            {viewMode === "timeline" ? (
+                <ScarsTimelineView scars={filteredScars} isMobile={isMobile} />
+            ) : (
+                <div ref={containerRef} className="relative min-h-[400px]">
+                    {/* Fixed Skip Button */}
+                    {revealStage === 2 && filteredScars.length > 3 && isInView && (
+                        <div className="fixed bottom-8 md:bottom-28 left-0 z-50 w-full flex justify-center pointer-events-none animate-in slide-in-from-bottom-8 fade-in duration-300">
+                            <button 
+                                type="button"
+                                onClick={() => {
+                                    const nextSection = sectionRef.current?.nextElementSibling;
+                                    if (nextSection) {
+                                        nextSection.scrollIntoView({ behavior: "smooth" });
+                                    }
+                                }}
+                                className="pointer-events-auto cursor-pointer bg-foreground/90 backdrop-blur-xl border border-border/50 px-4 py-2 rounded-full text-xs font-semibold shadow-xl hover:bg-foreground active:scale-95 text-background flex items-center gap-1.5 transition-all"
+                                aria-label="Skip to Next Section"
+                                title="Skip to next section"
+                            >
+                                <ArrowDown className="w-3.5 h-3.5 animate-bounce" />
+                                <span>Skip</span>
+                            </button>
+                        </div>
+                    )}
 
-                <div className="space-y-4">
-                    {visibleScars.map((scar, index) => (
-                        <ScarCard
-                            key={scar.id}
-                            scar={scar}
-                            index={index}
-                            isExpanded={expandedId === scar.id}
-                            onToggle={getToggleHandler(scar.id)}
-                            isMobile={isMobile}
-                        />
-                    ))}
-                </div>
+                    <div className="space-y-4">
+                        {visibleScars.map((scar, index) => (
+                            <ScarCard
+                                key={scar.id}
+                                scar={scar}
+                                index={index}
+                                isExpanded={expandedId === scar.id}
+                                onToggle={getToggleHandler(scar.id)}
+                                isMobile={isMobile}
+                            />
+                        ))}
+                    </div>
 
                 {/* Smart Fade Overlay */}
                 {hasMoreToReveal && revealStage < 2 && (
@@ -288,6 +321,7 @@ export default function BattleScars() {
                     </div>
                 )}
             </div>
+            )}
 
             {/* Subtle Centered Continue Button at the bottom (after all cards loaded) */}
             {revealStage === 2 && (

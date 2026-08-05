@@ -142,7 +142,7 @@ export const SkillModal = memo(function SkillModal({
                 animate="visible"
                 exit="exit"
                 onClick={onClose}
-                className="absolute inset-0 bg-slate-900/60 dark:bg-black/80"
+                className="absolute inset-0 bg-slate-950/25 dark:bg-black/80 backdrop-blur-sm"
                 aria-hidden="true"
                 style={{ willChange: "opacity" }}
             />
@@ -175,7 +175,7 @@ export const SkillModal = memo(function SkillModal({
                 }}
                 style={{ willChange: "transform, opacity" }}
                 className={cn(
-                    "relative bg-background border border-border shadow-2xl overflow-hidden z-10 focus:outline-none",
+                    "relative bg-white dark:bg-card/95 border border-slate-200 dark:border-border/80 shadow-[0_20px_50px_rgba(0,0,0,0.12)] dark:shadow-[0_25px_60px_-15px_rgba(0,0,0,0.8)] backdrop-blur-2xl overflow-hidden z-10 focus:outline-none tactical-corner-reticles",
                     isMobile
                         ? "w-full rounded-t-[32px] max-h-[85vh] overflow-y-auto"
                         : "w-full max-w-lg rounded-3xl",
@@ -184,7 +184,7 @@ export const SkillModal = memo(function SkillModal({
                 {/* ── Drag Handle + Close (mobile) ──────────────── */}
                 {isMobile && (
                     <div
-                        className="sticky top-0 z-20 flex items-center justify-between px-5 pt-3 pb-2 bg-background cursor-grab active:cursor-grabbing"
+                        className="sticky top-0 z-20 flex items-center justify-between px-5 pt-3 pb-2 bg-card/90 backdrop-blur-md border-b border-border/40 cursor-grab active:cursor-grabbing"
                         onPointerDown={(e) => dragControls.start(e)}
                     >
                         <div className="flex-1" />
@@ -199,7 +199,7 @@ export const SkillModal = memo(function SkillModal({
                                 e.stopPropagation();
                                 onClose();
                             }}
-                            className="p-2 rounded-full text-muted-foreground hover:text-foreground bg-muted/50 hover:bg-muted/80 transition-colors cursor-pointer active:scale-95"
+                            className="p-2 rounded-full text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-white bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/60 hover:bg-blue-50 dark:hover:bg-blue-500/20 hover:border-blue-300 dark:hover:border-blue-500/50 transition-all cursor-pointer active:scale-95 shadow-sm"
                         >
                             <X className="w-4 h-4" aria-hidden="true" />
                         </button>
@@ -214,7 +214,7 @@ export const SkillModal = memo(function SkillModal({
                             type="button"
                             aria-label="Close"
                             onClick={onClose}
-                            className="absolute top-4 right-4 p-2.5 rounded-full text-muted-foreground hover:text-foreground bg-muted hover:bg-muted/80 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 active:scale-95 cursor-pointer"
+                            className="absolute top-4 right-4 p-2.5 rounded-full text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-white bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/60 hover:bg-blue-50 dark:hover:bg-blue-500/20 hover:border-blue-300 dark:hover:border-blue-500/50 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 active:scale-95 cursor-pointer shadow-sm"
                         >
                             <X className="w-5 h-5" aria-hidden="true" />
                         </button>
@@ -222,7 +222,7 @@ export const SkillModal = memo(function SkillModal({
 
                     {/* Header */}
                     <div className="flex items-center gap-4 mb-6">
-                        <div className="flex items-center justify-center w-16 h-16 rounded-2xl bg-muted border border-border shrink-0">
+                        <div className="flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-b from-blue-50/80 via-purple-50/40 to-slate-50 dark:from-blue-500/15 dark:via-purple-500/5 dark:to-transparent border border-blue-200 dark:border-blue-500/30 shadow-md dark:shadow-[0_0_20px_rgba(59,130,246,0.15)] shrink-0">
                             {skill.themeable ? (
                                 <div
                                     className="w-8 h-8 bg-foreground"
@@ -283,9 +283,9 @@ export const SkillModal = memo(function SkillModal({
                     {/* ── Body ──────────────────────────────────── */}
                     <div className="space-y-6">
                         <div>
-                            <h4 className="text-xs font-bold text-muted-foreground uppercase tracking-widest mb-3 flex items-center gap-2">
+                            <h4 className="text-xs font-bold font-display text-muted-foreground uppercase tracking-widest mb-3 flex items-center gap-2">
                                 <LinkIcon
-                                    className="w-4 h-4"
+                                    className="w-4 h-4 text-[hsl(var(--accent-blue))]"
                                     aria-hidden="true"
                                 />{" "}
                                 Neural Connections (Core Projects)
@@ -295,21 +295,26 @@ export const SkillModal = memo(function SkillModal({
                                     {skill.projects.map((project) => (
                                         <span
                                             key={project}
-                                            className="px-3.5 py-1.5 bg-muted border border-border text-foreground text-sm rounded-lg font-semibold"
+                                            className="hud-tag"
+                                            style={{
+                                                color: "hsl(var(--accent-blue))",
+                                                borderColor: "hsl(var(--accent-blue) / 0.4)",
+                                                backgroundColor: "hsl(var(--accent-blue) / 0.12)",
+                                            }}
                                         >
+                                            <span className="w-1.5 h-1.5 rounded-full bg-[hsl(var(--accent-blue))] animate-pulse" aria-hidden="true" />
                                             {project}
                                         </span>
                                     ))}
                                 </div>
                             ) : (
-                                <div className="p-4 bg-muted/50 rounded-xl border border-dashed border-border">
-                                    <p className="text-sm font-medium text-muted-foreground flex items-start gap-2">
+                                <div className="p-4 rounded-xl border border-l-4 border-border border-l-[var(--scar-medium)] bg-muted/20 shadow-sm">
+                                    <p className="text-xs md:text-sm font-medium text-foreground/90 flex items-center gap-2">
                                         <Lightbulb
-                                            className="w-4 h-4 text-yellow-500 shrink-0 mt-0.5"
+                                            className="w-4 h-4 text-[var(--scar-medium)] shrink-0"
                                             aria-hidden="true"
                                         />
-                                        Currently researching and exploring this
-                                        technology.
+                                        Currently researching and exploring this technology.
                                     </p>
                                 </div>
                             )}
@@ -317,7 +322,7 @@ export const SkillModal = memo(function SkillModal({
 
                         {/* Battle Scar deep link */}
                         {skill.scarId && (
-                            <div className="pt-6 border-t border-border">
+                            <div className="pt-6 border-t border-border/60">
                                 <button
                                     type="button"
                                     onClick={() =>
@@ -327,29 +332,31 @@ export const SkillModal = memo(function SkillModal({
                                             router,
                                         )
                                     }
-                                    className="w-full flex items-center justify-between p-4 rounded-xl border shadow-sm transition-all duration-200 
-                                        bg-violet-500/10 hover:bg-violet-500/20 border-violet-500/20 text-violet-600 dark:text-violet-400 
-                                        group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500/50 cursor-pointer"
+                                    className="w-full flex items-center justify-between p-4 rounded-2xl border shadow-md transition-all duration-300 
+                                        bg-[hsl(var(--accent-purple)/0.08)] hover:bg-[hsl(var(--accent-purple)/0.15)] 
+                                        border-[hsl(var(--accent-purple)/0.3)] hover:border-[hsl(var(--accent-purple)/0.6)] 
+                                        text-foreground cyber-card cyber-card-interactive
+                                        group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--accent-purple)/0.5)] cursor-pointer"
                                 >
-                                    <div className="flex items-center gap-3">
-                                        <div className="p-2 rounded-lg bg-violet-500/10 group-hover:bg-violet-500/20 transition-colors">
+                                    <div className="flex items-center gap-3.5">
+                                        <div className="p-2.5 rounded-xl bg-[hsl(var(--accent-purple)/0.15)] border border-[hsl(var(--accent-purple)/0.3)] text-[hsl(var(--accent-purple))] group-hover:scale-105 transition-all duration-300 shadow-sm">
                                             <Activity
-                                                className="w-5 h-5 group-hover:rotate-12 transition-transform duration-200"
+                                                className="w-5 h-5 group-hover:rotate-12 transition-transform duration-300"
                                                 aria-hidden="true"
                                             />
                                         </div>
                                         <div className="flex flex-col items-start leading-tight">
-                                            <span className="font-bold text-sm tracking-wide">
+                                            <span className="font-bold font-display text-sm tracking-wide text-foreground">
                                                 View Linked Battle Scar
                                             </span>
-                                            <span className="text-[10px] opacity-60 font-mono uppercase">
-                                                Engineering Post-Mortem
+                                            <span className="hud-tag mt-1" style={{ color: "hsl(var(--accent-purple))", borderColor: "hsl(var(--accent-purple) / 0.3)", backgroundColor: "hsl(var(--accent-purple) / 0.1)" }}>
+                                                ENGINEERING POST-MORTEM
                                             </span>
                                         </div>
                                     </div>
 
-                                    <div className="flex items-center gap-2 opacity-50 group-hover:opacity-100 group-hover:translate-x-1 transition-all">
-                                        <span className="text-[10px] font-bold uppercase hidden sm:inline">
+                                    <div className="flex items-center gap-2 text-[hsl(var(--accent-purple))] group-hover:translate-x-1 transition-all">
+                                        <span className="text-[10px] font-mono font-bold uppercase tracking-wider hidden sm:inline">
                                             Explore Case
                                         </span>
                                         <ChevronRight

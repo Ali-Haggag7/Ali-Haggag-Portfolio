@@ -25,6 +25,7 @@
   --color-card-foreground: hsl(var(--card-foreground));
 
   --font-sans: var(--font-outfit), var(--font-cairo), sans-serif;
+  --font-display: var(--font-display), var(--font-outfit), sans-serif;
 
   --radius-lg: var(--radius);
   --radius-md: calc(var(--radius) - 2px);
@@ -160,6 +161,14 @@
     --tl-accent-yellow: #eab308;
     --tl-accent-emerald: #10b981;
 
+    /* Evolution chapter accents */
+    --evo-accent-1: #a855f7;
+    --evo-accent-2: #3b82f6;
+    --evo-accent-3: #eab308;
+    --evo-accent-4: #06b6d4;
+    --evo-accent-5: #10b981;
+    --evo-accent-6: #f43f5e;
+
     /* Services category accents (filter bar + card badges) */
     --svc-accent-systems: #3b82f6;
     --svc-accent-realtime: #a855f7;
@@ -215,6 +224,32 @@
     /* Namespaced — avoids collision with third-party --gap / --duration */
     --marquee-gap: 1rem;
     --marquee-duration: 40s;
+
+    /* ── AliScript Playground — syntax token colors & accents (dark default) ── */
+    --ali-tok-keyword:    #60a5fa;
+    --ali-tok-command:    #34d399;
+    --ali-tok-sensor:     #a78bfa;
+    --ali-tok-mathfn:     #fbbf24;
+    --ali-tok-comment:    #64748b;
+    --ali-tok-string:     #fb923c;
+    --ali-tok-number:     #67e8f9;
+    --ali-tok-operator:   #94a3b8;
+    --ali-tok-ident:      #c8d6e8;
+    --ali-chip-keyword:   #60a5fa;
+    --ali-chip-sensor:    #a78bfa;
+    --ali-chip-mathfn:    #fbbf24;
+    --ali-chip-command:   #34d399;
+    --ali-chip-quota:     #fb923c;
+    --ali-chip-ast:       #67e8f9;
+    --ali-accent-src:     #94a3b8;
+    --ali-accent-lex:     #60a5fa;
+    --ali-accent-ast:     #a78bfa;
+    --ali-accent-tle:     #fb923c;
+    --ali-accent-sbx:     #34d399;
+    --ali-accent-det:     #fbbf24;
+    --ali-accent-shield:  #60a5fa;
+    --ali-accent-cpu:     #fb923c;
+    --ali-accent-flow:    #34d399;
   }
 
   /* Mirrors :root so next-themes works after hydration adds .dark */
@@ -293,6 +328,34 @@
     --heatmap-2: hsl(var(--accent-blue) / 0.5);
     --heatmap-3: hsl(var(--accent-blue) / 0.72);
     --heatmap-4: hsl(var(--accent-blue) / 1);
+
+    /* ── AliScript Playground — syntax token colors (dark) ── */
+    --ali-tok-keyword:    #60a5fa;
+    --ali-tok-command:    #34d399;
+    --ali-tok-sensor:     #a78bfa;
+    --ali-tok-mathfn:     #fbbf24;
+    --ali-tok-comment:    #64748b;
+    --ali-tok-string:     #fb923c;
+    --ali-tok-number:     #67e8f9;
+    --ali-tok-operator:   #94a3b8;
+    --ali-tok-ident:      #c8d6e8;
+    /* chip accent vars */
+    --ali-chip-keyword:   #60a5fa;
+    --ali-chip-sensor:    #a78bfa;
+    --ali-chip-mathfn:    #fbbf24;
+    --ali-chip-command:   #34d399;
+    --ali-chip-quota:     #fb923c;
+    --ali-chip-ast:       #67e8f9;
+    /* section element accents */
+    --ali-accent-src:     #94a3b8;
+    --ali-accent-lex:     #60a5fa;
+    --ali-accent-ast:     #a78bfa;
+    --ali-accent-tle:     #fb923c;
+    --ali-accent-sbx:     #34d399;
+    --ali-accent-det:     #fbbf24;
+    --ali-accent-shield:  #60a5fa;
+    --ali-accent-cpu:     #fb923c;
+    --ali-accent-flow:    #34d399;
   }
 
   /* Light — only active when next-themes adds .light class */
@@ -306,16 +369,16 @@
     --popover-foreground: 222.2 84% 4.9%;
     --primary: 222.2 47.4% 11.2%;
     --primary-foreground: 210 40% 98%;
-    --secondary: 210 40% 96.1%;
+    --secondary: 210 40% 94%;
     --secondary-foreground: 222.2 47.4% 11.2%;
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-    --accent: 210 40% 96.1%;
+    --muted: 210 40% 93.5%;
+    --muted-foreground: 215.4 25% 38%;
+    --accent: 210 40% 93.5%;
     --accent-foreground: 222.2 47.4% 11.2%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
+    --border: 214.3 25% 85%;
+    --input: 214.3 25% 85%;
     --ring: 222.2 84% 4.9%;
 
     /* HSL equivalents of accents for tailwind opacity / color utilities */
@@ -341,8 +404,8 @@
     --scar-critical: #dc2626;
     --scar-high: #ea580c;
     --scar-medium: #ca8a04;
-    --scar-code-bg: #0f172a;
-    --scar-code-fg: #e2e8f0;
+    --scar-code-bg: #f6f8fb;
+    --scar-code-fg: #1e293b;
     --scar-code-border: rgba(15, 23, 42, 0.12);
 
     --pill-frontend: var(--tl-accent-blue);
@@ -374,6 +437,34 @@
     --heatmap-2: hsl(var(--accent-blue) / 0.5);
     --heatmap-3: hsl(var(--accent-blue) / 0.72);
     --heatmap-4: hsl(var(--accent-blue) / 1);
+
+    /* ── AliScript Playground — syntax token colors (light) ── */
+    --ali-tok-keyword:    #2563eb;
+    --ali-tok-command:    #059669;
+    --ali-tok-sensor:     #7c3aed;
+    --ali-tok-mathfn:     #d97706;
+    --ali-tok-comment:    #64748b;
+    --ali-tok-string:     #ea580c;
+    --ali-tok-number:     #0284c7;
+    --ali-tok-operator:   #64748b;
+    --ali-tok-ident:      #0f172a;
+    /* chip accent vars */
+    --ali-chip-keyword:   #2563eb;
+    --ali-chip-sensor:    #7c3aed;
+    --ali-chip-mathfn:    #d97706;
+    --ali-chip-command:   #059669;
+    --ali-chip-quota:     #ea580c;
+    --ali-chip-ast:       #0284c7;
+    /* section element accents */
+    --ali-accent-src:     #64748b;
+    --ali-accent-lex:     #2563eb;
+    --ali-accent-ast:     #7c3aed;
+    --ali-accent-tle:     #ea580c;
+    --ali-accent-sbx:     #059669;
+    --ali-accent-det:     #d97706;
+    --ali-accent-shield:  #2563eb;
+    --ali-accent-cpu:     #ea580c;
+    --ali-accent-flow:    #059669;
   }
 
   html {
@@ -663,3 +754,202 @@ html.modal-open .fixed-right-compensate {
     animation: none !important;
   }
 }
+
+/* ==========================================================================
+   CYBERNETIC TACTICAL DESIGN SYSTEM UTILITIES
+   Bespoke, high-precision visual identity replacing generic AI card templates.
+   ========================================================================== */
+
+/* Bespoke Tactical Card Frame */
+.cyber-card {
+  position: relative;
+  background-color: hsl(var(--card) / 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid hsl(var(--border) / 0.6);
+  border-radius: var(--radius);
+  box-shadow: 0 8px 32px -8px rgba(0, 0, 0, 0.5), inset 0 1px 0 0 rgba(255, 255, 255, 0.08);
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.25s ease, box-shadow 0.25s ease;
+  will-change: transform;
+}
+
+.cyber-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, hsl(var(--accent) / 0.4), transparent);
+  pointer-events: none;
+}
+
+.cyber-card-interactive {
+  cursor: pointer;
+}
+
+.cyber-card-interactive:hover {
+  border-color: hsl(var(--accent) / 0.5);
+  box-shadow: 0 16px 48px -12px rgba(0, 0, 0, 0.7), 0 0 20px -4px hsl(var(--accent) / 0.25), inset 0 1px 0 0 rgba(255, 255, 255, 0.15);
+}
+
+/* Tactical Corner Reticle Markers */
+.tactical-corner-reticles {
+  position: relative;
+}
+
+.tactical-corner-reticles::before,
+.tactical-corner-reticles::after {
+  content: "";
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  pointer-events: none;
+  z-index: 20;
+}
+
+.tactical-corner-reticles::before {
+  top: 4px;
+  left: 4px;
+  border-top: 2px solid hsl(var(--accent) / 0.7);
+  border-left: 2px solid hsl(var(--accent) / 0.7);
+}
+
+.tactical-corner-reticles::after {
+  bottom: 4px;
+  right: 4px;
+  border-bottom: 2px solid hsl(var(--accent) / 0.7);
+  border-right: 2px solid hsl(var(--accent) / 0.7);
+}
+
+/* High-Contrast Technical HUD Header */
+.hud-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.25rem 0.625rem;
+  border-radius: 9999px;
+  font-family: var(--font-mono, monospace);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  background-color: hsl(var(--muted) / 0.6);
+  border: 1px solid hsl(var(--border) / 0.8);
+  color: hsl(var(--foreground));
+}
+
+/* Segmented LED Metric Gauge */
+.led-meter {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.led-segment {
+  height: 6px;
+  flex: 1;
+  border-radius: 1px;
+  background-color: hsl(var(--muted) / 0.8);
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.led-segment.active-emerald {
+  background-color: hsl(var(--accent-emerald, 142 76% 45%));
+  box-shadow: 0 0 6px hsl(var(--accent-emerald, 142 76% 45%) / 0.6);
+}
+
+.led-segment.active-purple {
+  background-color: hsl(var(--accent-purple, 270 76% 60%));
+  box-shadow: 0 0 6px hsl(var(--accent-purple, 270 76% 60%) / 0.6);
+}
+
+.led-segment.active-blue {
+  background-color: hsl(var(--accent-blue, 217 91% 60%));
+  box-shadow: 0 0 6px hsl(var(--accent-blue, 217 91% 60%) / 0.6);
+}
+
+/* ==========================================================================
+   EDITORIAL SECTION HEADER SYSTEM
+   Replaces the generic badge+gradient-title pattern across every section.
+   ========================================================================== */
+
+/* Section eyebrow — clean line-bracketed label */
+.section-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  font-family: var(--font-display), sans-serif;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: hsl(var(--muted-foreground));
+}
+
+.section-eyebrow::before,
+.section-eyebrow::after {
+  content: "";
+  display: block;
+  width: 1.5rem;
+  height: 1px;
+  background-color: hsl(var(--muted-foreground) / 0.4);
+  flex-shrink: 0;
+}
+
+/* Editorial section title — Space Grotesk display font */
+.section-title {
+  font-family: var(--font-display), sans-serif;
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: hsl(var(--foreground));
+}
+
+/* Accent word — single solid color, not rainbow gradient */
+.accent-word {
+  color: hsl(var(--accent-blue));
+}
+
+.accent-word-emerald {
+  color: hsl(var(--accent-emerald));
+}
+
+/* Thin full-width section divider */
+.section-rule {
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(90deg, hsl(var(--border) / 0.8) 0%, transparent 100%);
+  margin-bottom: 3rem;
+}
+
+/* Left-border metric card — replaces rounded bubble cards */
+.metric-card-rail {
+  position: relative;
+  padding: 1.25rem 1.25rem 1.25rem 1.5rem;
+  border-left: 2px solid hsl(var(--border) / 0.6);
+  transition: border-color 0.25s ease;
+}
+
+.metric-card-rail:hover {
+  border-left-color: hsl(var(--accent-blue) / 0.7);
+}
+
+/* Ecosystem Map Electric Line Flow Animation */
+@keyframes electricFlow {
+  0% {
+    stroke-dashoffset: 24;
+  }
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+.animate-electric-line {
+  stroke-dasharray: 8 16;
+  animation: electricFlow 0.35s linear infinite;
+  transition: stroke-width 0.25s ease, opacity 0.25s ease;
+  will-change: stroke-dashoffset;
+}
+

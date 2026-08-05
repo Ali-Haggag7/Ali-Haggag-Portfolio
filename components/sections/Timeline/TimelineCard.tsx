@@ -150,10 +150,9 @@ export const TimelineCard = memo(function TimelineCard({
                         : undefined
                 }
                 className={cn(
-                    "ml-20 md:ml-0 w-full md:w-[45%] rounded-2xl p-6 relative z-10",
+                    "ml-20 md:ml-0 w-full md:w-[45%] rounded-2xl p-6 relative z-10 cyber-card cyber-card-interactive tactical-corner-reticles",
                     hasDetails ? "cursor-pointer" : "cursor-default",
-                    "bg-card/80 border border-border shadow-sm transition-colors duration-300",
-                    "hover:shadow-xl hover:bg-card focus:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+                    "focus:outline-none focus-visible:ring-2 focus-visible:ring-ring",
                     item.hoverBorder,
                 )}
                 // Active card: subtle left-border highlight via CSS variable accent.
@@ -163,25 +162,29 @@ export const TimelineCard = memo(function TimelineCard({
                         : undefined
                 }
             >
-                <span className={cn(
-                    "text-sm font-mono font-bold tracking-wider px-3 py-1 rounded-full",
-                    "bg-background border border-border dark:border-white/5",
-                    item.color,
-                )}>
+                <span
+                    className="hud-tag"
+                    style={{
+                        color: item.accentVar,
+                        borderColor: `color-mix(in srgb, ${item.accentVar} 40%, transparent)`,
+                        backgroundColor: `color-mix(in srgb, ${item.accentVar} 10%, transparent)`,
+                    }}
+                >
+                    <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: item.accentVar }} />
                     {item.year}
                 </span>
 
-                <h3 className="text-2xl font-bold text-foreground mt-3 tracking-tight">
+                <h3 className="text-2xl font-bold font-display text-foreground mt-3 tracking-tight">
                     {item.title}
                 </h3>
 
-                <p className="mt-3 text-muted-foreground text-base leading-relaxed">
+                <p className="mt-3 text-muted-foreground text-sm leading-relaxed">
                     {item.description}
                 </p>
 
                 {hasDetails && (
                     <>
-                        <span className="mt-4 inline-flex min-h-[44px] items-center gap-1.5 text-sm font-semibold text-foreground/80">
+                        <span className="mt-4 inline-flex min-h-[44px] items-center gap-1.5 text-xs font-display font-semibold uppercase tracking-wider text-[hsl(var(--accent-blue))]">
                             {expanded ? "Hide milestones" : "View milestones"}
                             <ChevronDown
                                 className={cn(

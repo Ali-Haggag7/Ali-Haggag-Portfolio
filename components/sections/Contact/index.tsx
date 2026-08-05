@@ -111,16 +111,10 @@ export default function ContactSection({ statsPanel }: { statsPanel: React.React
 
                     <motion.h2
                         {...anim(fadeUpFar, { transition: { delay: 0.1 } })}
-                        className="text-4xl min-[380px]:text-5xl md:text-7xl font-extrabold text-foreground tracking-tighter mb-6 leading-[1.1]"
+                        className="section-title text-4xl min-[380px]:text-5xl md:text-7xl mb-6 leading-[1.1]"
                     >
                         Working <br />
-                        <span
-                            className="text-transparent bg-clip-text"
-                            style={{
-                                backgroundImage:
-                                    "linear-gradient(to right, var(--color-accent), var(--color-accent-secondary))",
-                            }}
-                        >
+                        <span className="accent-word">
                             Worldwide.
                         </span>
                     </motion.h2>

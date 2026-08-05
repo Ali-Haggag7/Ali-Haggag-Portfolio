@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Cairo, Outfit } from "next/font/google";
+import { Cairo, Outfit, Space_Grotesk } from "next/font/google";
 import { ThemeProvider } from "@/providers/theme-provider";
 import CustomEffects from "@/components/ui/custom-effects";
 import PwaRegister from "./PwaRegister";
@@ -7,6 +7,11 @@ import "./globals.css";
 
 const cairo = Cairo({ variable: "--font-cairo", subsets: ["arabic"] });
 const outfit = Outfit({ variable: "--font-outfit", subsets: ["latin"] });
+const spaceGrotesk = Space_Grotesk({
+  variable: "--font-display",
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700"],
+});
 
 export const metadata: Metadata = {
   title: "Ali Haggag | Full-Stack Developer",
@@ -41,7 +46,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
          * next-themes handles class toggling after hydration via ThemeProvider.
          */}
       </head>
-      <body className={`${cairo.variable} ${outfit.variable} antialiased`}>
+      <body className={`${cairo.variable} ${outfit.variable} ${spaceGrotesk.variable} antialiased`}>
         <ThemeProvider
           attribute="class"
           defaultTheme="dark"

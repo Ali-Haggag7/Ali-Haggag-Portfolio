@@ -72,14 +72,13 @@ export default function Timeline() {
             />
 
             <div className="container mx-auto px-4 md:px-6">
-                <div className="flex flex-col items-center mb-10 animate-fade-in">
-                    <h2 className="text-3xl md:text-5xl font-extrabold text-foreground tracking-tighter text-center">
+                <div className="flex flex-col items-center text-center mb-10 max-w-3xl mx-auto animate-fade-in">
+                    <p className="section-eyebrow mb-3">Work History</p>
+                    <h2 className="section-title text-4xl md:text-5xl mb-3">
                         My{" "}
-                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600">
-                            Journey
-                        </span>
+                        <span className="accent-word">Journey</span>
                     </h2>
-                    <p className="text-muted-foreground mt-4 text-center max-w-2xl text-lg">
+                    <p className="text-muted-foreground text-sm md:text-base leading-relaxed max-w-xl">
                         From writing my first line of code to architecting scalable systems.
                     </p>
                 </div>

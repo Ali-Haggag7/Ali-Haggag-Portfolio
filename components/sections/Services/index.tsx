@@ -5,6 +5,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { servicesData, type ServiceCategory } from "./services.data";
 import { ServiceCard } from "./ServiceCard";
+import { SecurityPostureCard } from "./SecurityPostureCard";
 
 type FilterValue = "all" | ServiceCategory;
 
@@ -45,22 +46,20 @@ export default function Services() {
     return (
         <section
             id="services"
-            className="py-24 relative overflow-hidden bg-background scroll-mt-10"
+            className="py-24 relative overflow-hidden bg-transparent scroll-mt-10"
         >
             {/* Decorative glow — extracted to a stable element, no inline style recalc */}
             <div className="services-glow" aria-hidden="true" />
 
             <div className="container mx-auto px-4 relative z-10">
-                <div className="text-center mb-12 max-w-3xl mx-auto animate-fade-in">
-                    <h2 className="text-4xl md:text-5xl font-extrabold text-foreground tracking-tighter mb-4">
+                <div className="flex flex-col items-center text-center mb-12 max-w-3xl mx-auto animate-fade-in">
+                    <p className="section-eyebrow mb-3">Technical Capabilities</p>
+                    <h2 className="section-title text-4xl md:text-5xl mb-3">
                         What I{" "}
-                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-cyan-500">
-                            Offer
-                        </span>
+                        <span className="accent-word">Offer</span>
                     </h2>
-                    <p className="text-muted-foreground mt-4 max-w-2xl mx-auto text-lg">
-                        Technical solutions designed to scale with your business needs.
-                        Turning complex ideas into elegant, high-performance applications.
+                    <p className="text-muted-foreground text-sm md:text-base leading-relaxed max-w-xl">
+                        Technical solutions designed to scale. Turning complex ideas into elegant, high-performance applications.
                     </p>
                 </div>
 
@@ -124,6 +123,9 @@ export default function Services() {
                         ))}
                     </AnimatePresence>
                 </div>
+
+                {/* 5-Layer Security Architecture Posture Card */}
+                <SecurityPostureCard />
             </div>
         </section>
     );

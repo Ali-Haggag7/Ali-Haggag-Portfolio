@@ -18,6 +18,7 @@ import {
     useState,
 } from "react";
 import { DOCK_ITEMS, DockItem, smoothScrollTo } from "./data";
+import { AudioSynthesizer } from "../AudioSynthesizer";
 
 // ─── Spring & animation configs ───────────────────────────────────────────────
 // Mutable object types — satisfies Framer Motion's internal SpringOptions.
@@ -33,8 +34,10 @@ const DIST_RANGE: [number, number, number] = [-150, 0, 150];
 // ─── FloatingDockDesktop ──────────────────────────────────────────────────────
 export const FloatingDockDesktop = memo(function FloatingDockDesktop({
     className,
+    onOpenLiveCv,
 }: {
     className?: string;
+    onOpenLiveCv?: () => void;
 }) {
     // MotionValue never triggers a React re-render — the perfect vehicle for
     // high-frequency mouse coordinates.
@@ -62,8 +65,11 @@ export const FloatingDockDesktop = memo(function FloatingDockDesktop({
             )}
         >
             {DOCK_ITEMS.map((item) => (
-                <IconContainer key={item.title} mouseX={mouseX} item={item} />
+                <IconContainer key={item.title} mouseX={mouseX} item={item} onOpenLiveCv={onOpenLiveCv} />
             ))}
+            <div className="flex items-center justify-center self-center pl-3 border-l border-border/40 h-10 my-auto">
+                <AudioSynthesizer />
+            </div>
         </motion.div>
     );
 });
@@ -74,11 +80,13 @@ export const FloatingDockDesktop = memo(function FloatingDockDesktop({
 const IconContainer = memo(function IconContainer({
     mouseX,
     item,
+    onOpenLiveCv,
 }: {
     mouseX: MotionValue<number>;
     item: DockItem;
+    onOpenLiveCv?: () => void;
 }) {
-    const { title, Icon, iconClassName, href, glowColor } = item;
+    const { title, Icon, iconClassName, href, glowColor, isModalTrigger } = item;
 
     // Cache bounding rect so the transform callback never calls
     // getBoundingClientRect() synchronously mid-frame (forced layout).
@@ -123,9 +131,14 @@ const IconContainer = memo(function IconContainer({
     // onClick is stable — smoothScrollTo is a module-level function.
     const handleClick = useCallback(
         (e: React.MouseEvent<HTMLAnchorElement>) => {
+            if (isModalTrigger) {
+                e.preventDefault();
+                onOpenLiveCv?.();
+                return;
+            }
             if (!isExternal) smoothScrollTo(e, href);
         },
-        [isExternal, href],
+        [isExternal, href, isModalTrigger, onOpenLiveCv],
     );
 
     // CSS custom properties for glow — computed once per glowColor change,

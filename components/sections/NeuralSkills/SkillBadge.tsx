@@ -23,12 +23,12 @@ export const SkillBadge = memo(function SkillBadge({
             onClick={onClick}
             aria-label={`View details for ${skill.name}`}
             className={cn(
-                "group relative flex items-center gap-2 px-3 py-2.5 rounded-xl",
-                "min-h-[48px] md:min-h-[44px] border border-border/50 bg-card/50",
-                "transition-all duration-200 ease-in-out",
-                "hover:bg-card hover:border-blue-500/50 md:hover:-translate-y-1.5 md:hover:shadow-xl hover:shadow-blue-500/10",
+                "group relative flex items-center gap-2 px-3 py-2.5 rounded-xl cyber-card cyber-card-interactive",
+                "min-h-[48px] md:min-h-[44px] border border-border/60 bg-card/60",
+                "transition-all duration-400 ease-[cubic-bezier(0.16,1,0.3,1)]",
+                "hover:bg-card hover:border-[hsl(var(--accent-blue)/0.5)] md:hover:-translate-y-1 md:hover:shadow-xl hover:shadow-[hsl(var(--accent-blue)/0.1)]",
                 "will-change-transform",
-                "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500",
+                "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--accent-blue))]",
                 "active:scale-95 cursor-pointer"
             )}
         >
@@ -67,7 +67,7 @@ export const SkillBadge = memo(function SkillBadge({
                 )}
             </div>
 
-            <span className="text-sm font-semibold text-muted-foreground group-hover:text-foreground transition-colors duration-200">
+            <span className="text-sm font-semibold font-display tracking-tight text-muted-foreground group-hover:text-foreground transition-colors duration-200">
                 {skill.name}
             </span>
 
@@ -75,7 +75,7 @@ export const SkillBadge = memo(function SkillBadge({
                 // motion-safe: respects prefers-reduced-motion — one class, no media query needed
                 <span
                     aria-label="Has battle scar"
-                    className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-background motion-safe:animate-pulse"
+                    className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-[hsl(var(--scar-critical))] rounded-full border-2 border-background motion-safe:animate-pulse"
                 />
             )}
         </button>

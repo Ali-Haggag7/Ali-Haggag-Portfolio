@@ -6,6 +6,8 @@ import { cn } from "@/lib/utils";
 import dynamic from "next/dynamic";
 import MagicButton from "./magic-button";
 import { useTerminal } from "./Terminal/useTerminal";
+import { CurrentlyBuildingTicker } from "./CurrentlyBuildingTicker";
+import { EasterEggController } from "./EasterEggController";
 
 // Dynamically import TerminalWindow to separate heavy command engine from initial bundle
 const TerminalWindow = dynamic(
@@ -109,21 +111,22 @@ export default function HeroSection() {
 
     return (
         <section
+            id="hero"
             ref={containerRef}
             aria-label="Hero Section Terminal"
-            className="relative flex min-h-[90vh] w-full flex-col items-center justify-center pt-24 pb-12 px-4 overflow-hidden bg-background"
+            className="relative flex min-h-[90vh] w-full flex-col items-center justify-center pt-24 pb-12 px-4 overflow-hidden bg-transparent"
         >
             {/* Animated Mesh Gradient Background */}
             <div className="absolute inset-0 overflow-hidden pointer-events-none -z-20 opacity-30 dark:opacity-40">
-                <div 
-                    className="absolute -top-1/4 -left-1/4 w-[80%] h-[80%] rounded-full blur-[40px] md:blur-[120px] mix-blend-screen animate-mesh-spin"
+                <div
+                    className="absolute top-0 left-0 w-[60%] h-[60%] rounded-full blur-[40px] md:blur-[100px] mix-blend-screen animate-mesh-spin"
                     style={{
                         background: "radial-gradient(circle, var(--tl-accent-blue) 0%, transparent 70%)",
                         animationDuration: "25s",
                     }}
                 />
-                <div 
-                    className="absolute -bottom-1/4 -right-1/4 w-[80%] h-[80%] rounded-full blur-[40px] md:blur-[120px] mix-blend-screen animate-mesh-spin"
+                <div
+                    className="absolute bottom-0 right-0 w-[60%] h-[60%] rounded-full blur-[40px] md:blur-[100px] mix-blend-screen animate-mesh-spin"
                     style={{
                         background: "radial-gradient(circle, var(--tl-accent-purple) 0%, transparent 70%)",
                         animationDuration: "35s",
@@ -161,6 +164,12 @@ export default function HeroSection() {
                 )}
                 style={{ background: "radial-gradient(circle, rgba(59,130,246,0.1) 0%, rgba(147,51,234,0.1) 50%, transparent 70%)" }}
             />
+
+            {/* EASTER EGG CONTROLLER */}
+            <EasterEggController />
+
+            {/* CURRENTLY BUILDING TICKER */}
+            <CurrentlyBuildingTicker />
 
             {/* SYSTEM ONLINE BADGE */}
             <div className={cn(

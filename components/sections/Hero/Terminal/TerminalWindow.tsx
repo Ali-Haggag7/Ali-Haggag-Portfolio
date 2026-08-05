@@ -101,7 +101,15 @@ const AVAILABLE_COMMANDS = [
     "neofetch",
     "contact",
     "sudo",
-    "clear"
+    "clear",
+    "experience",
+    "stats",
+    "scout",
+    "arena",
+    "stack",
+    "scars",
+    "aliscript",
+    "certs",
 ];
 
 function getLevenshteinDistance(s1: string, s2: string): number {
@@ -185,17 +193,127 @@ export const TerminalWindow = memo(function TerminalWindow({ terminal }: { termi
         switch (cmd) {
             case "help":
                 output = (
-                    <div className="text-gray-400 font-mono space-y-1">
+                    <div className="text-gray-400 font-mono space-y-1 text-xs md:text-sm">
                         <div>Available commands:</div>
                         <div><span className="text-yellow-300">whoami</span>       - Display identity card</div>
+                        <div><span className="text-yellow-300">experience</span>   - Show work history &amp; leadership roles</div>
+                        <div><span className="text-yellow-300">stats</span>        - Engineering metrics by the numbers</div>
+                        <div><span className="text-yellow-300">scout</span>        - Autonomous AI agent architecture</div>
+                        <div><span className="text-yellow-300">arena</span>        - Logic Arena flagship engine overview</div>
+                        <div><span className="text-yellow-300">aliscript</span>    - Custom DSL compiler specification</div>
                         <div><span className="text-yellow-300">skills</span>       - Show technical skills tree</div>
                         <div><span className="text-yellow-300">projects</span>     - List current projects</div>
+                        <div><span className="text-yellow-300">scars</span>        - Production incident autopsy reports</div>
+                        <div><span className="text-yellow-300">certs</span>        - Certifications &amp; diplomas</div>
                         <div><span className="text-yellow-300">cd &lt;project&gt;</span>  - Scroll to specific project section</div>
                         <div><span className="text-yellow-300">log</span>          - View engineering changelog</div>
                         <div><span className="text-yellow-300">neofetch</span>     - Show specifications and specs</div>
                         <div><span className="text-yellow-300">contact</span>      - Get contact coordinates</div>
                         <div><span className="text-yellow-300">sudo hire-me</span>  - Initialize recruiting protocol</div>
                         <div><span className="text-yellow-300">clear</span>        - Clear terminal screen</div>
+                    </div>
+                );
+                break;
+            case "experience":
+                output = (
+                    <div className="text-gray-300 font-mono space-y-3 text-xs md:text-sm">
+                        <div className="border-l-2 border-emerald-500/50 pl-3">
+                            <div className="text-emerald-400 font-bold">Frontend Lead | South Valley National University</div>
+                            <div className="text-gray-400">Field Training · Feb 2026 – Jun 2026</div>
+                            <div className="text-white mt-1">Led StudentHub campus platform frontend in an 8-person Agile team.</div>
+                            <div className="text-blue-300 text-xs mt-1">★ 500+ commits · 135+ PRs · 47 web screens built (React 18 + Vite + Tailwind)</div>
+                            <div className="text-purple-300 text-xs">★ Full EN/AR bilingual RTL · JWT role auth · 110+ REST endpoints integrated</div>
+                        </div>
+                        <div className="border-l-2 border-blue-500/50 pl-3">
+                            <div className="text-blue-400 font-bold">Backend Intern | Web Masters</div>
+                            <div className="text-gray-400">Remote, Cairo · Jul 2025 – Aug 2025</div>
+                            <div className="text-white mt-1">Engineered RESTful APIs for Blog Pro CMS &amp; URL Shortener (Node.js/Express/MongoDB).</div>
+                            <div className="text-emerald-300 text-xs mt-1">★ ~40% data sync latency reduction via Firebase Realtime DB</div>
+                            <div className="text-yellow-300 text-xs">★ ~30% query speedup via optimized MongoDB schemas &amp; Joi validation</div>
+                        </div>
+                    </div>
+                );
+                break;
+            case "stats":
+                output = (
+                    <div className="text-gray-300 font-mono space-y-1 text-xs md:text-sm">
+                        <div className="text-emerald-400 font-bold mb-1">=== ENGINEERING BY THE NUMBERS ===</div>
+                        <div><span className="text-yellow-300 font-bold">500+</span> Commits on StudentHub alone (135+ PRs merged)</div>
+                        <div><span className="text-yellow-300 font-bold">156+</span> Automated tests across Scout cognitive pipeline</div>
+                        <div><span className="text-yellow-300 font-bold">6</span> Production systems deployed (DigitalOcean, Vercel, Cloudflare)</div>
+                        <div><span className="text-yellow-300 font-bold">20 TPS</span> Server physics engine tick rate (Logic Arena)</div>
+                        <div><span className="text-yellow-300 font-bold">&lt;50ms</span> WebRTC P2P audio/video latency (Flurry)</div>
+                        <div><span className="text-yellow-300 font-bold">80%</span> WebSocket payload reduction via delta diffing</div>
+                        <div><span className="text-yellow-300 font-bold">30+</span> Production incidents debugged &amp; documented</div>
+                        <div><span className="text-yellow-300 font-bold">2,000</span> Ops/tick deterministic execution quota (AliScript)</div>
+                    </div>
+                );
+                break;
+            case "scout":
+                output = (
+                    <div className="text-gray-300 font-mono space-y-2 text-xs md:text-sm">
+                        <div className="text-purple-400 font-bold">[SCOUT v0.24] AI Autonomous Job-Application Agent (Graduation Project)</div>
+                        <div>Stack: NestJS 11 · Next.js 16 · Tauri v2 (Rust) · PostgreSQL · Redis/BullMQ · Playwright</div>
+                        <div className="text-blue-300">● Brain Loop: Observe → Reason → Plan → Act → Verify (worker_threads isolated)</div>
+                        <div className="text-emerald-300">● Ethical Guardrails: Final Click Rule, &quot;Never Lie&quot; claims verifier, no scraping/evasion</div>
+                        <div className="text-yellow-300">● Observability: 1-2 FPS browser streaming + real-time AI thought stream via Socket.io</div>
+                    </div>
+                );
+                break;
+            case "arena":
+                output = (
+                    <div className="text-gray-300 font-mono space-y-2 text-xs md:text-sm">
+                        <div className="text-emerald-400 font-bold">[LOGIC ARENA v3.6.5] Competitive Robot-Programming Platform</div>
+                        <div>Stack: Next.js 16 · NestJS 11 · React Three Fiber · Socket.io · Redis · DigitalOcean</div>
+                        <div className="text-purple-300">● Language: AliScript v2.4 custom DSL (Lexer → AST → Deterministic 2,000 ops quota)</div>
+                        <div className="text-blue-300">● Renderer: 20 TPS physics interpolated to 120 FPS render; pure Web Audio spatial sound</div>
+                        <div className="text-yellow-300">● Content: 8 game modes, 60 campaign levels, mobile drag-and-drop block compiler</div>
+                    </div>
+                );
+                break;
+            case "aliscript":
+                output = (
+                    <div className="text-gray-300 font-mono space-y-1 text-xs md:text-sm">
+                        <div className="text-yellow-300 font-bold">=== ALISCRIPT v2.4 SPECIFICATION ===</div>
+                        <div>Parser ......... Custom Lexer → AST Parser (No eval(), node-by-node AST)</div>
+                        <div>Quota .......... 2,000 ops/tick TLE limit (deterministic across any hardware)</div>
+                        <div>Features ....... WHILE / IF / FOR, user functions, state-machines, Swarm API</div>
+                        <div>Superpowers .... SHIELD, CLOAK, DASH, TELEPORT, MINE, TAUNT (energy &amp; cooldowns)</div>
+                        <div>Diagnostics .... Worker-thread semantic analyzer w/ Levenshtein autocorrect</div>
+                    </div>
+                );
+                break;
+            case "scars":
+                output = (
+                    <div className="text-gray-300 font-mono space-y-1 text-xs md:text-sm">
+                        <div className="text-red-400 font-bold">=== BATTLE SCARS (30+ RESOLVED INCIDENTS) ===</div>
+                        <div><span className="text-red-400">[CRITICAL]</span> Ghost Worker Uprising (Playwright worker_threads leak)</div>
+                        <div><span className="text-red-400">[CRITICAL]</span> Ghost Match Massacre (Physics loop unhook on disconnect)</div>
+                        <div><span className="text-red-400">[CRITICAL]</span> Ghost Robot Infestation (R3F InterpolationBuffer singleton)</div>
+                        <div><span className="text-yellow-300">[HIGH]</span>     Mobile Scroll Lag (3D recreate + backdrop-blur repaint)</div>
+                        <div><span className="text-yellow-300">[HIGH]</span>     VDOM Stuttering (Custom React.memo equality functions)</div>
+                        <div className="text-muted-foreground text-xs mt-1">Type &apos;cd projects&apos; or scroll to Battle Scars section for full autopsies.</div>
+                    </div>
+                );
+                break;
+            case "stack":
+                output = (
+                    <div className="text-gray-300 font-mono space-y-2 text-xs md:text-sm">
+                        <div><span className="text-blue-400 font-bold">Frontend:</span> Next.js 15/16, React 19, TypeScript, Tailwind CSS, Framer Motion, R3F</div>
+                        <div><span className="text-emerald-400 font-bold">Backend:</span> NestJS 11, Node.js, Express, PostgreSQL, MongoDB, Redis, Prisma</div>
+                        <div><span className="text-purple-400 font-bold">AI &amp; Real-Time:</span> Groq (Llama 3.3 70B), Playwright, Socket.io, WebRTC, Tauri v2</div>
+                        <div><span className="text-yellow-400 font-bold">DevOps &amp; Security:</span> Docker + Nginx, DigitalOcean, JWT HttpOnly, AES-256-GCM</div>
+                    </div>
+                );
+                break;
+            case "certs":
+                output = (
+                    <div className="text-gray-300 font-mono space-y-1 text-xs md:text-sm">
+                        <div className="text-emerald-400 font-bold">=== CERTIFICATIONS &amp; DIPLOMAS ===</div>
+                        <div>● Front-End Development Diploma (React.js) — Sef Academy</div>
+                        <div>● Back-End Development Training Program — Web Masters</div>
+                        <div>● Back-End Development Diploma (Node.js) — Sef Academy</div>
+                        <div>● The Web Frontend Learning Guide — Udemy</div>
                     </div>
                 );
                 break;

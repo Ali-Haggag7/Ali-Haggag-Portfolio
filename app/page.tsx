@@ -1,25 +1,38 @@
 import ClientShell from "@/components/layout/ClientShell";
 import HeroSection from "@/components/sections/Hero";
+import EvolutionArc from "@/components/sections/Evolution";
+import EngineeringMetrics from "@/components/sections/Metrics";
 import NeuralSkills from "@/components/sections/NeuralSkills";
 import ProjectsSection from "@/components/sections/Projects";
+import EcosystemMapSection from "@/components/sections/EcosystemMap";
+import ScoutBrainVisualizerSection from "@/components/sections/ScoutBrain";
+import AliScriptPlaygroundSection from "@/components/sections/AliScriptPlayground";
+import ArchitectureVisualizerSection from "@/components/sections/ArchitectureVisualizer";
 import BattleScars from "@/components/sections/BattleScars";
-import Timeline from "@/components/sections/Timeline";
 import Services from "@/components/sections/Services";
 import ContactSection from "@/components/sections/Contact";
 import { BattleScarsSkeleton } from "@/components/sections/BattleScars/Skeleton";
 import { GitHubStatsPanel } from "@/components/sections/Contact/GitHubStatsPanel";
+import { InteractiveTourGuide } from "@/components/tour/InteractiveTourGuide";
 import { Suspense } from "react";
 
 export default function Home() {
   return (
     <main className="flex min-h-screen flex-col items-center justify-center overflow-hidden relative">
       <HeroSection />
+      <EvolutionArc />
+      <EngineeringMetrics />
       <NeuralSkills />
-      <ProjectsSection />
+      <Suspense fallback={null}>
+        <ProjectsSection />
+      </Suspense>
+      <EcosystemMapSection />
+      <ScoutBrainVisualizerSection />
+      <AliScriptPlaygroundSection />
+      <ArchitectureVisualizerSection />
       <Suspense fallback={<BattleScarsSkeleton />}>
         <BattleScars />
       </Suspense>
-      <Timeline />
       <Services />
       <ContactSection
         statsPanel={
@@ -39,6 +52,7 @@ export default function Home() {
         }
       />
       <ClientShell />
+      <InteractiveTourGuide />
     </main>
   );
 }

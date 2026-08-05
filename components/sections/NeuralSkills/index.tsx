@@ -16,6 +16,8 @@ import {
 import { useStableMap } from "@/hooks/useStableMap";
 import { SkillBadge } from "./SkillBadge";
 import { SkillModal } from "./SkillModal";
+import { RadarChart } from "./RadarChart";
+import { CopyStackButton } from "./CopyStackButton";
 
 // Static reference — hoisted to module scope to avoid re-allocation
 const GLOW_STYLE = {
@@ -27,7 +29,7 @@ const categoryVariants: Variants = {
     visible: (i: number) => ({
         opacity: 1,
         y: 0,
-        transition: { duration: 0.5, delay: i * 0.06, ease: "easeOut" },
+        transition: { opacity: { duration: 0.5, delay: i * 0.06, ease: "easeOut" } },
     }),
 };
 
@@ -57,17 +59,17 @@ const SkillCategory = memo(function SkillCategory({
             variants={categoryVariants}
             initial={isSearching ? "visible" : "hidden"}
             whileInView={isSearching ? undefined : "visible"}
+            whileHover={{ y: -6 }}
+            transition={{ y: { duration: 0.25, ease: [0.16, 1, 0.3, 1] } }}
             viewport={{ once: true, margin: "-40px" }}
             custom={index}
             style={{ willChange: "transform, opacity" }}
             className={cn(
-                "group relative flex flex-col gap-5 border border-border/50 overflow-hidden",
-                "transition-[border-color,box-shadow] duration-300 w-full max-w-full",
-                // iOS Native glassmorphism on mobile, standard card on desktop
-                "bg-card/85 rounded-[24px] p-5 shadow-sm",
-                "md:bg-card/80 md:backdrop-blur-none md:rounded-3xl md:p-6 md:w-fit md:shadow-none",
+                "group relative flex flex-col gap-5 border border-slate-200/90 dark:border-border/60 overflow-hidden cyber-card cyber-card-interactive tactical-corner-reticles",
+                "w-full max-w-full bg-white/90 dark:bg-card/90 backdrop-blur-xl rounded-[24px] p-5 shadow-sm",
+                "md:rounded-3xl md:p-6 md:w-fit",
                 styles.border,
-                "md:hover:shadow-xl",
+                "hover:shadow-xl",
                 styles.shadow,
             )}
         >
@@ -178,20 +180,17 @@ export default function NeuralSkills() {
             />
 
             {/* ── Section Header ─────────────────────────────────── */}
-            <div className="text-center mb-10 px-4 animate-fade-in">
-                <div className="inline-flex items-center justify-center gap-2 mb-4">
-                    <span className="text-blue-500 font-mono text-sm uppercase tracking-widest font-bold flex items-center gap-2 bg-blue-500/10 px-4 py-1.5 rounded-full border border-blue-500/20">
-                        <Wrench className="w-4 h-4" aria-hidden="true" /> Technical Arsenal
-                    </span>
-                </div>
+            <div className="flex flex-col items-center text-center mb-10 px-4 animate-fade-in w-full max-w-3xl mx-auto">
+                <p className="section-eyebrow mb-3">Technical Arsenal</p>
                 <h2
                     id="skills-title"
-                    className="text-3xl md:text-5xl font-extrabold text-foreground tracking-tight mb-4"
+                    className="section-title text-4xl md:text-5xl mb-3"
                 >
-                    My Technology Stack
+                    My Technology{" "}
+                    <span className="accent-word">Stack</span>
                 </h2>
-                <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-                    A highly curated ecosystem of tools, frameworks, and languages I use to architect and deploy scalable, production-grade applications.
+                <p className="text-muted-foreground text-sm md:text-base leading-relaxed max-w-xl">
+                    A curated ecosystem of tools, frameworks, and languages I use to architect and deploy scalable, production-grade applications.
                 </p>
             </div>
 
@@ -234,6 +233,14 @@ export default function NeuralSkills() {
                     </dt>
                 </div>
             </dl>
+
+            {/* Technical Radar Chart & Copy Stack Controls */}
+            <div className="w-full my-8 space-y-6">
+                <div className="flex justify-center">
+                    <CopyStackButton />
+                </div>
+                <RadarChart />
+            </div>
 
             {/* ── Search Bar ─────────────────────────────────────── */}
             <div className="w-full max-w-md mb-10 px-2">

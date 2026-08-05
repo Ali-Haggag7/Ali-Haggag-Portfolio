@@ -13,12 +13,14 @@ export default function Reviews() {
     const secondRow = reviewsData.slice(reviewsData.length / 2);
 
     return (
-        <section className="relative flex w-full flex-col items-center justify-center overflow-hidden py-24 bg-background">
-            <div className="text-center mb-16 px-4 relative z-20">
-                <h2 className="text-4xl md:text-5xl font-extrabold text-foreground tracking-tighter mb-4">
-                    Client <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-cyan-500">Testimonials</span>
+        <section className="relative flex w-full flex-col items-center justify-center overflow-hidden py-24 bg-transparent">
+            <div className="mb-12 px-4 relative z-20">
+                <p className="section-eyebrow mb-4">Social Proof</p>
+                <h2 className="section-title text-4xl md:text-6xl mb-3">
+                    Client{" "}
+                    <span className="accent-word">Testimonials</span>
                 </h2>
-                <p className="text-muted-foreground mt-4 text-lg max-w-2xl mx-auto">
+                <p className="text-muted-foreground max-w-2xl text-sm md:text-base leading-relaxed">
                     Trusted by startups and businesses worldwide. Here's what they have to say.
                 </p>
             </div>
