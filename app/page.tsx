@@ -18,7 +18,7 @@ import { Suspense } from "react";
 
 export default function Home() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center overflow-hidden relative">
+    <main className="flex min-h-screen flex-col items-center justify-center relative overflow-x-hidden">
       <HeroSection />
       <EvolutionArc />
       <EngineeringMetrics />

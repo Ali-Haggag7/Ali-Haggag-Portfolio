@@ -33,7 +33,7 @@ export default function ScoutBrainVisualizerSection() {
     }, [isAutoLooping]);
 
     return (
-        <section id="scout-brain" className="relative w-full py-20 bg-transparent overflow-hidden">
+        <section id="scout-brain" className="relative w-full py-20 bg-transparent z-0">
             <div className="container mx-auto px-4 md:px-6">
                 {/* Section Header */}
                 <div className="flex flex-col items-center text-center mb-10 max-w-3xl mx-auto">

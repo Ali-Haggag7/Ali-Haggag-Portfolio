@@ -114,10 +114,10 @@ export default function HeroSection() {
             id="hero"
             ref={containerRef}
             aria-label="Hero Section Terminal"
-            className="relative flex min-h-[90vh] w-full flex-col items-center justify-center pt-24 pb-12 px-4 overflow-hidden bg-transparent"
+            className="relative flex min-h-[90vh] w-full flex-col items-center justify-center pt-24 pb-12 px-4 bg-transparent"
         >
             {/* Animated Mesh Gradient Background */}
-            <div className="absolute inset-0 overflow-hidden pointer-events-none -z-20 opacity-30 dark:opacity-40">
+            <div className="absolute inset-0 pointer-events-none -z-20 opacity-30 dark:opacity-40">
                 <div
                     className="absolute top-0 left-0 w-[60%] h-[60%] rounded-full blur-[40px] md:blur-[100px] mix-blend-screen animate-mesh-spin"
                     style={{
@@ -126,9 +126,9 @@ export default function HeroSection() {
                     }}
                 />
                 <div
-                    className="absolute bottom-0 right-0 w-[60%] h-[60%] rounded-full blur-[40px] md:blur-[100px] mix-blend-screen animate-mesh-spin"
+                    className="absolute bottom-0 right-0 w-[60%] h-[120%] rounded-full blur-[40px] md:blur-[100px] mix-blend-screen animate-mesh-spin"
                     style={{
-                        background: "radial-gradient(circle, var(--tl-accent-purple) 0%, transparent 70%)",
+                        background: "radial-gradient(ellipse, var(--tl-accent-purple) 0%, transparent 70%)",
                         animationDuration: "35s",
                         animationDelay: "-10s",
                         animationDirection: "reverse",

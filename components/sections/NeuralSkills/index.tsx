@@ -170,6 +170,7 @@ export default function NeuralSkills() {
 
     return (
         <section
+            id="skills"
             aria-labelledby="skills-title"
             className="relative flex w-full max-w-6xl flex-col items-center justify-center pt-24 pb-32 mx-auto px-4 md:px-8"
         >

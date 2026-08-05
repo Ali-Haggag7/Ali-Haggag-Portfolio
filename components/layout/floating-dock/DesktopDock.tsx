@@ -18,8 +18,6 @@ import {
     useState,
 } from "react";
 import { DOCK_ITEMS, DockItem, smoothScrollTo } from "./data";
-import { AudioSynthesizer } from "../AudioSynthesizer";
-
 // ─── Spring & animation configs ───────────────────────────────────────────────
 // Mutable object types — satisfies Framer Motion's internal SpringOptions.
 // Only the string literal "spring" needs `as const` for the discriminated union.
@@ -67,9 +65,6 @@ export const FloatingDockDesktop = memo(function FloatingDockDesktop({
             {DOCK_ITEMS.map((item) => (
                 <IconContainer key={item.title} mouseX={mouseX} item={item} onOpenLiveCv={onOpenLiveCv} />
             ))}
-            <div className="flex items-center justify-center self-center pl-3 border-l border-border/40 h-10 my-auto">
-                <AudioSynthesizer />
-            </div>
         </motion.div>
     );
 });
