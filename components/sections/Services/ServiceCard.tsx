@@ -93,6 +93,7 @@ export function ServiceCard({
             variants={cardVariants}
             initial="hidden"
             whileInView="visible"
+            whileHover={{ y: -6 }}
             custom={index}
             viewport={{ once: true, margin: "-50px" }}
             className="h-full"
@@ -105,9 +106,8 @@ export function ServiceCard({
                 tabIndex={0}
                 className={cn(
                     "group relative overflow-hidden h-full rounded-2xl cyber-card cyber-card-interactive tactical-corner-reticles p-7 focus:outline-none cursor-default",
-                    "transition-all duration-400 ease-[cubic-bezier(0.16,1,0.3,1)]",
-                    "hover:-translate-y-1.5 focus:-translate-y-1.5",
-                    "hover:border-[hsl(var(--accent-blue)/0.5)] focus:border-[hsl(var(--accent-blue)/0.5)]"
+                    "transition-[border-color,box-shadow] duration-300 ease-out",
+                    "hover:border-[hsl(var(--accent-blue)/0.6)] focus:border-[hsl(var(--accent-blue)/0.6)] hover:shadow-xl"
                 )}
             >
                 {/* Spotlight overlay — driven by motion values, zero re-renders */}
@@ -233,8 +233,8 @@ export function ServiceCard({
                     )}
                 </div>
 
-                {/* Accent line on bottom */}
-                <div className="absolute bottom-0 left-0 h-1 w-full origin-left scale-x-0 bg-gradient-to-r from-[hsl(var(--accent-blue))] to-[hsl(var(--accent-purple))] transition-transform duration-300 ease-out group-hover:scale-x-100 group-focus:scale-x-100 z-20" />
+                {/* Accent line on bottom — 100% flush at bottom edge with zero gap */}
+                <div className="absolute bottom-0 inset-x-0 h-1.5 origin-left scale-x-0 bg-gradient-to-r from-[hsl(var(--accent-blue))] to-[hsl(var(--accent-purple))] transition-transform duration-300 ease-out group-hover:scale-x-100 group-focus:scale-x-100 rounded-b-2xl z-30" />
             </div>
         </motion.div>
     );
