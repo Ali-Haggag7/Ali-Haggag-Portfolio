@@ -7,6 +7,8 @@ import type { TerminalState } from "./useTerminal";
 
 export type HistoryItem = { id: number; command: string; output: React.ReactNode };
 
+import { TerminalMascot } from "./TerminalMascot";
+
 const BootSequence = memo(function BootSequence({ step }: { step: number }) {
     return (
         <>
@@ -57,15 +59,18 @@ type TerminalInputProps = {
     onSubmit: (value: string) => void;
     playKeystroke: () => void;
     inputRef: React.RefObject<HTMLInputElement | null>;
+    onFocusChange?: (focused: boolean) => void;
+    onTyping?: () => void;
 };
 
-const TerminalInput = memo(function TerminalInput({ onSubmit, playKeystroke, inputRef }: TerminalInputProps) {
+const TerminalInput = memo(function TerminalInput({ onSubmit, playKeystroke, inputRef, onFocusChange, onTyping }: TerminalInputProps) {
     const [value, setValue] = useState("");
 
     const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
         setValue(e.target.value);
         playKeystroke();
-    }, [playKeystroke]);
+        onTyping?.();
+    }, [playKeystroke, onTyping]);
 
     const handleSubmit = useCallback((e: React.FormEvent) => {
         e.preventDefault();
@@ -81,6 +86,8 @@ const TerminalInput = memo(function TerminalInput({ onSubmit, playKeystroke, inp
                 type="text"
                 value={value}
                 onChange={handleChange}
+                onFocus={() => onFocusChange?.(true)}
+                onBlur={() => onFocusChange?.(false)}
                 aria-label="Terminal Command"
                 className="flex-1 bg-transparent border-none outline-none text-white font-mono placeholder:text-emerald-500/30 focus:ring-0 caret-[var(--live-dot)]"
                 placeholder="Type 'help' to see available commands..."
@@ -513,10 +520,22 @@ Status .......... Available`}
         terminal.playKeystroke();
     }, [terminal]);
 
+    const [isFocused, setIsFocused] = useState(false);
+    const [isTyping, setIsTyping] = useState(false);
+    const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+    const handleTyping = useCallback(() => {
+        setIsTyping(true);
+        if (typingTimeoutRef.current) clearTimeout(typingTimeoutRef.current);
+        typingTimeoutRef.current = setTimeout(() => {
+            setIsTyping(false);
+        }, 600);
+    }, []);
+
     const wrapperClasses = terminal.isFullScreen
         ? "fixed inset-0 z-[100] bg-[hsl(var(--terminal-bg-forced))] flex flex-col text-left m-0 rounded-none border-none terminal-scanlines"
         : cn(
-            "w-full max-w-3xl mx-auto rounded-xl border border-[hsl(var(--terminal-border-forced))] mb-8 text-left flex flex-col terminal-scanlines relative overflow-hidden terminal-glow-container",
+            "w-full max-w-3xl mx-auto rounded-xl border border-[hsl(var(--terminal-border-forced))] mb-8 text-left flex flex-col terminal-scanlines relative overflow-visible terminal-glow-container",
             "transition-[transform,opacity] duration-300 transform-gpu will-change-[transform,opacity]",
             terminal.isClosed
                 ? "scale-95 opacity-0 pointer-events-none"
@@ -531,6 +550,11 @@ Status .......... Available`}
 
     return (
         <article className={wrapperClasses} onClick={handleTerminalClick}>
+            {/* Interactive Cyber Mascot companion resting on top-right border */}
+            {!terminal.isFullScreen && !terminal.isClosed && !terminal.isMinimized && (
+                <TerminalMascot isFocused={isFocused} isTyping={isTyping} />
+            )}
+
             {/* Glassmorphism Background Layer (Separated to prevent Chrome box-shadow + backdrop-filter flicker bug) */}
             {!terminal.isFullScreen && (
                 <div 
@@ -539,7 +563,7 @@ Status .......... Available`}
                 />
             )}
 
-            <header className="flex items-center justify-between px-4 py-4 bg-[hsl(var(--terminal-bg-forced))] border-b border-[hsl(var(--terminal-border-forced))] shrink-0">
+            <header className="relative z-10 flex items-center justify-between px-4 py-4 bg-[hsl(var(--terminal-bg-forced))] border-b border-[hsl(var(--terminal-border-forced))] shrink-0">
                 <div className="flex gap-2">
                     <button
                         type="button"
@@ -605,6 +629,8 @@ Status .......... Available`}
                         onSubmit={handleCommand}
                         playKeystroke={terminal.playKeystroke}
                         inputRef={inputRef}
+                        onFocusChange={setIsFocused}
+                        onTyping={handleTyping}
                     />
                 )}
             </div>
