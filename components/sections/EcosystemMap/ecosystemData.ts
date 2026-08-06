@@ -18,21 +18,21 @@ export interface EcosystemEdge {
 
 export const ECOSYSTEM_NODES: readonly EcosystemNode[] = Object.freeze([
     // Project Star Nodes
-    { id: "logic-arena", label: "Logic Arena", type: "project", description: "Flagship robot-programming arena with custom AliScript DSL & 20 TPS physics", x: 25, y: 30, color: "#10b981", iconUrl: "/logic-arena-icon.png" },
-    { id: "scout", label: "Scout AI", type: "project", description: "Autonomous AI job-application agent with isolated worker_threads brain loop", x: 75, y: 30, color: "#a855f7" },
-    { id: "flurry", label: "Flurry", type: "project", description: "Real-time social super-app with WebRTC P2P calls & offline-first PWA sync", x: 15, y: 70, color: "#3b82f6", iconUrl: "/flurry-icon.ico" },
-    { id: "cs-arena", label: "CS Arena", type: "project", description: "Developer project ecosystem with 3-level cascading URL state classification", x: 85, y: 70, color: "#06b6d4" },
-    { id: "cybership", label: "Cybership API", type: "project", description: "Domain-Driven carrier API with Zod Anti-Corruption Layer", x: 50, y: 15, color: "#f97316" },
-    { id: "blog-pro", label: "Blog Pro", type: "project", description: "MERN CMS with 5-layer security pipeline and RBAC", x: 50, y: 85, color: "#eab308" },
+    { id: "logic-arena", label: "Logic Arena", type: "project", description: "Flagship robot-programming arena with custom AliScript DSL & 20 TPS physics", x: 24, y: 26, color: "#10b981", iconUrl: "/logic-arena-icon.png" },
+    { id: "scout", label: "Scout AI", type: "project", description: "Autonomous AI job-application agent with isolated worker_threads brain loop", x: 76, y: 26, color: "#a855f7" },
+    { id: "flurry", label: "Flurry", type: "project", description: "Real-time social super-app with WebRTC P2P calls & offline-first PWA sync", x: 14, y: 72, color: "#3b82f6", iconUrl: "/flurry-icon.ico" },
+    { id: "cs-arena", label: "CS Arena", type: "project", description: "Developer project ecosystem with 3-level cascading URL state classification", x: 86, y: 72, color: "#06b6d4" },
+    { id: "cybership", label: "Cybership API", type: "project", description: "Domain-Driven carrier API with Zod Anti-Corruption Layer", x: 50, y: 10, color: "#f97316" },
+    { id: "blog-pro", label: "Blog Pro", type: "project", description: "MERN CMS with 5-layer security pipeline and RBAC", x: 50, y: 90, color: "#eab308" },
 
     // Tech Cluster Constellation Hubs
-    { id: "tech-nestjs", label: "NestJS 11", type: "tech", x: 50, y: 32, color: "#e11d48", iconUrl: "/skills/nestjs.svg" },
-    { id: "tech-socketio", label: "Socket.io", type: "tech", x: 35, y: 50, color: "#000000", iconUrl: "/skills/socketio.svg", themeable: true },
-    { id: "tech-redis", label: "Redis", type: "tech", x: 65, y: 50, color: "#dc2626", iconUrl: "/skills/redis.svg" },
-    { id: "tech-webrtc", label: "WebRTC", type: "tech", x: 20, y: 50, color: "#2563eb", iconUrl: "/skills/webrtc.svg", themeable: true },
-    { id: "tech-nextjs", label: "Next.js 16", type: "tech", x: 50, y: 55, color: "#000000", iconUrl: "/skills/nextjs.svg", themeable: true },
-    { id: "tech-zod", label: "Zod", type: "tech", x: 65, y: 70, color: "#3b82f6", iconUrl: "/skills/zod.svg" },
-    { id: "tech-pwa", label: "PWA & SW", type: "tech", x: 35, y: 70, color: "#5b21b6", iconUrl: "/skills/pwa.svg" },
+    { id: "tech-nestjs", label: "NestJS 11", type: "tech", x: 50, y: 28, color: "#e11d48", iconUrl: "/skills/nestjs.svg" },
+    { id: "tech-socketio", label: "Socket.io", type: "tech", x: 35, y: 48, color: "#000000", iconUrl: "/skills/socketio.svg", themeable: true },
+    { id: "tech-redis", label: "Redis", type: "tech", x: 65, y: 48, color: "#dc2626", iconUrl: "/skills/redis.svg" },
+    { id: "tech-webrtc", label: "WebRTC", type: "tech", x: 18, y: 48, color: "#2563eb", iconUrl: "/skills/webrtc.svg", themeable: true },
+    { id: "tech-nextjs", label: "Next.js 16", type: "tech", x: 50, y: 52, color: "#000000", iconUrl: "/skills/nextjs.svg", themeable: true },
+    { id: "tech-zod", label: "Zod", type: "tech", x: 66, y: 72, color: "#3b82f6", iconUrl: "/skills/zod.svg" },
+    { id: "tech-pwa", label: "PWA & SW", type: "tech", x: 34, y: 72, color: "#5b21b6", iconUrl: "/skills/pwa.svg" },
 ]);
 
 export const ECOSYSTEM_EDGES: readonly EcosystemEdge[] = Object.freeze([

@@ -50,8 +50,18 @@ export const EcosystemMap = memo(function EcosystemMap() {
     const [selectedNodeId, setSelectedNodeId] = useState<string>("logic-arena");
     const [debouncedActiveId, setDebouncedActiveId] = useState<string>("logic-arena");
 
-    const width = 800;
-    const height = 450;
+    // SSR-safe mobile detection for dynamic SVG viewBox scaling
+    const [isMobile, setIsMobile] = useState(false);
+    useEffect(() => {
+        const mql = window.matchMedia("(max-width: 640px)");
+        const update = () => setIsMobile(mql.matches);
+        update();
+        mql.addEventListener("change", update);
+        return () => mql.removeEventListener("change", update);
+    }, []);
+
+    const width = isMobile ? 440 : 800;
+    const height = isMobile ? 620 : 450;
 
     // Instant active ID for high-frequency SVG canvas line highlights
     const activeId = hoveredNodeId || selectedNodeId;
@@ -99,10 +109,21 @@ export const EcosystemMap = memo(function EcosystemMap() {
     const ActiveProjectFallbackIcon = activeNode.type === "project" ? getProjectFallbackIcon(activeNode.id) : null;
     const ActiveTechFallbackIcon = activeNode.type === "tech" ? getTechFallbackIcon(activeNode.id) : null;
 
+    // Responsive node sizes
+    const projDim = isMobile ? 54 : 46;
+    const projHalf = projDim / 2;
+    const projImgDim = isMobile ? 48 : 42;
+    const projImgHalf = projImgDim / 2;
+    
+    const techDim = isMobile ? 34 : 26;
+    const techHalf = techDim / 2;
+    const techIconDim = isMobile ? 22 : 16;
+    const techIconHalf = techIconDim / 2;
+
     return (
         <div className="w-full max-w-5xl mx-auto space-y-6">
             {/* SVG Constellation Map Canvas Box */}
-            <div className="relative aspect-[16/9] w-full rounded-3xl border border-border/80 bg-card/90 backdrop-blur-xl cyber-card tactical-corner-reticles p-4 shadow-2xl overflow-hidden">
+            <div className="relative aspect-[3/4] sm:aspect-[16/9] w-full min-h-[500px] sm:min-h-0 rounded-3xl border border-border/80 bg-card/90 backdrop-blur-xl cyber-card tactical-corner-reticles p-3 sm:p-4 shadow-2xl overflow-hidden">
                 {/* Parallax background star dots (theme dynamic) */}
                 <div className="absolute inset-0 opacity-20 bg-[radial-gradient(hsl(var(--muted-foreground)/0.3)_1px,transparent_1px)] [background-size:16px_16px] pointer-events-none" />
 
@@ -110,7 +131,7 @@ export const EcosystemMap = memo(function EcosystemMap() {
                     <defs>
                         {/* ClipPath for iOS Squircle App Icons */}
                         <clipPath id="project-squircle-clip">
-                            <rect x="-21" y="-21" width="42" height="42" rx="11" />
+                            <rect x={-projImgHalf} y={-projImgHalf} width={projImgDim} height={projImgDim} rx={isMobile ? 13 : 11} />
                         </clipPath>
 
                         {/* Full-Canvas Tactical Dot Matrix Pattern */}
@@ -194,7 +215,7 @@ export const EcosystemMap = memo(function EcosystemMap() {
                                     x2={to.x}
                                     y2={to.y}
                                     stroke={wireColor}
-                                    strokeWidth={isHighlighted ? 3.5 : 1}
+                                    strokeWidth={isHighlighted ? (isMobile ? 4.5 : 3.5) : (isMobile ? 1.5 : 1)}
                                     strokeOpacity={isHighlighted ? 0.35 : 0.3}
                                     strokeLinecap="round"
                                     className="transition-all duration-300 ease-out"
@@ -207,7 +228,7 @@ export const EcosystemMap = memo(function EcosystemMap() {
                                     x2={to.x}
                                     y2={to.y}
                                     stroke={sourceNode.color}
-                                    strokeWidth={1.5}
+                                    strokeWidth={isMobile ? 2 : 1.5}
                                     strokeDasharray="4 12"
                                     strokeLinecap="round"
                                     className="ambient-wire-stream transition-opacity duration-300"
@@ -223,7 +244,7 @@ export const EcosystemMap = memo(function EcosystemMap() {
                                     x2={to.x}
                                     y2={to.y}
                                     stroke={wireColor}
-                                    strokeWidth={3}
+                                    strokeWidth={isMobile ? 4 : 3}
                                     strokeDasharray="12 12"
                                     strokeLinecap="round"
                                     filter={isHighlighted ? "url(#wire-plasma-glow)" : undefined}
@@ -240,7 +261,7 @@ export const EcosystemMap = memo(function EcosystemMap() {
                                     x2={to.x}
                                     y2={to.y}
                                     stroke="#ffffff"
-                                    strokeWidth={1.5}
+                                    strokeWidth={isMobile ? 2 : 1.5}
                                     strokeDasharray="5 15"
                                     strokeLinecap="round"
                                     className="spark-core-stream transition-all duration-300 ease-out"
@@ -276,27 +297,27 @@ export const EcosystemMap = memo(function EcosystemMap() {
                                 {/* Selection Glow Pulse Ring */}
                                 {isSelected && (
                                     <rect
-                                        x={isProject ? "-29" : "-17"}
-                                        y={isProject ? "-29" : "-17"}
-                                        width={isProject ? "58" : "34"}
-                                        height={isProject ? "58" : "34"}
-                                        rx={isProject ? "16" : "10"}
+                                        x={isProject ? -(projHalf + 6) : -(techHalf + 5)}
+                                        y={isProject ? -(projHalf + 6) : -(techHalf + 5)}
+                                        width={isProject ? projDim + 12 : techDim + 10}
+                                        height={isProject ? projDim + 12 : techDim + 10}
+                                        rx={isProject ? 18 : 12}
                                         fill="none"
                                         stroke={node.color}
-                                        strokeWidth="2"
+                                        strokeWidth="2.5"
                                         className="animate-ping opacity-60"
                                     />
                                 )}
 
                                 {isProject ? (
-                                    /* ── PROJECT NODE: Large iOS Squircle App Icon (46x46 rx=13) ── */
+                                    /* ── PROJECT NODE: Large iOS Squircle App Icon ── */
                                     <>
                                         <rect
-                                            x="-23"
-                                            y="-23"
-                                            width="46"
-                                            height="46"
-                                            rx="13"
+                                            x={-projHalf}
+                                            y={-projHalf}
+                                            width={projDim}
+                                            height={projDim}
+                                            rx={isMobile ? 15 : 13}
                                             fill="hsl(var(--card))"
                                             stroke={isConnected ? node.color : "hsl(var(--border))"}
                                             strokeWidth={isConnected ? "3" : "1.5"}
@@ -305,44 +326,44 @@ export const EcosystemMap = memo(function EcosystemMap() {
                                         {node.iconUrl ? (
                                             <image
                                                 href={node.iconUrl}
-                                                x="-21"
-                                                y="-21"
-                                                width="42"
-                                                height="42"
+                                                x={-projImgHalf}
+                                                y={-projImgHalf}
+                                                width={projImgDim}
+                                                height={projImgDim}
                                                 preserveAspectRatio="xMidYMid slice"
                                                 clipPath="url(#project-squircle-clip)"
                                                 className="pointer-events-none transition-transform group-hover:scale-110"
                                             />
                                         ) : FallbackProjectIcon ? (
-                                            <foreignObject x="-13" y="-13" width="26" height="26" className="pointer-events-none">
+                                            <foreignObject x={-projImgHalf / 1.6} y={-projImgHalf / 1.6} width={projImgDim / 1.3} height={projImgDim / 1.3} className="pointer-events-none">
                                                 <div className="w-full h-full flex items-center justify-center">
                                                     <FallbackProjectIcon
-                                                        className="w-6 h-6 transition-transform group-hover:scale-110"
+                                                        className="w-7 h-7 transition-transform group-hover:scale-110"
                                                         style={{ color: node.color }}
                                                     />
                                                 </div>
                                             </foreignObject>
                                         ) : (
-                                            <circle r="8" fill={node.color} className={cn("transition-transform", isConnected && "animate-pulse")} />
+                                            <circle r="10" fill={node.color} className={cn("transition-transform", isConnected && "animate-pulse")} />
                                         )}
                                     </>
                                 ) : (
-                                    /* ── TECH NODE: Compact Tech Skill Badge (26x26 rx=7) ── */
+                                    /* ── TECH NODE: Compact Tech Skill Badge ── */
                                     <>
                                         <rect
-                                            x="-13"
-                                            y="-13"
-                                            width="26"
-                                            height="26"
-                                            rx="7"
+                                            x={-techHalf}
+                                            y={-techHalf}
+                                            width={techDim}
+                                            height={techDim}
+                                            rx={isMobile ? 10 : 7}
                                             fill="hsl(var(--card))"
                                             stroke={isConnected ? node.color : "hsl(var(--border))"}
-                                            strokeWidth={isConnected ? "2" : "1"}
+                                            strokeWidth={isConnected ? "2.5" : "1"}
                                             className="transition-all duration-300 group-hover:scale-125 shadow-md"
                                         />
                                         {node.iconUrl ? (
                                             node.themeable ? (
-                                                <foreignObject x="-9" y="-9" width="18" height="18" className="pointer-events-none">
+                                                <foreignObject x={-techIconHalf} y={-techIconHalf} width={techIconDim} height={techIconDim} className="pointer-events-none">
                                                     <div
                                                         className="w-full h-full bg-foreground opacity-80 group-hover:opacity-100 transition-opacity"
                                                         style={{
@@ -357,19 +378,19 @@ export const EcosystemMap = memo(function EcosystemMap() {
                                             ) : (
                                                 <image
                                                     href={node.iconUrl}
-                                                    x="-8"
-                                                    y="-8"
-                                                    width="16"
-                                                    height="16"
+                                                    x={-techIconHalf}
+                                                    y={-techIconHalf}
+                                                    width={techIconDim}
+                                                    height={techIconDim}
                                                     preserveAspectRatio="xMidYMid meet"
                                                     className="pointer-events-none transition-transform group-hover:scale-110"
                                                 />
                                             )
                                         ) : FallbackTechIcon ? (
-                                            <foreignObject x="-8" y="-8" width="16" height="16" className="pointer-events-none">
+                                            <foreignObject x={-techIconHalf} y={-techIconHalf} width={techIconDim} height={techIconDim} className="pointer-events-none">
                                                 <div className="w-full h-full flex items-center justify-center">
                                                     <FallbackTechIcon
-                                                        className="w-3.5 h-3.5 transition-transform group-hover:scale-110"
+                                                        className="w-4 h-4 transition-transform group-hover:scale-110"
                                                         style={{ color: node.color }}
                                                     />
                                                 </div>
@@ -380,10 +401,10 @@ export const EcosystemMap = memo(function EcosystemMap() {
 
                                 {/* Node Title Label */}
                                 <text
-                                    y={isProject ? "38" : "30"}
+                                    y={isProject ? (isMobile ? "44" : "38") : (isMobile ? "32" : "30")}
                                     textAnchor="middle"
                                     fill={isConnected ? "hsl(var(--foreground))" : "hsl(var(--muted-foreground))"}
-                                    fontSize={isProject ? "11" : "10"}
+                                    fontSize={isProject ? (isMobile ? "13" : "11") : (isMobile ? "11" : "10")}
                                     fontWeight={isProject ? "bold" : "600"}
                                     fontFamily="var(--font-display), sans-serif"
                                     className="select-none transition-colors group-hover:fill-[hsl(var(--foreground))]"
