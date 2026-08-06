@@ -223,13 +223,13 @@ export default function BattleScars() {
             </dl>
 
             {/* View Mode Switcher */}
-            <div className="flex justify-center mb-6">
-                <div className="inline-flex items-center gap-1 rounded-full border border-slate-200 dark:border-border/80 bg-slate-100/90 dark:bg-card p-1.5 shadow-sm">
+            <div className="flex justify-center mb-6 overflow-x-auto no-scrollbar py-1 w-full px-2">
+                <div className="inline-flex items-center gap-1 rounded-full border border-slate-200 dark:border-border/80 bg-slate-100/90 dark:bg-card p-1.5 shadow-sm shrink-0">
                     <button
                         type="button"
                         onClick={() => setViewMode("grid")}
                         className={cn(
-                            "flex min-h-[44px] items-center gap-2 px-4 rounded-full text-xs font-mono font-bold transition-colors cursor-pointer",
+                            "flex min-h-[44px] shrink-0 items-center gap-2 px-4 rounded-full text-xs font-mono font-bold transition-colors cursor-pointer",
                             viewMode === "grid"
                                 ? "bg-blue-500/20 text-blue-600 dark:text-blue-400 border border-blue-500/40"
                                 : "text-slate-600 dark:text-muted-foreground hover:text-foreground"
@@ -242,7 +242,7 @@ export default function BattleScars() {
                         type="button"
                         onClick={() => setViewMode("timeline")}
                         className={cn(
-                            "flex min-h-[44px] items-center gap-2 px-4 rounded-full text-xs font-mono font-bold transition-colors cursor-pointer",
+                            "flex min-h-[44px] shrink-0 items-center gap-2 px-4 rounded-full text-xs font-mono font-bold transition-colors cursor-pointer",
                             viewMode === "timeline"
                                 ? "bg-purple-500/20 text-purple-600 dark:text-purple-400 border border-purple-500/40"
                                 : "text-slate-600 dark:text-muted-foreground hover:text-foreground"

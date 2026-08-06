@@ -18,7 +18,7 @@ export const CategoryFilter = memo(function CategoryFilter({ categories, activeC
         <div 
             role="group" 
             aria-label="Filter by category" 
-            className="flex overflow-x-auto items-center md:justify-center gap-2 mb-10 pb-2 -mx-4 px-4 md:mx-0 md:px-0 snap-x [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
+            className="flex overflow-x-auto no-scrollbar items-center md:justify-center gap-2 mb-10 py-1 -mx-4 px-4 md:mx-0 md:px-0 snap-x"
         >
             {categories.map((category) => {
                 const isActive = activeCategory === category;

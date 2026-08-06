@@ -78,14 +78,14 @@ export default function EvolutionArc() {
                 {/* Quick-nav buttons */}
                 <nav
                     aria-label="Jump to chapter"
-                    className="mb-16 flex flex-wrap items-center justify-center gap-2 sm:gap-3"
+                    className="mb-16 flex items-center justify-start sm:justify-center gap-2 sm:gap-3 overflow-x-auto no-scrollbar py-1 w-full px-2"
                 >
                     {anchors.map(({ title, id, year }) => (
                         <button
                             key={id}
                             type="button"
                             onClick={() => jumpTo(id)}
-                            className="inline-flex min-h-[44px] items-center gap-2 rounded-full border border-border bg-card px-4 text-xs font-mono font-semibold text-muted-foreground transition-colors duration-200 hover:text-foreground hover:border-foreground/30 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring cursor-pointer"
+                            className="inline-flex min-h-[44px] shrink-0 items-center gap-2 rounded-full border border-border bg-card px-4 text-xs font-mono font-semibold text-muted-foreground transition-colors duration-200 hover:text-foreground hover:border-foreground/30 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring cursor-pointer"
                         >
                             <span className="opacity-60">{year}</span>
                             <span>{title}</span>

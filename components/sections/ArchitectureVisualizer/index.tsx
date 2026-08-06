@@ -48,16 +48,16 @@ export default function ArchitectureVisualizerSection() {
                     </p>
 
                     {/* System Map Switcher Tabs */}
-                    <div className="flex flex-wrap items-center justify-center gap-2 mt-8">
+                    <div className="flex items-center justify-start sm:justify-center gap-2 mt-8 overflow-x-auto no-scrollbar py-1 w-full px-2">
                         {ARCHITECTURE_MAPS.map((map) => (
                             <button
                                 key={map.id}
                                 type="button"
                                 onClick={() => handleMapChange(map.id)}
                                 className={cn(
-                                    "flex min-h-[44px] items-center gap-2 px-5 rounded-full text-xs font-mono font-bold transition-all cursor-pointer",
+                                    "flex min-h-[44px] shrink-0 items-center gap-2 px-5 rounded-full text-xs font-mono font-bold transition-all cursor-pointer",
                                     selectedMapId === map.id
-                                        ? "bg-blue-500/20 text-blue-400 border border-blue-500/40 shadow-[0_0_15px_rgba(59,130,246,0.3)]"
+                                        ? "bg-blue-500/20 text-blue-600 dark:text-blue-400 border border-blue-500/40 shadow-[0_0_15px_rgba(59,130,246,0.3)]"
                                         : "bg-card border border-border text-muted-foreground hover:text-foreground"
                                 )}
                             >

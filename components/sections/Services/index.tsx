@@ -67,7 +67,7 @@ export default function Services() {
                 <div
                     role="group"
                     aria-label="Filter services by category"
-                    className="mb-12 flex flex-wrap items-center justify-center gap-2 sm:gap-3"
+                    className="mb-12 flex items-center justify-start sm:justify-center gap-2 sm:gap-3 overflow-x-auto no-scrollbar py-1 w-full px-2"
                 >
                     {FILTERS.map((f) => {
                         const active = filter === f.value;
@@ -78,7 +78,7 @@ export default function Services() {
                                 onClick={() => setFilter(f.value)}
                                 aria-pressed={active}
                                 className={cn(
-                                    "inline-flex min-h-[44px] items-center rounded-full border px-4 text-sm font-semibold",
+                                    "inline-flex min-h-[44px] shrink-0 items-center rounded-full border px-4 text-sm font-semibold",
                                     "transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring cursor-pointer",
                                     !active &&
                                         "border-border bg-card text-muted-foreground hover:text-foreground hover:border-foreground/30"

@@ -58,15 +58,15 @@ export const InteractiveTourGuide = memo(function InteractiveTourGuide() {
 
     return (
         <>
-            {/* Floating Tour Trigger Button — floats cleanly above Chatbot on mobile (bottom-[80px] left-4) and on left side on desktop */}
+            {/* Floating Tour Trigger Button — desktop only to keep mobile screen 100% unobscured */}
             <button
                 type="button"
                 onClick={() => setIsModalOpen(true)}
                 title="Start Guided AI Portfolio Tour"
                 aria-label="Start Guided AI Portfolio Tour"
                 className={cn(
-                    "fixed bottom-[80px] md:bottom-6 left-4 md:left-6 z-45 inline-flex min-h-[44px] items-center gap-2 rounded-full border border-purple-500/40 dark:border-[hsl(var(--accent-purple)/0.4)]",
-                    "bg-background/95 dark:bg-card/95 backdrop-blur-xl px-3.5 py-2.5 md:px-4 text-[11px] md:text-xs font-display font-bold uppercase tracking-wider",
+                    "hidden md:inline-flex fixed bottom-6 left-6 z-45 items-center gap-2 rounded-full border border-purple-500/40 dark:border-[hsl(var(--accent-purple)/0.4)]",
+                    "bg-background/95 dark:bg-card/95 backdrop-blur-xl px-4 py-2.5 text-xs font-display font-bold uppercase tracking-wider",
                     "text-purple-600 dark:text-[hsl(var(--accent-purple))] shadow-xl shadow-purple-500/10 dark:shadow-[0_0_20px_rgba(168,85,247,0.25)]",
                     "hover:bg-purple-500/10 dark:hover:bg-[hsl(var(--accent-purple)/0.15)] hover:border-purple-500/60 dark:hover:border-[hsl(var(--accent-purple)/0.6)] hover:scale-105 active:scale-95",
                     "transition-all duration-300 cursor-pointer animate-in fade-in focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"

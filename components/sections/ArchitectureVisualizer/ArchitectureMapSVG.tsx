@@ -1,6 +1,6 @@
 "use client";
 
-import { memo } from "react";
+import { memo, useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import type { ArchitectureMap, SystemNode } from "./architectureData";
 import { Server, Monitor, Database, Cpu, HardDrive, ShieldCheck } from "lucide-react";
@@ -34,8 +34,18 @@ export const ArchitectureMapSVG = memo(function ArchitectureMapSVG({
     selectedNodeId,
     onSelectNode,
 }: ArchitectureMapSVGProps) {
-    const width = 800;
-    const height = 400;
+    // SSR-safe mobile detection for dynamic SVG viewBox scaling
+    const [isMobile, setIsMobile] = useState(false);
+    useEffect(() => {
+        const mql = window.matchMedia("(max-width: 640px)");
+        const update = () => setIsMobile(mql.matches);
+        update();
+        mql.addEventListener("change", update);
+        return () => mql.removeEventListener("change", update);
+    }, []);
+
+    const width = isMobile ? 440 : 800;
+    const height = isMobile ? 560 : 400;
 
     // Helper: convert percentage coords to SVG pixel coords
     const getCoords = (node: SystemNode) => ({
@@ -44,12 +54,12 @@ export const ArchitectureMapSVG = memo(function ArchitectureMapSVG({
     });
 
     return (
-        <div className="w-full overflow-x-auto py-2">
-            <div className="min-w-[700px] relative aspect-[2/1] rounded-2xl border border-border/80 bg-card/80 backdrop-blur-sm p-4 shadow-inner overflow-hidden">
+        <div className="w-full py-2">
+            <div className="w-full relative h-[460px] sm:h-auto sm:aspect-[2/1] rounded-2xl border border-border/80 bg-card/80 backdrop-blur-sm p-2 sm:p-4 shadow-inner overflow-hidden">
                 {/* Dotted Canvas Background Grid */}
                 <div className="absolute inset-0 opacity-25 bg-[radial-gradient(hsl(var(--muted-foreground)/0.3)_1px,transparent_1px)] [background-size:18px_18px] pointer-events-none" />
 
-                <svg viewBox={`0 0 ${width} ${height}`} className="w-full h-full relative z-10">
+                <svg viewBox={`0 0 ${width} ${height}`} preserveAspectRatio="xMidYMid meet" className="w-full h-full relative z-10">
                     <defs>
                         {/* Glow filters per color */}
                         {Object.entries(CATEGORY_COLORS).map(([cat, color]) => (
@@ -115,7 +125,7 @@ export const ArchitectureMapSVG = memo(function ArchitectureMapSVG({
                                 {/* Outer Selection Glow Ring */}
                                 {isSelected && (
                                     <circle
-                                        r="36"
+                                        r={isMobile ? "40" : "36"}
                                         fill="none"
                                         stroke={color}
                                         strokeWidth="2"
@@ -125,7 +135,7 @@ export const ArchitectureMapSVG = memo(function ArchitectureMapSVG({
 
                                 {/* Outer Node Circle */}
                                 <circle
-                                    r="26"
+                                    r={isMobile ? "28" : "26"}
                                     fill="hsl(var(--card))"
                                     stroke={isSelected ? color : "hsl(var(--border))"}
                                     strokeWidth={isSelected ? "3" : "1.5"}
@@ -134,15 +144,15 @@ export const ArchitectureMapSVG = memo(function ArchitectureMapSVG({
                                 />
 
                                 {/* Icon placeholder in center */}
-                                <g transform="translate(-10, -10)">
-                                    <Icon size={20} color={color} />
+                                <g transform={isMobile ? "translate(-12, -12)" : "translate(-10, -10)"}>
+                                    <Icon size={isMobile ? 24 : 20} color={color} />
                                 </g>
 
                                 {/* Node Label Text */}
                                 <text
-                                    y="45"
+                                    y={isMobile ? "48" : "45"}
                                     textAnchor="middle"
-                                    fontSize="11"
+                                    fontSize={isMobile ? "12" : "11"}
                                     fontFamily="monospace"
                                     className={cn(
                                         "select-none transition-colors font-mono",

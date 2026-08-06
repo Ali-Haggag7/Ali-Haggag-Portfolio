@@ -978,4 +978,13 @@ html.modal-open .fixed-right-compensate {
   transition: stroke-width 0.25s ease, opacity 0.25s ease;
   will-change: stroke-dashoffset;
 }
+
+/* Hide scrollbars for clean horizontal tab strips */
+.no-scrollbar::-webkit-scrollbar {
+  display: none !important;
+}
+.no-scrollbar {
+  -ms-overflow-style: none !important;  /* IE and Edge */
+  scrollbar-width: none !important;  /* Firefox */
+}
 

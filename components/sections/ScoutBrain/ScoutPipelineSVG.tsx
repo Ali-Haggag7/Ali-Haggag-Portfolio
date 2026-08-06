@@ -26,20 +26,20 @@ export const ScoutPipelineSVG = memo(function ScoutPipelineSVG({
     const progressPercent = activeIndex >= 0 ? (activeIndex / (COGNITIVE_STEPS.length - 1)) * 100 : 0;
 
     return (
-        <div className="w-full overflow-x-auto py-4">
-            <div className="min-w-[640px] flex items-start justify-between relative px-6 pt-1 pb-2">
-                {/* Connecting Track Line - Positioned with tight 4px gap below 56px icon boxes */}
+        <div className="w-full py-3">
+            <div className="w-full flex items-start justify-between relative px-1 sm:px-6 pt-1 pb-2">
+                {/* Connecting Track Line */}
                 <div
                     aria-hidden="true"
-                    className="absolute top-[76px] left-12 right-12 h-1 bg-border/60 -translate-y-1/2 -z-10 rounded-full"
+                    className="absolute top-7 sm:top-9 left-6 right-6 sm:left-12 sm:right-12 h-1 bg-border/60 -translate-y-1/2 -z-10 rounded-full"
                 />
 
                 {/* Active Progress Beam */}
                 <div
                     aria-hidden="true"
-                    className="absolute top-[70px] left-12 h-1 bg-gradient-to-r from-purple-600 via-purple-500 to-indigo-400 -translate-y-1/2 -z-10 rounded-full transition-all duration-500 ease-out shadow-[0_0_10px_rgba(168,85,247,0.6)]"
+                    className="absolute top-7 sm:top-9 left-6 sm:left-12 h-1 bg-gradient-to-r from-purple-600 via-purple-500 to-indigo-400 -translate-y-1/2 -z-10 rounded-full transition-all duration-500 ease-out shadow-[0_0_10px_rgba(168,85,247,0.6)]"
                     style={{
-                        width: `calc(${progressPercent}% * (100% - 6rem) / 100)`,
+                        width: `calc(${progressPercent}% * (100% - 3rem) / 100)`,
                     }}
                 />
 
@@ -54,14 +54,14 @@ export const ScoutPipelineSVG = memo(function ScoutPipelineSVG({
                             type="button"
                             onClick={() => onSelectStep(step.id)}
                             className={cn(
-                                "group relative flex flex-col items-center p-2 rounded-2xl transition-all duration-300 cursor-pointer min-h-[44px]",
+                                "group relative flex flex-col items-center p-1 sm:p-2 rounded-2xl transition-all duration-300 cursor-pointer min-h-[44px]",
                                 isActive ? "scale-105" : "hover:scale-102"
                             )}
                         >
-                            {/* Step Node Icon Container (56px) */}
+                            {/* Step Node Icon Container (40px mobile / 56px desktop) */}
                             <div
                                 className={cn(
-                                    "flex h-14 w-14 items-center justify-center rounded-2xl border-2 transition-all duration-300 shadow-md relative z-10",
+                                    "flex h-10 w-10 sm:h-14 sm:w-14 items-center justify-center rounded-xl sm:rounded-2xl border-2 transition-all duration-300 shadow-md relative z-10",
                                     isActive
                                         ? "bg-purple-500/20 border-purple-500 text-purple-600 dark:text-purple-400 shadow-[0_0_20px_rgba(168,85,247,0.4)]"
                                         : isPassed
@@ -69,18 +69,18 @@ export const ScoutPipelineSVG = memo(function ScoutPipelineSVG({
                                         : "bg-slate-100 dark:bg-card border-slate-200 dark:border-border text-slate-600 dark:text-muted-foreground hover:border-foreground/40 hover:text-foreground"
                                 )}
                             >
-                                <Icon className="h-6 w-6" aria-hidden="true" />
+                                <Icon className="h-4 w-4 sm:h-6 sm:w-6" aria-hidden="true" />
                             </div>
 
-                            {/* 12px Spacer Div where track line passes through center (70px from top) */}
-                            <div className="h-5 w-full pointer-events-none" />
+                            {/* Spacer */}
+                            <div className="h-2 sm:h-4 w-full pointer-events-none" />
 
                             {/* Step Title & Number */}
                             <div className="text-center space-y-0.5">
-                                <span className="text-[10px] font-mono font-bold tracking-widest text-purple-600 dark:text-purple-400 uppercase block">
-                                    Step 0{step.number}
+                                <span className="text-[9px] sm:text-[10px] font-mono font-bold tracking-wider text-purple-600 dark:text-purple-400 uppercase block">
+                                    0{step.number}
                                 </span>
-                                <span className={cn("text-xs font-bold font-mono transition-colors block", isActive ? "text-foreground" : "text-slate-600 dark:text-muted-foreground group-hover:text-foreground")}>
+                                <span className={cn("text-[10px] sm:text-xs font-bold font-mono transition-colors block leading-tight", isActive ? "text-foreground" : "text-slate-600 dark:text-muted-foreground group-hover:text-foreground")}>
                                     {step.title}
                                 </span>
                             </div>
@@ -89,7 +89,7 @@ export const ScoutPipelineSVG = memo(function ScoutPipelineSVG({
                             {isActive && (
                                 <span
                                     aria-hidden="true"
-                                    className="absolute top-2 h-14 w-14 rounded-2xl border border-purple-500/60 animate-ping pointer-events-none"
+                                    className="absolute top-1 sm:top-2 h-10 w-10 sm:h-14 sm:w-14 rounded-xl sm:rounded-2xl border border-purple-500/60 animate-ping pointer-events-none"
                                 />
                             )}
                         </button>

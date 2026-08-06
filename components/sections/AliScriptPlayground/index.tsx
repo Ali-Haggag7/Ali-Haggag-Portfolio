@@ -100,11 +100,11 @@ export default function AliScriptPlaygroundSection() {
                     </p>
 
                     {/* ── Compilation Pipeline ───────────────────────────── */}
-                    <div className="flex items-center justify-center gap-2 flex-wrap mb-10">
+                    <div className="flex items-center justify-start sm:justify-center gap-2 overflow-x-auto no-scrollbar py-2 w-full px-2 mb-10">
                         {PIPELINE.map((stage, i) => (
-                            <div key={stage.label} className="flex items-center gap-2">
+                            <div key={stage.label} className="flex items-center gap-2 shrink-0">
                                 <div
-                                    className="group flex flex-col items-center px-4 py-3 rounded-xl text-center min-w-[90px] transition-all duration-300 hover:-translate-y-0.5"
+                                    className="group flex flex-col items-center px-3.5 py-2.5 sm:px-4 sm:py-3 rounded-xl text-center min-w-[85px] sm:min-w-[90px] transition-all duration-300 hover:-translate-y-0.5"
                                     style={{
                                         background: `color-mix(in srgb, ${stage.accent} 7%, hsl(var(--card)))`,
                                         border: `1px solid color-mix(in srgb, ${stage.accent} 22%, hsl(var(--border) / 0.4))`,
@@ -142,7 +142,7 @@ export default function AliScriptPlaygroundSection() {
                     </div>
 
                     {/* ── Language Fact Cards ────────────────────────────── */}
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 w-full max-w-3xl">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3.5 w-full max-w-4xl">
                         {LANG_FACTS.map(({ icon: Icon, label, desc, accent }) => (
                             <div
                                 key={label}
