@@ -76,7 +76,7 @@ export const SkillBadge = memo(function SkillBadge({
                 // motion-safe: respects prefers-reduced-motion — one class, no media query needed
                 <span
                     aria-label="Has battle scar"
-                    className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-[hsl(var(--scar-critical))] rounded-full border-2 border-background motion-safe:animate-pulse"
+                    className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-[var(--scar-critical)] rounded-full border-2 border-background motion-safe:animate-pulse"
                 />
             )}
         </button>

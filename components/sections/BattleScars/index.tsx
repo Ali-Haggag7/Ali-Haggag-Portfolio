@@ -189,7 +189,7 @@ export default function BattleScars() {
                     className="section-title text-4xl md:text-5xl mb-3"
                 >
                     Battle{" "}
-                    <span style={{ color: "hsl(var(--scar-critical))" }}>Scars</span>
+                    <span style={{ color: "var(--scar-critical)" }}>Scars</span>
                 </h2>
                 <p className="text-muted-foreground text-sm md:text-base leading-relaxed max-w-xl">
                     Real engineering isn&apos;t just writing code. It&apos;s about the decisions made when systems fail, latency spikes, and requirements shift.
