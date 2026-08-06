@@ -34,7 +34,7 @@ export const CategoryFilter = memo(function CategoryFilter({ categories, activeC
                             "transition-all duration-200",
                             isActive
                                 ? "bg-[hsl(var(--accent-blue))] text-white border-transparent shadow-md shadow-[hsl(var(--accent-blue))]/20"
-                                : "bg-background/40 backdrop-blur-xl text-muted-foreground border-border/50 hover:bg-muted/80 hover:text-foreground"
+                                : "bg-slate-100/80 dark:bg-background/40 text-slate-700 dark:text-muted-foreground border-slate-200 dark:border-border/50 hover:bg-slate-200/80 dark:hover:bg-muted/80 hover:text-foreground"
                         )}
                     >
                         {category} <span className="opacity-70 font-normal">({count})</span>

@@ -198,24 +198,24 @@ export default function BattleScars() {
 
             {/* Post-mortem stats bar - iOS Native Style on Mobile */}
             <dl className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4 mb-8 md:mb-10">
-                <div className="flex flex-col items-center justify-center rounded-[24px] border border-border/50 bg-background/40 backdrop-blur-xl p-5 text-center shadow-sm">
-                    <ListChecks className="w-5 h-5 mb-2 text-muted-foreground/80" aria-hidden="true" />
-                    <dt className="text-[10px] font-semibold tracking-widest text-muted-foreground uppercase order-2 mt-1">Total Scars</dt>
-                    <dd className="text-3xl font-semibold tracking-tighter text-foreground order-1 leading-none">{stats.total}</dd>
+                <div className="flex flex-col items-center justify-center rounded-[24px] border border-slate-200 dark:border-border/50 bg-slate-100/80 dark:bg-background/40 backdrop-blur-xl p-5 text-center shadow-sm">
+                    <ListChecks className="w-5 h-5 mb-2 text-slate-600 dark:text-muted-foreground/80" aria-hidden="true" />
+                    <dt className="text-[10px] font-bold tracking-widest text-slate-600 dark:text-muted-foreground uppercase order-2 mt-1">Total Scars</dt>
+                    <dd className="text-3xl font-extrabold tracking-tighter text-foreground order-1 leading-none">{stats.total}</dd>
                 </div>
 
-                <div className="flex flex-col items-center justify-center rounded-[24px] border border-red-500/20 bg-red-500/5 backdrop-blur-xl p-5 text-center shadow-sm">
-                    <ShieldAlert className="w-5 h-5 mb-2 text-red-500/80" aria-hidden="true" />
-                    <dt className="text-[10px] font-semibold tracking-widest text-red-500/80 uppercase order-2 mt-1">Critical</dt>
-                    <dd className="text-3xl font-semibold tracking-tighter text-red-500 order-1 leading-none">{stats.critical}</dd>
+                <div className="flex flex-col items-center justify-center rounded-[24px] border border-red-500/30 dark:border-red-500/20 bg-red-500/10 dark:bg-red-500/5 backdrop-blur-xl p-5 text-center shadow-sm">
+                    <ShieldAlert className="w-5 h-5 mb-2 text-red-600 dark:text-red-500/80" aria-hidden="true" />
+                    <dt className="text-[10px] font-bold tracking-widest text-red-600 dark:text-red-500/80 uppercase order-2 mt-1">Critical</dt>
+                    <dd className="text-3xl font-extrabold tracking-tighter text-red-600 dark:text-red-500 order-1 leading-none">{stats.critical}</dd>
                 </div>
 
-                <div className="flex flex-col items-center justify-center rounded-[24px] border border-border/50 bg-background/40 backdrop-blur-xl p-5 text-center shadow-sm col-span-2 md:col-span-1">
-                    <FolderGit2 className="w-5 h-5 mb-2 text-muted-foreground/80" aria-hidden="true" />
-                    <dt className="text-[10px] font-semibold tracking-widest text-muted-foreground uppercase order-2 mt-1">Most Affected</dt>
-                    <dd className="text-lg font-semibold tracking-tight text-foreground order-1 leading-tight flex flex-col items-center gap-0.5">
+                <div className="flex flex-col items-center justify-center rounded-[24px] border border-slate-200 dark:border-border/50 bg-slate-100/80 dark:bg-background/40 backdrop-blur-xl p-5 text-center shadow-sm col-span-2 md:col-span-1">
+                    <FolderGit2 className="w-5 h-5 mb-2 text-slate-600 dark:text-muted-foreground/80" aria-hidden="true" />
+                    <dt className="text-[10px] font-bold tracking-widest text-slate-600 dark:text-muted-foreground uppercase order-2 mt-1">Most Affected</dt>
+                    <dd className="text-lg font-extrabold tracking-tight text-foreground order-1 leading-tight flex flex-col items-center gap-0.5">
                         {stats.mostAffected}
-                        <span className="text-[11px] font-normal text-muted-foreground">
+                        <span className="text-[11px] font-semibold text-slate-600 dark:text-muted-foreground">
                             {stats.mostAffectedCount} scars
                         </span>
                     </dd>
@@ -224,15 +224,15 @@ export default function BattleScars() {
 
             {/* View Mode Switcher */}
             <div className="flex justify-center mb-6">
-                <div className="inline-flex items-center gap-1 rounded-full border border-border/80 bg-card p-1.5 shadow-sm">
+                <div className="inline-flex items-center gap-1 rounded-full border border-slate-200 dark:border-border/80 bg-slate-100/90 dark:bg-card p-1.5 shadow-sm">
                     <button
                         type="button"
                         onClick={() => setViewMode("grid")}
                         className={cn(
                             "flex min-h-[44px] items-center gap-2 px-4 rounded-full text-xs font-mono font-bold transition-colors cursor-pointer",
                             viewMode === "grid"
-                                ? "bg-blue-500/20 text-blue-400 border border-blue-500/40"
-                                : "text-muted-foreground hover:text-foreground"
+                                ? "bg-blue-500/20 text-blue-600 dark:text-blue-400 border border-blue-500/40"
+                                : "text-slate-600 dark:text-muted-foreground hover:text-foreground"
                         )}
                     >
                         <LayoutGrid className="h-3.5 w-3.5" aria-hidden="true" />
@@ -244,8 +244,8 @@ export default function BattleScars() {
                         className={cn(
                             "flex min-h-[44px] items-center gap-2 px-4 rounded-full text-xs font-mono font-bold transition-colors cursor-pointer",
                             viewMode === "timeline"
-                                ? "bg-purple-500/20 text-purple-400 border border-purple-500/40"
-                                : "text-muted-foreground hover:text-foreground"
+                                ? "bg-purple-500/20 text-purple-600 dark:text-purple-400 border border-purple-500/40"
+                                : "text-slate-600 dark:text-muted-foreground hover:text-foreground"
                         )}
                     >
                         <GitCommit className="h-3.5 w-3.5" aria-hidden="true" />
