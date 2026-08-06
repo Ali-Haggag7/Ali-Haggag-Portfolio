@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useCallback, useEffect, memo } from "react";
+import { cn } from "@/lib/utils";
 import { type TourPersona } from "./tourData";
 import { TourPersonaModal } from "./TourPersonaModal";
 import { SpotlightCutoutOverlay } from "./SpotlightCutoutOverlay";
@@ -57,17 +58,23 @@ export const InteractiveTourGuide = memo(function InteractiveTourGuide() {
 
     return (
         <>
-            {/* Floating Tour Trigger Button — sits above the dock */}
+            {/* Floating Tour Trigger Button — floats cleanly above Chatbot on mobile (bottom-[80px] left-4) and on left side on desktop */}
             <button
                 type="button"
                 onClick={() => setIsModalOpen(true)}
                 title="Start Guided AI Portfolio Tour"
                 aria-label="Start Guided AI Portfolio Tour"
-                className="fixed bottom-4 md:bottom-6 left-4 md:left-6 z-50 inline-flex min-h-[44px] items-center gap-2 rounded-full border border-[hsl(var(--accent-purple)/0.4)] bg-card/90 backdrop-blur-xl px-4 py-2.5 text-xs font-display font-bold uppercase tracking-wider text-[hsl(var(--accent-purple))] shadow-xl hover:bg-[hsl(var(--accent-purple)/0.15)] hover:border-[hsl(var(--accent-purple)/0.6)] transition-all cursor-pointer animate-in fade-in duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                className={cn(
+                    "fixed bottom-[80px] md:bottom-6 left-4 md:left-6 z-45 inline-flex min-h-[44px] items-center gap-2 rounded-full border border-purple-500/40 dark:border-[hsl(var(--accent-purple)/0.4)]",
+                    "bg-background/95 dark:bg-card/95 backdrop-blur-xl px-3.5 py-2.5 md:px-4 text-[11px] md:text-xs font-display font-bold uppercase tracking-wider",
+                    "text-purple-600 dark:text-[hsl(var(--accent-purple))] shadow-xl shadow-purple-500/10 dark:shadow-[0_0_20px_rgba(168,85,247,0.25)]",
+                    "hover:bg-purple-500/10 dark:hover:bg-[hsl(var(--accent-purple)/0.15)] hover:border-purple-500/60 dark:hover:border-[hsl(var(--accent-purple)/0.6)] hover:scale-105 active:scale-95",
+                    "transition-all duration-300 cursor-pointer animate-in fade-in focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                )}
             >
-                <Compass className="h-4 w-4 text-[hsl(var(--accent-purple))]" aria-hidden="true" />
+                <Compass className="h-4 w-4 text-purple-600 dark:text-[hsl(var(--accent-purple))]" aria-hidden="true" />
                 <span>Guided Tour</span>
-                <Sparkles className="h-3.5 w-3.5 text-[hsl(var(--accent-purple))]" aria-hidden="true" />
+                <Sparkles className="h-3.5 w-3.5 text-purple-600 dark:text-[hsl(var(--accent-purple))]" aria-hidden="true" />
             </button>
 
             {/* Persona Selection Modal */}
