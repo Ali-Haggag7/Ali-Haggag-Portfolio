@@ -38,21 +38,21 @@ export const SECURITY_LAYERS = Object.freeze([
 
 export const SecurityPostureCard = memo(function SecurityPostureCard() {
     return (
-        <div className="w-full max-w-4xl mx-auto my-12 p-6 rounded-2xl border border-[hsl(var(--accent-emerald)/0.4)] cyber-card tactical-corner-reticles bg-card/90 backdrop-blur-xl shadow-2xl space-y-4">
+        <div className="w-full max-w-4xl mx-auto my-12 p-6 rounded-2xl border border-emerald-500/30 dark:border-[hsl(var(--accent-emerald)/0.4)] cyber-card tactical-corner-reticles bg-card/90 backdrop-blur-xl shadow-2xl space-y-4">
             <div className="flex items-center justify-between pb-3 border-b border-border/60">
-                <div className="flex items-center gap-2 font-display text-xs md:text-sm font-bold tracking-wide text-[hsl(var(--accent-emerald))]">
-                    <ShieldCheck className="h-5 w-5 text-[hsl(var(--accent-emerald))] animate-pulse" aria-hidden="true" />
+                <div className="flex items-center gap-2 font-display text-xs md:text-sm font-extrabold tracking-wide text-emerald-700 dark:text-emerald-400">
+                    <ShieldCheck className="h-5 w-5 text-emerald-600 dark:text-emerald-400 animate-pulse" aria-hidden="true" />
                     <span>5-LAYER SECURITY POSTURE MATRIX</span>
                 </div>
                 <span
                     className="hud-tag"
                     style={{
-                        color: "hsl(var(--accent-emerald))",
-                        borderColor: "hsl(var(--accent-emerald) / 0.4)",
-                        backgroundColor: "hsl(var(--accent-emerald) / 0.1)",
+                        color: "var(--tl-accent-emerald)",
+                        borderColor: "color-mix(in srgb, var(--tl-accent-emerald) 40%, transparent)",
+                        backgroundColor: "color-mix(in srgb, var(--tl-accent-emerald) 12%, transparent)",
                     }}
                 >
-                    <span className="w-1.5 h-1.5 rounded-full bg-[hsl(var(--accent-emerald))] animate-ping" />
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-600 dark:bg-[hsl(var(--accent-emerald))] animate-ping" />
                     STATUS // ZERO VULNS
                 </span>
             </div>
@@ -61,25 +61,25 @@ export const SecurityPostureCard = memo(function SecurityPostureCard() {
                 {SECURITY_LAYERS.map((layer) => (
                     <div
                         key={layer.layer}
-                        className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3.5 rounded-xl border border-border/60 bg-muted/20 transition-all duration-200 hover:border-[hsl(var(--accent-emerald)/0.5)] hover:bg-muted/40"
+                        className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3.5 rounded-xl border border-slate-200 dark:border-border/60 bg-slate-100/60 dark:bg-muted/20 transition-all duration-200 hover:border-emerald-500/50 hover:bg-slate-100 dark:hover:bg-muted/40"
                     >
                         <div className="flex items-center gap-3">
-                            <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg border border-[hsl(var(--accent-emerald)/0.3)] bg-[hsl(var(--accent-emerald)/0.1)] text-xs font-mono font-bold text-[hsl(var(--accent-emerald))]">
+                            <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg border border-emerald-500/40 dark:border-[hsl(var(--accent-emerald)/0.3)] bg-emerald-500/10 text-xs font-mono font-bold text-emerald-700 dark:text-emerald-400">
                                 L0{layer.layer}
                             </span>
                             <div>
                                 <h4 className="text-sm font-bold font-display text-foreground">
                                     {layer.name}
                                 </h4>
-                                <p className="text-xs text-muted-foreground mt-0.5">
+                                <p className="text-xs text-muted-foreground mt-0.5 font-medium">
                                     {layer.description}
                                 </p>
                             </div>
                         </div>
 
                         <div className="flex items-center gap-2 shrink-0 text-xs font-mono">
-                            <span className="text-muted-foreground">Implemented in:</span>
-                            <span className="font-semibold text-[hsl(var(--accent-emerald))] bg-[hsl(var(--accent-emerald)/0.1)] px-2.5 py-0.5 rounded border border-[hsl(var(--accent-emerald)/0.2)]">
+                            <span className="text-slate-600 dark:text-muted-foreground font-medium">Implemented in:</span>
+                            <span className="font-bold text-emerald-700 dark:text-emerald-400 bg-emerald-500/10 dark:bg-[hsl(var(--accent-emerald)/0.1)] px-2.5 py-0.5 rounded border border-emerald-500/30 dark:border-[hsl(var(--accent-emerald)/0.2)]">
                                 {layer.projects}
                             </span>
                         </div>
