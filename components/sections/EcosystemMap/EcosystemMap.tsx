@@ -335,10 +335,10 @@ export const EcosystemMap = memo(function EcosystemMap() {
                                                 className="pointer-events-none transition-transform group-hover:scale-110"
                                             />
                                         ) : FallbackProjectIcon ? (
-                                            <foreignObject x={-projImgHalf / 1.6} y={-projImgHalf / 1.6} width={projImgDim / 1.3} height={projImgDim / 1.3} className="pointer-events-none">
+                                            <foreignObject x={-projHalf} y={-projHalf} width={projDim} height={projDim} className="pointer-events-none">
                                                 <div className="w-full h-full flex items-center justify-center">
                                                     <FallbackProjectIcon
-                                                        className="w-7 h-7 transition-transform group-hover:scale-110"
+                                                        className="w-6 h-6 sm:w-7 sm:h-7 transition-transform group-hover:scale-110"
                                                         style={{ color: node.color }}
                                                     />
                                                 </div>

@@ -21,7 +21,7 @@ export const ECOSYSTEM_NODES: readonly EcosystemNode[] = Object.freeze([
     { id: "logic-arena", label: "Logic Arena", type: "project", description: "Flagship robot-programming arena with custom AliScript DSL & 20 TPS physics", x: 24, y: 26, color: "#10b981", iconUrl: "/logic-arena-icon.png" },
     { id: "scout", label: "Scout AI", type: "project", description: "Autonomous AI job-application agent with isolated worker_threads brain loop", x: 76, y: 26, color: "#a855f7" },
     { id: "flurry", label: "Flurry", type: "project", description: "Real-time social super-app with WebRTC P2P calls & offline-first PWA sync", x: 14, y: 72, color: "#3b82f6", iconUrl: "/flurry-icon.ico" },
-    { id: "cs-arena", label: "CS Arena", type: "project", description: "Developer project ecosystem with 3-level cascading URL state classification", x: 86, y: 72, color: "#06b6d4" },
+    { id: "cs-arena", label: "CS Arena", type: "project", description: "Developer project ecosystem with 3-level cascading URL state classification", x: 86, y: 72, color: "#06b6d4", iconUrl: "/cs-arena-icon.png" },
     { id: "cybership", label: "Cybership API", type: "project", description: "Domain-Driven carrier API with Zod Anti-Corruption Layer", x: 50, y: 10, color: "#f97316" },
     { id: "blog-pro", label: "Blog Pro", type: "project", description: "MERN CMS with 5-layer security pipeline and RBAC", x: 50, y: 90, color: "#eab308" },
 
