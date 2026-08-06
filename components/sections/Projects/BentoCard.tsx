@@ -186,8 +186,8 @@ export const BentoCard = memo(function BentoCard({
             <div className="relative z-20 flex flex-col gap-2 p-6 mt-auto">
                 {/* Icon row */}
                 <div className="mb-1 flex items-center gap-3">
-                    <div className="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-[hsl(var(--accent-purple)/0.15)] backdrop-blur-md border border-[hsl(var(--accent-purple)/0.3)] text-[hsl(var(--accent-purple))] shadow-inner transition-transform duration-300 group-hover:scale-105">
-                        <Icon className="h-5.5 w-5.5 text-[hsl(var(--accent-purple))]" aria-hidden="true" />
+                    <div className="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-black/80 backdrop-blur-md border border-white/20 shadow-inner transition-transform duration-300 group-hover:scale-105">
+                        <Icon className="h-5.5 w-5.5 text-white/80" aria-hidden="true" />
                     </div>
                 </div>
 
