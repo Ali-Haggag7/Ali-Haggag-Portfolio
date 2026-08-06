@@ -143,12 +143,14 @@ export const RobotCanvas = memo(function RobotCanvas({ robot, target }: RobotCan
         const height   = canvas.height;
         const cellSize = width / 8;
 
+        const isDark = typeof document !== "undefined" && document.documentElement.classList.contains("dark");
+
         // ── Background ────────────────────────────────────────────────────────
-        ctx.fillStyle = "#070b14";
+        ctx.fillStyle = isDark ? "#070b14" : "#f8fafc";
         ctx.fillRect(0, 0, width, height);
 
         // ── Grid lines ────────────────────────────────────────────────────────
-        ctx.strokeStyle = "rgba(59, 130, 246, 0.12)";
+        ctx.strokeStyle = isDark ? "rgba(59, 130, 246, 0.12)" : "rgba(37, 99, 235, 0.22)";
         ctx.lineWidth   = 1;
         for (let i = 0; i <= 8; i++) {
             ctx.beginPath();
@@ -169,7 +171,7 @@ export const RobotCanvas = memo(function RobotCanvas({ robot, target }: RobotCan
 
             // Outer glow
             const targetGlow = ctx.createRadialGradient(tx, ty, 2, tx, ty, tr * 1.8);
-            targetGlow.addColorStop(0, "rgba(239, 68, 68, 0.45)");
+            targetGlow.addColorStop(0, isDark ? "rgba(239, 68, 68, 0.45)" : "rgba(239, 68, 68, 0.25)");
             targetGlow.addColorStop(1, "rgba(239, 68, 68, 0)");
             ctx.fillStyle = targetGlow;
             ctx.beginPath();
@@ -194,7 +196,7 @@ export const RobotCanvas = memo(function RobotCanvas({ robot, target }: RobotCan
             ctx.fill();
 
             // Crosshair
-            ctx.strokeStyle = "rgba(255,255,255,0.7)";
+            ctx.strokeStyle = isDark ? "rgba(255,255,255,0.7)" : "rgba(15,23,42,0.7)";
             ctx.lineWidth   = 1.5;
             ctx.beginPath();
             ctx.moveTo(tx - tr * 0.8, ty);
@@ -293,8 +295,8 @@ export const RobotCanvas = memo(function RobotCanvas({ robot, target }: RobotCan
 
     return (
         <div className="relative flex flex-col rounded-xl border border-border/80 overflow-hidden bg-card shadow-sm">
-            {/* Canvas Dark Arena Header */}
-            <div className="w-full bg-[#070b14] flex items-center justify-center p-3 border-b border-border/40 shadow-inner">
+            {/* Canvas Arena Header */}
+            <div className="w-full bg-slate-100/90 dark:bg-[#070b14] flex items-center justify-center p-3 border-b border-border/40 shadow-inner transition-colors">
                 <canvas
                     ref={canvasRef}
                     width={340}
