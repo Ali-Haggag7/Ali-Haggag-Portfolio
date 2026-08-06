@@ -13,37 +13,37 @@ const BootSequence = memo(function BootSequence({ step }: { step: number }) {
             {step >= 1 && (
                 <div className="flex items-start gap-2 w-full">
                     <span className="text-green-500 font-bold shrink-0">root@ali-haggag:~$</span>
-                    <span className="text-white">whoami</span>
+                    <span className="text-white font-bold">whoami</span>
                 </div>
             )}
             {step >= 2 && (
                 <div className="pl-4 border-l-2 border-blue-500/30 ml-2 w-full break-words">
                     <span className="text-white font-bold text-lg">Ali Haggag</span><br />
-                    <span className="text-blue-300">Full-Stack Software Engineer | Real-time Systems Architect</span>
+                    <span className="text-blue-300 font-semibold">Full-Stack Software Engineer | Real-time Systems Architect</span>
                 </div>
             )}
             {step >= 3 && (
                 <div className="flex items-start gap-2 mt-4 w-full">
                     <span className="text-green-500 font-bold shrink-0">root@ali-haggag:~$</span>
-                    <span className="text-white">npm run start:prod</span>
+                    <span className="text-white font-bold">npm run start:prod</span>
                 </div>
             )}
             {step >= 4 && (
-                <div className="text-emerald-300 pl-4 border-l-2 border-emerald-500/30 ml-2 space-y-1 w-full break-words">
+                <div className="text-emerald-300 pl-4 border-l-2 border-emerald-500/30 ml-2 space-y-1 w-full break-words font-medium">
                     <div>{`> alihaggag-portfolio@2.0.0 start:prod`}</div>
                     <div>{`> node dist/server.js`}</div>
-                    <div className="text-blue-300">[Server] Running on port 3000...</div>
-                    <div className="text-green-400">[MongoDB] Connected successfully to Cluster0</div>
+                    <div className="text-blue-300 font-semibold">[Server] Running on port 3000...</div>
+                    <div className="text-green-400 font-semibold">[MongoDB] Connected successfully to Cluster0</div>
                 </div>
             )}
             {step >= 5 && (
                 <div className="flex items-start gap-2 mt-4 w-full">
                     <span className="text-green-500 font-bold shrink-0">root@ali-haggag:~$</span>
-                    <span className="text-white">ping db.alihaggag.com -c 1</span>
+                    <span className="text-white font-bold">ping db.alihaggag.com -c 1</span>
                 </div>
             )}
             {step >= 6 && (
-                <div className="text-yellow-300 pl-4 border-l-2 border-yellow-500/30 ml-2 w-full break-words">
+                <div className="text-yellow-300 pl-4 border-l-2 border-yellow-500/30 ml-2 w-full break-words font-medium">
                     PING db.alihaggag.com (104.21.2.22): 56 data bytes<br />
                     64 bytes from 104.21.2.22: icmp_seq=0 ttl=58 time=<span className="text-emerald-400 font-bold">1.02 ms</span><br />
                     <span className="text-gray-400 text-xs">--- Database Connection Verified ---</span>
