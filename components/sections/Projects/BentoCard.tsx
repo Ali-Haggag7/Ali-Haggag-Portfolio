@@ -109,29 +109,13 @@ export const BentoCard = memo(function BentoCard({
         >
             {/* Top HUD Spec Node Header */}
             <div className="absolute top-3 left-3 right-3 z-30 flex items-center justify-between pointer-events-none">
-                <span
-                    className="hud-tag"
-                    style={{
-                        backgroundColor: "hsl(var(--card) / 0.85)",
-                        backdropFilter: "blur(8px)",
-                        borderColor: "hsl(var(--border) / 0.8)",
-                        color: "hsl(var(--foreground))",
-                    }}
-                >
+                <span className="hud-tag bg-slate-900/85 backdrop-blur-md border border-slate-700/60 text-slate-200 font-mono text-[10px]">
                     NODE // {feature.id.toUpperCase()}
                 </span>
                 {demoHref && (
-                    <span
-                        className="hud-tag"
-                        style={{
-                            backgroundColor: "hsl(var(--card) / 0.85)",
-                            backdropFilter: "blur(8px)",
-                            borderColor: "hsl(var(--accent-emerald) / 0.4)",
-                            color: "hsl(var(--accent-emerald))",
-                        }}
-                    >
+                    <span className="hud-tag bg-slate-900/85 backdrop-blur-md border border-emerald-500/40 text-emerald-400 font-mono text-[10px]">
                         <span
-                            className="inline-block h-1.5 w-1.5 rounded-full bg-[hsl(var(--accent-emerald))]"
+                            className="inline-block h-1.5 w-1.5 rounded-full bg-emerald-400"
                             style={{
                                 animation: "live-pulse 2s ease-in-out infinite",
                             }}
@@ -143,7 +127,7 @@ export const BentoCard = memo(function BentoCard({
             </div>
 
             {/* Media Layer */}
-            <div className="absolute inset-0 z-0 overflow-hidden rounded-2xl bg-muted/20">
+            <div className="absolute inset-0 z-0 overflow-hidden rounded-2xl bg-slate-950">
                 <div
                     className="h-full w-full transition-all duration-700 ease-out group-hover:scale-[1.03] group-hover:brightness-[1.08]"
                     style={{ willChange: "transform, filter" }}
@@ -181,21 +165,21 @@ export const BentoCard = memo(function BentoCard({
             </div>
 
             {/* Overlays & Content */}
-            <div aria-hidden="true" className="absolute inset-0 z-10 bg-gradient-to-t from-[hsl(var(--card)/0.96)] via-[hsl(var(--card)/0.55)] to-transparent pointer-events-none" />
+            <div aria-hidden="true" className="absolute inset-0 z-10 bg-gradient-to-t from-slate-950/95 via-slate-950/70 to-slate-950/20 pointer-events-none transition-opacity duration-300 group-hover:opacity-90" />
 
             <div className="relative z-20 flex flex-col gap-2 p-6 mt-auto">
                 {/* Icon row */}
                 <div className="mb-1 flex items-center gap-3">
-                    <div className="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-black/80 backdrop-blur-md border border-white/20 shadow-inner transition-transform duration-300 group-hover:scale-105">
-                        <Icon className="h-5.5 w-5.5 text-white/80" aria-hidden="true" />
+                    <div className="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-slate-900/90 backdrop-blur-md border border-slate-700/60 shadow-inner transition-transform duration-300 group-hover:scale-105">
+                        <Icon className="h-5.5 w-5.5 text-slate-100" aria-hidden="true" />
                     </div>
                 </div>
 
-                <h3 className="text-xl font-bold font-display tracking-tight text-foreground transition-transform duration-300 group-hover:translate-x-1">
+                <h3 className="text-xl font-bold font-display tracking-tight text-white transition-transform duration-300 group-hover:translate-x-1">
                     {name}
                 </h3>
 
-                <p className="text-xs md:text-sm text-muted-foreground font-medium max-w-lg leading-relaxed transition-transform duration-300 delay-75 group-hover:translate-x-1">
+                <p className="text-xs md:text-sm text-slate-300 font-medium max-w-lg leading-relaxed transition-transform duration-300 delay-75 group-hover:translate-x-1">
                     {description}
                 </p>
 
@@ -204,10 +188,9 @@ export const BentoCard = memo(function BentoCard({
                     {visiblePills.map((pill) => (
                         <span
                             key={pill.name}
-                            className="inline-flex items-center px-2.5 py-0.5 text-[10px] font-mono font-bold uppercase tracking-wider rounded-md border border-border/60 backdrop-blur-md transition-transform duration-200 group-hover:translate-x-0.5"
+                            className="inline-flex items-center px-2.5 py-0.5 text-[10px] font-mono font-bold uppercase tracking-wider rounded-md border border-slate-700/60 bg-slate-900/80 backdrop-blur-md transition-transform duration-200 group-hover:translate-x-0.5"
                             style={{
                                 color: PILL_CATEGORY_VAR[pill.category],
-                                backgroundColor: "hsl(var(--card) / 0.8)",
                             }}
                         >
                             {pill.name}
@@ -215,9 +198,9 @@ export const BentoCard = memo(function BentoCard({
                     ))}
                 </div>
 
-                <div className="mt-2 text-xs font-display font-semibold tracking-wider uppercase text-[hsl(var(--accent-purple))] flex items-center gap-1.5 opacity-80 group-hover:opacity-100 transition-all duration-300">
+                <div className="mt-2 text-xs font-display font-semibold tracking-wider uppercase text-purple-400 flex items-center gap-1.5 opacity-90 group-hover:opacity-100 group-hover:text-purple-300 transition-all duration-300">
                     <span>EXPLORE AUTOPSY</span>
-                    <Activity className="w-3.5 h-3.5 text-[hsl(var(--accent-purple))] animate-pulse" aria-hidden="true" />
+                    <Activity className="w-3.5 h-3.5 text-purple-400 group-hover:text-purple-300 animate-pulse" aria-hidden="true" />
                 </div>
             </div>
         </motion.button>
