@@ -45,8 +45,11 @@ export const ArchitectureMapSVG = memo(function ArchitectureMapSVG({
 
     return (
         <div className="w-full overflow-x-auto py-2">
-            <div className="min-w-[700px] relative aspect-[2/1] rounded-2xl border border-border/80 bg-[var(--scar-code-bg)] p-4 shadow-inner">
-                <svg viewBox={`0 0 ${width} ${height}`} className="w-full h-full">
+            <div className="min-w-[700px] relative aspect-[2/1] rounded-2xl border border-border/80 bg-card/80 backdrop-blur-sm p-4 shadow-inner overflow-hidden">
+                {/* Dotted Canvas Background Grid */}
+                <div className="absolute inset-0 opacity-25 bg-[radial-gradient(hsl(var(--muted-foreground)/0.3)_1px,transparent_1px)] [background-size:18px_18px] pointer-events-none" />
+
+                <svg viewBox={`0 0 ${width} ${height}`} className="w-full h-full relative z-10">
                     <defs>
                         {/* Glow filters per color */}
                         {Object.entries(CATEGORY_COLORS).map(([cat, color]) => (
@@ -55,7 +58,15 @@ export const ArchitectureMapSVG = memo(function ArchitectureMapSVG({
                                 <feComposite in="SourceGraphic" in2="blur" operator="over" />
                             </filter>
                         ))}
+
+                        {/* Dot Matrix Pattern */}
+                        <pattern id="arch-dot-grid" width="20" height="20" patternUnits="userSpaceOnUse">
+                            <circle cx="10" cy="10" r="1.2" fill="hsl(var(--muted-foreground))" opacity="0.35" />
+                        </pattern>
                     </defs>
+
+                    {/* Dotted Grid Fill */}
+                    <rect width={width} height={height} fill="url(#arch-dot-grid)" rx="12" />
 
                     {/* Render Connection Lines */}
                     {map.nodes.map((node) => {
@@ -76,8 +87,9 @@ export const ArchitectureMapSVG = memo(function ArchitectureMapSVG({
                                         y1={from.y}
                                         x2={to.x}
                                         y2={to.y}
-                                        stroke={isConnectedToSelected ? CATEGORY_COLORS[node.category] : "rgba(255, 255, 255, 0.12)"}
+                                        stroke={isConnectedToSelected ? CATEGORY_COLORS[node.category] : "hsl(var(--border))"}
                                         strokeWidth={isConnectedToSelected ? 2.5 : 1.5}
+                                        strokeOpacity={isConnectedToSelected ? 0.9 : 0.5}
                                         strokeDasharray={isConnectedToSelected ? "6, 6" : "none"}
                                         className={isConnectedToSelected ? "animate-pulse" : ""}
                                     />
@@ -113,12 +125,12 @@ export const ArchitectureMapSVG = memo(function ArchitectureMapSVG({
 
                                 {/* Outer Node Circle */}
                                 <circle
-                                    r="28"
-                                    fill="#111827"
-                                    stroke={isSelected ? color : "rgba(255, 255, 255, 0.2)"}
+                                    r="26"
+                                    fill="hsl(var(--card))"
+                                    stroke={isSelected ? color : "hsl(var(--border))"}
                                     strokeWidth={isSelected ? "3" : "1.5"}
                                     filter={isSelected ? `url(#glow-${node.category})` : "none"}
-                                    className="transition-all duration-300 group-hover:stroke-white"
+                                    className="transition-all duration-300 group-hover:stroke-foreground/60 shadow-md"
                                 />
 
                                 {/* Icon placeholder in center */}
@@ -130,11 +142,12 @@ export const ArchitectureMapSVG = memo(function ArchitectureMapSVG({
                                 <text
                                     y="45"
                                     textAnchor="middle"
-                                    fill={isSelected ? "#ffffff" : "#94a3b8"}
                                     fontSize="11"
-                                    fontWeight={isSelected ? "bold" : "normal"}
                                     fontFamily="monospace"
-                                    className="select-none transition-colors group-hover:fill-white"
+                                    className={cn(
+                                        "select-none transition-colors font-mono",
+                                        isSelected ? "fill-foreground font-extrabold" : "fill-muted-foreground font-semibold group-hover:fill-foreground"
+                                    )}
                                 >
                                     {node.label}
                                 </text>
