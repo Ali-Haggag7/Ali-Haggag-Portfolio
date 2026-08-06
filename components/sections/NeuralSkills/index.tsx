@@ -59,13 +59,11 @@ const SkillCategory = memo(function SkillCategory({
             variants={categoryVariants}
             initial={isSearching ? "visible" : "hidden"}
             whileInView={isSearching ? undefined : "visible"}
-            whileHover={{ y: -6 }}
-            transition={{ y: { duration: 0.25, ease: [0.16, 1, 0.3, 1] } }}
             viewport={{ once: true, margin: "-40px" }}
             custom={index}
-            style={{ willChange: "transform, opacity" }}
+            style={{ willChange: "transform, opacity", cursor: "default" }}
             className={cn(
-                "group relative flex flex-col gap-5 border border-slate-200/90 dark:border-border/60 overflow-hidden cyber-card cyber-card-interactive tactical-corner-reticles",
+                "group relative flex flex-col gap-5 border border-slate-200/90 dark:border-border/60 overflow-hidden cyber-card cyber-card-interactive tactical-corner-reticles cursor-default",
                 "w-full max-w-full bg-white/90 dark:bg-card/90 backdrop-blur-xl rounded-[24px] p-5 shadow-sm",
                 "md:rounded-3xl md:p-6 md:w-fit",
                 styles.border,

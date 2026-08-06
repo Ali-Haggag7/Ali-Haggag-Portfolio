@@ -22,10 +22,11 @@ export const SkillBadge = memo(function SkillBadge({
             type="button"
             onClick={onClick}
             aria-label={`View details for ${skill.name}`}
+            style={{ transitionDuration: ".35s", transitionTimingFunction: "cubic-bezier(0.34,1.56,0.64,1)" }}
             className={cn(
-                "group relative flex items-center gap-2 px-3 py-2.5 rounded-xl cyber-card cyber-card-interactive",
+                "group relative flex items-center gap-2 px-3 py-2.5 rounded-xl",
                 "min-h-[48px] md:min-h-[44px] border border-border/60 bg-card/60",
-                "transition-all duration-400 ease-[cubic-bezier(0.16,1,0.3,1)]",
+                "transition-all",
                 "hover:bg-card hover:border-[hsl(var(--accent-blue)/0.5)] md:hover:-translate-y-1 md:hover:shadow-xl hover:shadow-[hsl(var(--accent-blue)/0.1)]",
                 "will-change-transform",
                 "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--accent-blue))]",

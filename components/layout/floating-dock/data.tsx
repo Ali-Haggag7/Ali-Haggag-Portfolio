@@ -4,7 +4,7 @@
 
 import {
     Home, Terminal, Briefcase, Mail,
-    Layers, FileText, Cpu, type LucideIcon,
+    Layers, FileText, Cpu, Brain, Network, type LucideIcon,
 } from "lucide-react";
 
 export interface DockItem {
@@ -19,9 +19,11 @@ export interface DockItem {
 // Defined OUTSIDE any component — allocated once, never re-allocated.
 export const DOCK_ITEMS: DockItem[] = [
     { title: "Home", Icon: Home, iconClassName: "group-hover:text-foreground", href: "#", glowColor: "hsl(var(--muted-foreground))" },
-    { title: "Projects", Icon: Terminal, iconClassName: "group-hover:text-[hsl(var(--accent-blue))] text-[hsl(var(--accent-blue))]/80", href: "#projects", glowColor: "hsl(var(--accent-blue))" },
-    { title: "Skills", Icon: Cpu, iconClassName: "group-hover:text-[hsl(var(--accent-purple))] text-[hsl(var(--accent-purple))]/80", href: "#skills", glowColor: "hsl(var(--accent-purple))" },
     { title: "Evolution", Icon: Briefcase, iconClassName: "group-hover:text-[hsl(var(--accent-emerald))] text-[hsl(var(--accent-emerald))]/80", href: "#evolution", glowColor: "hsl(var(--accent-emerald))" },
+    { title: "Skills", Icon: Cpu, iconClassName: "group-hover:text-[hsl(var(--accent-purple))] text-[hsl(var(--accent-purple))]/80", href: "#skills", glowColor: "hsl(var(--accent-purple))" },
+    { title: "Projects", Icon: Terminal, iconClassName: "group-hover:text-[hsl(var(--accent-blue))] text-[hsl(var(--accent-blue))]/80", href: "#projects", glowColor: "hsl(var(--accent-blue))" },
+    { title: "Ecosystem", Icon: Network, iconClassName: "group-hover:text-[var(--tl-accent-blue)] text-[var(--tl-accent-blue)]/80", href: "#ecosystem", glowColor: "var(--tl-accent-blue)" },
+    { title: "ScoutBrain", Icon: Brain, iconClassName: "group-hover:text-[hsl(var(--accent-purple))] text-[hsl(var(--accent-purple))]/80", href: "#scout-brain", glowColor: "hsl(var(--accent-purple))" },
     { title: "Services", Icon: Layers, iconClassName: "group-hover:text-[var(--tl-accent-yellow)] text-[var(--tl-accent-yellow)]/80", href: "#services", glowColor: "var(--tl-accent-yellow)" },
     { title: "Contact", Icon: Mail, iconClassName: "group-hover:text-[var(--scar-critical)] text-[var(--scar-critical)]/80", href: "#contact", glowColor: "var(--scar-critical)" },
     { title: "Live CV", Icon: FileText, iconClassName: "group-hover:text-emerald-400 text-emerald-400/90 animate-pulse", href: "#live-cv", glowColor: "hsl(var(--accent-emerald))", isModalTrigger: true },
