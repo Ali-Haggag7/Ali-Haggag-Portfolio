@@ -63,10 +63,10 @@ export const ScoutPipelineSVG = memo(function ScoutPipelineSVG({
                                 className={cn(
                                     "flex h-14 w-14 items-center justify-center rounded-2xl border-2 transition-all duration-300 shadow-md relative z-10",
                                     isActive
-                                        ? "bg-purple-500/20 border-purple-500 text-purple-400 shadow-[0_0_20px_rgba(168,85,247,0.4)]"
+                                        ? "bg-purple-500/20 border-purple-500 text-purple-600 dark:text-purple-400 shadow-[0_0_20px_rgba(168,85,247,0.4)]"
                                         : isPassed
-                                        ? "bg-purple-500/10 border-purple-500/50 text-purple-300"
-                                        : "bg-card border-border text-muted-foreground hover:border-foreground/40 hover:text-foreground"
+                                        ? "bg-purple-500/10 border-purple-500/50 text-purple-600 dark:text-purple-300"
+                                        : "bg-slate-100 dark:bg-card border-slate-200 dark:border-border text-slate-600 dark:text-muted-foreground hover:border-foreground/40 hover:text-foreground"
                                 )}
                             >
                                 <Icon className="h-6 w-6" aria-hidden="true" />
@@ -77,10 +77,10 @@ export const ScoutPipelineSVG = memo(function ScoutPipelineSVG({
 
                             {/* Step Title & Number */}
                             <div className="text-center space-y-0.5">
-                                <span className="text-[10px] font-mono font-bold tracking-widest text-purple-400 uppercase block">
+                                <span className="text-[10px] font-mono font-bold tracking-widest text-purple-600 dark:text-purple-400 uppercase block">
                                     Step 0{step.number}
                                 </span>
-                                <span className={cn("text-xs font-bold font-mono transition-colors block", isActive ? "text-foreground" : "text-muted-foreground group-hover:text-foreground")}>
+                                <span className={cn("text-xs font-bold font-mono transition-colors block", isActive ? "text-foreground" : "text-slate-600 dark:text-muted-foreground group-hover:text-foreground")}>
                                     {step.title}
                                 </span>
                             </div>
