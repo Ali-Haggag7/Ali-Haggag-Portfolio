@@ -20,7 +20,7 @@ export interface TourPersona {
 export const TOUR_PERSONAS: readonly TourPersona[] = Object.freeze([
     {
         id: "recruiter",
-        title: "🎯 Recruiter & Hiring Manager",
+        title: "Recruiter & Hiring Manager",
         description: "Guided deep-dive into Ali's growth story, engineering scale, and live CV proof.",
         badge: "HIRING SIGNAL",
         steps: [
@@ -75,7 +75,7 @@ export const TOUR_PERSONAS: readonly TourPersona[] = Object.freeze([
     },
     {
         id: "engineer",
-        title: "💻 Senior Engineer & Architect",
+        title: "Senior Engineer & Architect",
         description: "Deep technical walkthrough of compiler design, AI brain loop, & system post-mortems.",
         badge: "DEEP TECH",
         steps: [
