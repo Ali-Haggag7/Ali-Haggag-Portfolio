@@ -77,9 +77,10 @@ export const RadarChart = memo(function RadarChart() {
                                 return `${pt.x},${pt.y}`;
                             }).join(" ")}
                             fill="none"
-                            stroke="rgba(255, 255, 255, 0.08)"
+                            stroke="currentColor"
                             strokeWidth="1"
                             strokeDasharray={level === 1.0 ? "none" : "2, 2"}
+                            className="text-foreground/15"
                         />
                     ))}
 
@@ -93,8 +94,9 @@ export const RadarChart = memo(function RadarChart() {
                                 y1={center}
                                 x2={pt.x}
                                 y2={pt.y}
-                                stroke="rgba(255, 255, 255, 0.12)"
+                                stroke="currentColor"
                                 strokeWidth="1"
+                                className="text-foreground/20"
                             />
                         );
                     })}
@@ -136,11 +138,12 @@ export const RadarChart = memo(function RadarChart() {
                                     y={labelPt.y}
                                     textAnchor="middle"
                                     dominantBaseline="central"
-                                    fill={isHovered ? "#ffffff" : "#94a3b8"}
                                     fontSize="9"
-                                    fontWeight={isHovered ? "bold" : "normal"}
                                     fontFamily="monospace"
-                                    className="select-none transition-colors"
+                                    className={cn(
+                                        "select-none transition-colors fill-muted-foreground",
+                                        isHovered && "fill-foreground font-bold"
+                                    )}
                                 >
                                     {axis.label}
                                 </text>
@@ -153,9 +156,9 @@ export const RadarChart = memo(function RadarChart() {
             {/* Hover details badge */}
             <div className="min-h-[32px] flex items-center justify-center text-xs font-mono">
                 {hoveredAxis ? (
-                    <span className="text-purple-300 font-semibold flex items-center gap-1.5">
-                        <Zap className="h-3.5 w-3.5 text-purple-400" aria-hidden="true" />
-                        {hoveredAxis.label}: <strong className="text-white">{hoveredAxis.score}%</strong> (Battle-Tested)
+                    <span className="text-purple-600 dark:text-purple-300 font-semibold flex items-center gap-1.5">
+                        <Zap className="h-3.5 w-3.5 text-purple-500 dark:text-purple-400" aria-hidden="true" />
+                        {hoveredAxis.label}: <strong className="text-foreground">{hoveredAxis.score}%</strong> (Battle-Tested)
                     </span>
                 ) : (
                     <span className="text-muted-foreground">Hover over any axis to inspect score</span>
