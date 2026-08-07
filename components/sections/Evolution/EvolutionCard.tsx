@@ -16,9 +16,31 @@ const cardVariants: Variants = {
 };
 
 const expandVariants: Variants = {
-    hidden: { opacity: 0, y: -8 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.25, ease: "easeOut" } },
-    exit: { opacity: 0, y: -8, transition: { duration: 0.18, ease: "easeIn" } },
+    hidden: {
+        opacity: 0,
+        height: 0,
+        y: -6,
+    },
+    visible: {
+        opacity: 1,
+        height: "auto",
+        y: 0,
+        transition: {
+            height: { duration: 0.35, ease: [0.16, 1, 0.3, 1] },
+            opacity: { duration: 0.25, delay: 0.05 },
+            y: { duration: 0.3, ease: "easeOut" },
+        },
+    },
+    exit: {
+        opacity: 0,
+        height: 0,
+        y: -6,
+        transition: {
+            height: { duration: 0.3, ease: [0.7, 0, 0.84, 0] },
+            opacity: { duration: 0.18 },
+            y: { duration: 0.2 },
+        },
+    },
 };
 
 const VIEWPORT = { once: true, margin: "-50px" } as const;
@@ -148,7 +170,7 @@ export const EvolutionCard = memo(function EvolutionCard({
         >
             {/* Timeline dot */}
             <div className={cn(
-                "absolute left-8 md:left-1/2 -translate-x-1/2 flex h-12 w-12 items-center justify-center rounded-full border-2 z-10",
+                "absolute left-8 md:left-1/2 -translate-x-1/2 flex h-12 w-12 items-center justify-center rounded-full border-2 z-20",
                 "bg-background border-border dark:bg-neutral-950 dark:border-neutral-800",
                 "transition-transform duration-300 ease-out group-hover:scale-110 will-change-transform",
             )}>
@@ -248,30 +270,21 @@ export const EvolutionCard = memo(function EvolutionCard({
                             />
                         </span>
 
-                        {isMobile ? (
-                            <div
-                                id={detailId}
-                                className="grid transition-[grid-template-rows] duration-300 ease-out"
-                                style={{ gridTemplateRows: expanded ? "1fr" : "0fr" }}
-                            >
-                                <div className="overflow-hidden">{detailBody}</div>
-                            </div>
-                        ) : (
-                            <AnimatePresence initial={false}>
-                                {expanded && (
-                                    <motion.div
-                                        id={detailId}
-                                        variants={expandVariants}
-                                        initial="hidden"
-                                        animate="visible"
-                                        exit="exit"
-                                        style={{ willChange: "transform, opacity" }}
-                                    >
-                                        {detailBody}
-                                    </motion.div>
-                                )}
-                            </AnimatePresence>
-                        )}
+                        <AnimatePresence initial={false}>
+                            {expanded && (
+                                <motion.div
+                                    id={detailId}
+                                    variants={expandVariants}
+                                    initial="hidden"
+                                    animate="visible"
+                                    exit="exit"
+                                    className="overflow-hidden"
+                                    style={{ willChange: "height, opacity, transform" }}
+                                >
+                                    {detailBody}
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
                     </>
                 )}
             </motion.div>

@@ -15,11 +15,32 @@ const cardVariants: Variants = {
     },
 };
 
-// Expansion variants — opacity + translateY only (no height animation).
 const expandVariants: Variants = {
-    hidden: { opacity: 0, y: -8 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.25, ease: "easeOut" } },
-    exit: { opacity: 0, y: -8, transition: { duration: 0.18, ease: "easeIn" } },
+    hidden: {
+        opacity: 0,
+        height: 0,
+        y: -6,
+    },
+    visible: {
+        opacity: 1,
+        height: "auto",
+        y: 0,
+        transition: {
+            height: { duration: 0.35, ease: [0.16, 1, 0.3, 1] },
+            opacity: { duration: 0.25, delay: 0.05 },
+            y: { duration: 0.3, ease: "easeOut" },
+        },
+    },
+    exit: {
+        opacity: 0,
+        height: 0,
+        y: -6,
+        transition: {
+            height: { duration: 0.3, ease: [0.7, 0, 0.84, 0] },
+            opacity: { duration: 0.18 },
+            y: { duration: 0.2 },
+        },
+    },
 };
 
 const VIEWPORT = { once: true, margin: "-50px" } as const;
@@ -195,31 +216,21 @@ export const TimelineCard = memo(function TimelineCard({
                             />
                         </span>
 
-                        {/* Framer Motion on desktop, CSS transition on mobile */}
-                        {isMobile ? (
-                            <div
-                                id={detailId}
-                                className="grid transition-[grid-template-rows] duration-300 ease-out"
-                                style={{ gridTemplateRows: expanded ? "1fr" : "0fr" }}
-                            >
-                                <div className="overflow-hidden">{detailBody}</div>
-                            </div>
-                        ) : (
-                            <AnimatePresence initial={false}>
-                                {expanded && (
-                                    <motion.div
-                                        id={detailId}
-                                        variants={expandVariants}
-                                        initial="hidden"
-                                        animate="visible"
-                                        exit="exit"
-                                        style={{ willChange: "transform, opacity" }}
-                                    >
-                                        {detailBody}
-                                    </motion.div>
-                                )}
-                            </AnimatePresence>
-                        )}
+                        <AnimatePresence initial={false}>
+                            {expanded && (
+                                <motion.div
+                                    id={detailId}
+                                    variants={expandVariants}
+                                    initial="hidden"
+                                    animate="visible"
+                                    exit="exit"
+                                    className="overflow-hidden"
+                                    style={{ willChange: "height, opacity, transform" }}
+                                >
+                                    {detailBody}
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
                     </>
                 )}
             </motion.div>

@@ -97,14 +97,14 @@ export default function EvolutionArc() {
                     {/* Static track line */}
                     <div
                         aria-hidden="true"
-                        className="absolute left-8 top-0 h-full w-px md:left-1/2 bg-border rounded-full"
+                        className="absolute left-8 top-0 h-full w-px md:left-1/2 bg-border rounded-full z-0"
                     />
 
                     {/* Animated scroll progress line */}
                     <motion.div
                         aria-hidden="true"
                         style={{ scaleY: smoothProgress, ...PROGRESS_LINE_STYLE }}
-                        className="absolute left-8 top-0 h-full w-[3px] -ml-px md:left-1/2 rounded-full origin-top z-10 shadow-[0_0_12px_2px_rgba(168,85,247,0.4)] will-change-transform"
+                        className="absolute left-8 top-0 h-full w-[3px] -ml-px md:left-1/2 rounded-full origin-top z-0 shadow-[0_0_12px_2px_rgba(168,85,247,0.4)] will-change-transform"
                     />
 
                     {evolutionData.map((chapter, index) => (

@@ -25,20 +25,35 @@ export const NarrativeConnector = memo(function NarrativeConnector({
     isMobile,
 }: NarrativeConnectorProps) {
     const content = (
-        <div className="relative flex items-center gap-3 max-w-md mx-auto px-5 py-4 rounded-xl bg-card/50 border border-border/40 backdrop-blur-sm">
-            <ArrowDown
-                className="h-4 w-4 shrink-0 text-muted-foreground/60"
+        <div className="relative z-10 max-w-md mx-auto">
+            {/* Top edge blend gradient: smoothly dissolves neon line entry */}
+            <div
                 aria-hidden="true"
+                className="pointer-events-none absolute -top-6 left-0 right-0 h-12 bg-gradient-to-b from-transparent via-card/75 to-card/95 rounded-t-xl z-10"
             />
-            <p className="text-sm italic text-muted-foreground leading-relaxed">
-                {text}
-            </p>
+
+            {/* Bottom edge blend gradient: smoothly dissolves neon line exit */}
+            <div
+                aria-hidden="true"
+                className="pointer-events-none absolute -bottom-6 left-0 right-0 h-12 bg-gradient-to-b from-card/95 via-card/75 to-transparent rounded-b-xl z-10"
+            />
+
+            {/* Main card */}
+            <div className="relative z-10 flex items-center gap-3 px-5 py-4 rounded-xl bg-card/95 border border-border/60 backdrop-blur-md shadow-md">
+                <ArrowDown
+                    className="h-4 w-4 shrink-0 text-muted-foreground/60"
+                    aria-hidden="true"
+                />
+                <p className="text-sm italic text-muted-foreground leading-relaxed">
+                    {text}
+                </p>
+            </div>
         </div>
     );
 
     if (isMobile) {
         return (
-            <div className="my-4 ml-20 md:ml-0" aria-hidden="true">
+            <div className="my-4 ml-20 md:ml-0 relative z-10" aria-hidden="true">
                 {content}
             </div>
         );
@@ -50,7 +65,7 @@ export const NarrativeConnector = memo(function NarrativeConnector({
             initial="hidden"
             whileInView="visible"
             viewport={VIEWPORT}
-            className="my-4"
+            className="my-4 relative z-10"
             aria-hidden="true"
         >
             {content}
