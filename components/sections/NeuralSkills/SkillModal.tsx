@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useCallback, memo } from "react";
-import { motion, useDragControls } from "framer-motion";
+import { motion } from "framer-motion";
 import { X, Link as LinkIcon, Lightbulb, Activity, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
@@ -41,18 +41,18 @@ const MOBILE_MODAL_VARIANTS = {
     hidden: { y: "100%" },
     visible: {
         y: 0,
-        transition: { type: "spring", damping: 30, stiffness: 300 },
+        transition: { type: "spring", damping: 32, stiffness: 350 },
     },
     exit: {
         y: "100%",
-        transition: { duration: 0.2, ease: "easeIn" },
+        transition: { type: "spring", damping: 32, stiffness: 350 },
     },
 } as const;
 
 // ── Constants ──────────────────────────────────────────────────────────
 
-const SWIPE_CLOSE_THRESHOLD = 30;
-const SWIPE_VELOCITY_THRESHOLD = 100;
+const SWIPE_CLOSE_THRESHOLD = 80;
+const SWIPE_VELOCITY_THRESHOLD = 300;
 
 // ── Component ──────────────────────────────────────────────────────────
 
@@ -69,7 +69,6 @@ export const SkillModal = memo(function SkillModal({
     const raster = isRaster(skill.icon);
     const dialogRef = useRef<HTMLDivElement>(null);
     const router = useRouter();
-    const dragControls = useDragControls();
 
     // Restore focus to the trigger element when the modal closes
     useEffect(() => {
@@ -160,10 +159,9 @@ export const SkillModal = memo(function SkillModal({
                 animate="visible"
                 exit="exit"
                 drag={isMobile ? "y" : false}
-                dragControls={dragControls}
-                dragListener={false}
-                dragConstraints={{ top: 0, bottom: 1000 }}
-                dragElastic={0.15}
+                dragConstraints={{ top: 0 }}
+                dragElastic={{ top: 0, bottom: 0.5 }}
+                dragMomentum={false}
                 onDragEnd={(_, info) => {
                     if (
                         isMobile &&
@@ -173,7 +171,7 @@ export const SkillModal = memo(function SkillModal({
                         onClose();
                     }
                 }}
-                style={{ willChange: "transform, opacity" }}
+                style={{ willChange: "transform" }}
                 className={cn(
                     "relative bg-white dark:bg-card/95 border border-slate-200 dark:border-border/80 shadow-[0_20px_50px_rgba(0,0,0,0.12)] dark:shadow-[0_25px_60px_-15px_rgba(0,0,0,0.8)] backdrop-blur-2xl overflow-hidden z-10 focus:outline-none tactical-corner-reticles",
                     isMobile
@@ -184,8 +182,7 @@ export const SkillModal = memo(function SkillModal({
                 {/* ── Drag Handle + Close (mobile) ──────────────── */}
                 {isMobile && (
                     <div
-                        className="sticky top-0 z-20 flex items-center justify-between px-5 pt-3 pb-2 bg-card/90 backdrop-blur-md border-b border-border/40 cursor-grab active:cursor-grabbing"
-                        onPointerDown={(e) => dragControls.start(e)}
+                        className="sticky top-0 z-20 flex items-center justify-between px-5 pt-3 pb-2 bg-card/90 backdrop-blur-md border-b border-border/40"
                     >
                         <div className="flex-1" />
                         <div

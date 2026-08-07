@@ -34,9 +34,9 @@ export const COGNITIVE_STEPS: readonly CognitiveStep[] = Object.freeze([
             heading: "Two-Axis Classification & Deterministic Answers",
             codeSnippet: `[Classifier] Deterministic DB lookup matched candidate profile:
   - "Years experience NestJS" -> 3 (from User Experience DB, 0 LLM cost)
-[LLM Reasoner] Invoking Groq Llama-3.3-70B (BYOK fallback ready):
+[LLM Reasoner] Invoking Groq Llama-3.3-70B (auto 8B fallback on 429):
   - Reasoning: Candidate profile satisfies hybrid requirement. Proceed to Plan.`,
-            details: "Deterministic-first lookup answers known questions at 0 LLM cost. Complex questions invoke Groq Llama-3.3-70B.",
+            details: "Deterministic-first lookup answers known questions at 0 LLM cost. Complex questions invoke Groq Llama-3.3-70B with automated 8B instant fallback.",
         },
     },
     {
@@ -63,8 +63,8 @@ export const COGNITIVE_STEPS: readonly CognitiveStep[] = Object.freeze([
             codeSnippet: `[Executor] Running in node:worker_threads (threadId: 4)
   - Executing: page.type("#exp-nestjs", "3") -> OK
   - Executing: page.click("#hybrid-willing") -> OK
-  - Relaying 2 FPS browser frame buffer over Socket.io /dashboard`,
-            details: "Browser actions execute inside isolated threads. If Playwright crashes, Executor.terminateAllWorkers() prevents zombie workers.",
+  - Relaying 1-2 FPS browser frame buffer over Socket.io /dashboard`,
+            details: "Browser actions execute inside isolated threads. Executor.terminateAllWorkers() kills child threads on session stop.",
         },
     },
     {

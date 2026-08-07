@@ -1,12 +1,15 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { metricsData } from "./metrics.data";
+import { useEffect, useRef, useState, useCallback } from "react";
+import { AnimatePresence } from "framer-motion";
+import { metricsData, type MetricItem } from "./metrics.data";
 import { MetricCard } from "./MetricCard";
+import { MetricDetailModal } from "./MetricDetailModal";
 
 export default function EngineeringMetrics() {
     const sectionRef = useRef<HTMLDivElement>(null);
     const [isInView, setIsInView] = useState(false);
+    const [selectedMetric, setSelectedMetric] = useState<MetricItem | null>(null);
 
     useEffect(() => {
         const el = sectionRef.current;
@@ -26,6 +29,10 @@ export default function EngineeringMetrics() {
         return () => observer.disconnect();
     }, []);
 
+    const handleClose = useCallback(() => {
+        setSelectedMetric(null);
+    }, []);
+
     return (
         <section
             ref={sectionRef}
@@ -41,16 +48,28 @@ export default function EngineeringMetrics() {
                         <span className="accent-word-emerald">By The Numbers</span>
                     </h2>
                     <p className="text-muted-foreground text-sm md:text-base leading-relaxed max-w-xl">
-                        Real performance metrics, test counts, and system scale extracted from production deployments.
+                        Real performance metrics, test counts, and system scale extracted from production deployments. Click any card to inspect system evidence.
                     </p>
                 </div>
 
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6 max-w-6xl mx-auto">
                     {metricsData.map((metric) => (
-                        <MetricCard key={metric.id} metric={metric} isInView={isInView} />
+                        <MetricCard
+                            key={metric.id}
+                            metric={metric}
+                            isInView={isInView}
+                            onSelect={setSelectedMetric}
+                        />
                     ))}
                 </div>
             </div>
+
+            {/* Interactive Technical Dossier Modal */}
+            <AnimatePresence>
+                {selectedMetric && (
+                    <MetricDetailModal metric={selectedMetric} onClose={handleClose} />
+                )}
+            </AnimatePresence>
         </section>
     );
 }
