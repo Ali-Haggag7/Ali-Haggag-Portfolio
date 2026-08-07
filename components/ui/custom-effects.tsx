@@ -210,11 +210,10 @@ export default function CustomEffects() {
                             "radial-gradient(ellipse at top, rgba(255,0,128,0.35) 0%, transparent 70%)",
                         ],
                     }}
-                    exit={{ opacity: 0 }}
+                    exit={{ opacity: 0, transition: { duration: 0.5 } }}
                     transition={{
                         opacity: { duration: 0.4 },
                         background: { duration: 0.7, repeat: Infinity, ease: "linear" },
-                        exit: { duration: 0.5 },
                     }}
                     aria-hidden="true"
                     className="fixed inset-0 z-[10000] pointer-events-none"
