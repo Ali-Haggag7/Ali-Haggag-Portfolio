@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { ArrowRight, Terminal } from "lucide-react";
+import { triggerEasterEggDirect } from "@/components/ui/custom-effects";
 import { cn } from "@/lib/utils";
 import { footerLinks, socialLinks, handleSmoothScroll, currentYear } from "./footer.data";
 import { LocalTime } from "./LocalTime";
@@ -21,11 +22,6 @@ const socialSpring = {
 const viewport = { once: true } as const;
 
 export default function Footer() {
-    const triggerEasterEgg = (code: string) => {
-        for (const char of code) {
-            window.dispatchEvent(new KeyboardEvent("keydown", { key: char }));
-        }
-    };
 
     return (
         <footer className="w-full relative bg-background pt-20 pb-8 overflow-hidden">
@@ -160,7 +156,7 @@ export default function Footer() {
                                 <div className="grid grid-cols-3 md:flex gap-2">
                                     <button
                                         type="button"
-                                        onClick={() => triggerEasterEgg("matrix")}
+                                        onClick={() => triggerEasterEggDirect("matrix")}
                                         className="flex-1 min-h-[48px] md:min-h-11 flex flex-col md:flex-row items-center justify-center gap-1 md:gap-1.5 rounded-[16px] md:rounded-xl border border-border/50 md:border-border bg-card/40 md:bg-card backdrop-blur-xl md:backdrop-blur-none text-[11px] md:text-xs font-semibold hover:border-[hsl(var(--accent-blue))]/40 hover:bg-muted/20 dark:hover:bg-white/3 active:scale-95 transition-all cursor-pointer shadow-sm md:shadow-none focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
                                         title="Trigger Matrix Rain"
                                     >
@@ -169,7 +165,7 @@ export default function Footer() {
                                     </button>
                                     <button
                                         type="button"
-                                        onClick={() => triggerEasterEgg("party")}
+                                        onClick={() => triggerEasterEggDirect("party")}
                                         className="flex-1 min-h-[48px] md:min-h-11 flex flex-col md:flex-row items-center justify-center gap-1 md:gap-1.5 rounded-[16px] md:rounded-xl border border-border/50 md:border-border bg-card/40 md:bg-card backdrop-blur-xl md:backdrop-blur-none text-[11px] md:text-xs font-semibold hover:border-[hsl(var(--accent-purple))]/40 hover:bg-muted/20 dark:hover:bg-white/3 active:scale-95 transition-all cursor-pointer shadow-sm md:shadow-none focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
                                         title="Trigger Party Lights"
                                     >
@@ -178,7 +174,7 @@ export default function Footer() {
                                     </button>
                                     <button
                                         type="button"
-                                        onClick={() => triggerEasterEgg("nuke")}
+                                        onClick={() => triggerEasterEggDirect("nuke")}
                                         className="flex-1 min-h-[48px] md:min-h-11 flex flex-col md:flex-row items-center justify-center gap-1 md:gap-1.5 rounded-[16px] md:rounded-xl border border-border/50 md:border-border bg-card/40 md:bg-card backdrop-blur-xl md:backdrop-blur-none text-[11px] md:text-xs font-semibold hover:border-[hsl(var(--accent-emerald))]/40 hover:bg-muted/20 dark:hover:bg-white/3 active:scale-95 transition-all cursor-pointer shadow-sm md:shadow-none focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
                                         title="Trigger System Nuke"
                                     >
