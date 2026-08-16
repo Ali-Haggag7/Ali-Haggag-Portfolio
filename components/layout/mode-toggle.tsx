@@ -2,7 +2,7 @@
 
 import { Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
-import { useEffect, useState, useCallback, useMemo, memo } from "react";
+import { useEffect, useState, useCallback, memo } from "react";
 import { cn } from "@/lib/utils";
 
 // Static classes computed once at module load — never re-allocated.
@@ -13,24 +13,68 @@ const BUTTON_CLASS = cn(
     "bg-background/95 border border-border/50 shadow-md",
     "hover:shadow-lg active:scale-90 cursor-pointer",
     "transition-all duration-200 ease-out",
-    "focus:outline-none focus:ring-2 focus:ring-blue-500/50",
+    "focus:outline-none focus:ring-2 focus:ring-blue-500/50"
 );
 
 export const ModeToggle = memo(function ModeToggle() {
     const { setTheme, resolvedTheme } = useTheme();
-
-    // mounted guard — prevents hydration mismatch between SSR (no theme)
-    // and client (resolved theme). We render the shell immediately to
-    // avoid layout shift; icons are hidden via opacity until mounted.
     const [mounted, setMounted] = useState(false);
-    useEffect(() => { setMounted(true); }, []);
 
-    const isDark = useMemo(() => resolvedTheme === "dark", [resolvedTheme]);
+    useEffect(() => {
+        setMounted(true);
+    }, []);
 
-    // Stable toggle — never recreated unless isDark changes.
+    const isDark = resolvedTheme === "dark";
+
     const toggle = useCallback(
-        () => setTheme(isDark ? "light" : "dark"),
-        [isDark, setTheme],
+        (event: React.MouseEvent<HTMLButtonElement>) => {
+            const nextTheme = isDark ? "light" : "dark";
+
+            // Trigger instant theme change without any async blocking
+            setTheme(nextTheme);
+
+            // Create a lightweight, GPU-composited radial wave originating from the button
+            try {
+                const button = event.currentTarget;
+                const rect = button?.getBoundingClientRect?.();
+                const x = (event.clientX && event.clientX > 0) ? event.clientX : (rect ? rect.left + rect.width / 2 : window.innerWidth - 40);
+                const y = (event.clientY && event.clientY > 0) ? event.clientY : (rect ? rect.top + rect.height / 2 : 40);
+
+                const ripple = document.createElement("div");
+                ripple.style.position = "fixed";
+                ripple.style.left = `${x}px`;
+                ripple.style.top = `${y}px`;
+                ripple.style.width = "12px";
+                ripple.style.height = "12px";
+                ripple.style.borderRadius = "50%";
+                ripple.style.transform = "translate(-50%, -50%) scale(0)";
+                ripple.style.background = isDark
+                    ? "radial-gradient(circle, rgba(251, 191, 36, 0.25) 0%, rgba(245, 158, 11, 0.1) 50%, transparent 80%)"
+                    : "radial-gradient(circle, rgba(59, 130, 246, 0.3) 0%, rgba(147, 51, 234, 0.15) 50%, transparent 80%)";
+                ripple.style.pointerEvents = "none";
+                ripple.style.zIndex = "99999";
+                ripple.style.willChange = "transform, opacity";
+                ripple.style.transition = "transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.6s ease-out";
+                document.body.appendChild(ripple);
+
+                // Start expansion in next frame
+                requestAnimationFrame(() => {
+                    const maxDim = Math.max(window.innerWidth, window.innerHeight) * 2.8;
+                    ripple.style.transform = `translate(-50%, -50%) scale(${maxDim / 12})`;
+                    ripple.style.opacity = "0";
+                });
+
+                // Clean up DOM element after animation ends
+                setTimeout(() => {
+                    if (ripple.parentNode) {
+                        ripple.parentNode.removeChild(ripple);
+                    }
+                }, 650);
+            } catch {
+                /* Graceful fallback */
+            }
+        },
+        [isDark, setTheme]
     );
 
     return (
@@ -38,24 +82,17 @@ export const ModeToggle = memo(function ModeToggle() {
             <button
                 type="button"
                 onClick={toggle}
-                // aria-label reflects current state, not the action — screen readers
-                // announce what IS active, not what clicking will do.
                 aria-label={!mounted ? "Toggle theme" : isDark ? "Switch to light mode" : "Switch to dark mode"}
                 aria-pressed={mounted ? isDark : undefined}
                 className={BUTTON_CLASS}
-                // willChange declared on the element itself — promotes to GPU layer
-                // before the first interaction instead of lazily on first animation.
                 style={{ willChange: "transform" }}
             >
-                {/* Hover glow — opacity transition is Compositor-only */}
+                {/* Hover glow */}
                 <div
                     aria-hidden
                     className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-gradient-to-tr from-amber-500/10 to-orange-500/10 dark:from-blue-500/20 dark:to-cyan-500/20"
                 />
 
-                {/* Icons hidden until mounted to prevent SSR theme flash.
-            Once mounted, transition-all handles the rotation/scale swap.
-            GPU path: transform + opacity = Compositor only, zero Layout/Paint. */}
                 <Sun
                     aria-hidden
                     className={cn(
@@ -63,7 +100,7 @@ export const ModeToggle = memo(function ModeToggle() {
                         mounted && "transition-all duration-300",
                         !mounted || isDark
                             ? "rotate-90 scale-0 opacity-0"
-                            : "rotate-0 scale-100 opacity-100",
+                            : "rotate-0 scale-100 opacity-100"
                     )}
                     style={{ willChange: "transform, opacity" }}
                 />
@@ -75,7 +112,7 @@ export const ModeToggle = memo(function ModeToggle() {
                         mounted && "transition-all duration-300",
                         !mounted || !isDark
                             ? "-rotate-90 scale-0 opacity-0"
-                            : "rotate-0 scale-100 opacity-100",
+                            : "rotate-0 scale-100 opacity-100"
                     )}
                     style={{ willChange: "transform, opacity" }}
                 />

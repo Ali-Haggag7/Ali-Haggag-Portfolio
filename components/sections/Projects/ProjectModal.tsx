@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
-import { AnimatePresence } from "framer-motion";
 import { ProjectFeature } from "./projects.data";
 import { ProjectModalDesktop } from "./ProjectModalDesktop";
 import { ProjectModalMobile } from "./ProjectModalMobile";
@@ -55,13 +54,9 @@ export const ProjectModal = ({
         return () => window.removeEventListener("keydown", handleKeyDown);
     }, [handleKeyDown]);
 
-    return (
-        <AnimatePresence mode="wait">
-            {isMobile ? (
-                <ProjectModalMobile key="mobile" feature={feature} onClose={onClose} />
-            ) : (
-                <ProjectModalDesktop key="desktop" feature={feature} onClose={onClose} />
-            )}
-        </AnimatePresence>
+    return isMobile ? (
+        <ProjectModalMobile key="mobile" feature={feature} onClose={onClose} />
+    ) : (
+        <ProjectModalDesktop key="desktop" feature={feature} onClose={onClose} />
     );
 };

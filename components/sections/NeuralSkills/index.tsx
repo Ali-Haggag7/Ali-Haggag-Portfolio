@@ -18,6 +18,8 @@ import { SkillBadge } from "./SkillBadge";
 import { SkillModal } from "./SkillModal";
 import { RadarChart } from "./RadarChart";
 import { CopyStackButton } from "./CopyStackButton";
+import { DecryptedText } from "@/components/ui/DecryptedText";
+import { BorderBeam } from "@/components/ui/BorderBeam";
 
 // Static reference — hoisted to module scope to avoid re-allocation
 const GLOW_STYLE = {
@@ -31,6 +33,20 @@ const categoryVariants: Variants = {
         y: 0,
         transition: { opacity: { duration: 0.5, delay: i * 0.06, ease: "easeOut" } },
     }),
+};
+
+const ACCENT_BEAM_COLORS: Record<AccentColor, { from: string; to: string }> = {
+    blue: { from: "hsl(var(--accent-blue))", to: "hsl(var(--accent-cyan, 199 89% 48%))" },
+    emerald: { from: "hsl(var(--accent-emerald))", to: "hsl(var(--accent-blue))" },
+    violet: { from: "hsl(var(--accent-purple))", to: "hsl(var(--accent-blue))" },
+    amber: { from: "#f59e0b", to: "#ef4444" },
+    red: { from: "#ef4444", to: "#f97316" },
+    cyan: { from: "#06b6d4", to: "hsl(var(--accent-blue))" },
+    orange: { from: "#f97316", to: "#eab308" },
+    pink: { from: "#ec4899", to: "hsl(var(--accent-purple))" },
+    indigo: { from: "#6366f1", to: "hsl(var(--accent-blue))" },
+    fuchsia: { from: "#d946ef", to: "hsl(var(--accent-purple))" },
+    slate: { from: "#94a3b8", to: "#64748b" },
 };
 
 // ── Memoized category row ──────────────────────────────────────────────
@@ -53,6 +69,7 @@ const SkillCategory = memo(function SkillCategory({
     isSearching: boolean;
 }) {
     const styles = ACCENT_STYLES[accent];
+    const beamColors = ACCENT_BEAM_COLORS[accent] || ACCENT_BEAM_COLORS.blue;
 
     return (
         <motion.div
@@ -71,6 +88,14 @@ const SkillCategory = memo(function SkillCategory({
                 styles.shadow,
             )}
         >
+            {/* React Bits Border Beam Glow around Category Card */}
+            <BorderBeam
+                duration={8 + (index % 4) * 1.5}
+                borderWidth={1.5}
+                colorFrom={beamColors.from}
+                colorTo={beamColors.to}
+            />
+
             <div
                 aria-hidden="true"
                 className={cn(
@@ -180,7 +205,9 @@ export default function NeuralSkills() {
 
             {/* ── Section Header ─────────────────────────────────── */}
             <div className="flex flex-col items-center text-center mb-10 px-4 animate-fade-in w-full max-w-3xl mx-auto">
-                <p className="section-eyebrow mb-3">Technical Arsenal</p>
+                <p className="section-eyebrow mb-3">
+                    <DecryptedText text="Technical Arsenal" speed={30} sequential={true} animateOn="view" />
+                </p>
                 <h2
                     id="skills-title"
                     className="section-title text-4xl md:text-5xl mb-3"
@@ -195,7 +222,7 @@ export default function NeuralSkills() {
 
             {/* ── Arsenal Summary Stats Bar ──────────────────────── */}
             <dl className="grid grid-cols-2 md:grid-cols-4 gap-3 w-full max-w-3xl mb-8">
-                <div className="flex flex-col items-center justify-center rounded-[24px] md:rounded-2xl border border-border/50 bg-card/40 md:bg-card/80 backdrop-blur-xl md:backdrop-blur-none p-4 text-center shadow-sm md:shadow-none">
+                <div className="flex flex-col items-center justify-center rounded-[24px] md:rounded-2xl border border-border/50 bg-card/40 md:bg-card/80 backdrop-blur-xl md:backdrop-blur-none p-4 text-center shadow-sm md:shadow-none relative overflow-hidden">
                     <LayoutGrid className="w-5 h-5 mb-1.5 text-muted-foreground/80" aria-hidden="true" />
                     <dd className="text-2xl font-bold tracking-tighter text-foreground leading-none">
                         {arsenalStats.total}
@@ -204,7 +231,8 @@ export default function NeuralSkills() {
                         Total Skills
                     </dt>
                 </div>
-                <div className="flex flex-col items-center justify-center rounded-[24px] md:rounded-2xl border border-violet-500/20 bg-violet-500/5 backdrop-blur-xl md:backdrop-blur-none p-4 text-center shadow-sm md:shadow-none">
+                <div className="flex flex-col items-center justify-center rounded-[24px] md:rounded-2xl border border-violet-500/20 bg-violet-500/5 backdrop-blur-xl md:backdrop-blur-none p-4 text-center shadow-sm md:shadow-none relative overflow-hidden">
+                    <BorderBeam duration={10} borderWidth={1.5} colorFrom="hsl(var(--accent-purple))" colorTo="hsl(var(--accent-blue))" />
                     <Activity className="w-5 h-5 mb-1.5 text-violet-500/80" aria-hidden="true" />
                     <dd className="text-2xl font-bold tracking-tighter text-violet-500 leading-none">
                         {arsenalStats.battleTested}
@@ -213,7 +241,8 @@ export default function NeuralSkills() {
                         Battle-Tested
                     </dt>
                 </div>
-                <div className="flex flex-col items-center justify-center rounded-[24px] md:rounded-2xl border border-emerald-500/20 bg-emerald-500/5 backdrop-blur-xl md:backdrop-blur-none p-4 text-center shadow-sm md:shadow-none">
+                <div className="flex flex-col items-center justify-center rounded-[24px] md:rounded-2xl border border-emerald-500/20 bg-emerald-500/5 backdrop-blur-xl md:backdrop-blur-none p-4 text-center shadow-sm md:shadow-none relative overflow-hidden">
+                    <BorderBeam duration={10} borderWidth={1.5} colorFrom="hsl(var(--accent-emerald))" colorTo="hsl(var(--accent-blue))" />
                     <CheckCircle2 className="w-5 h-5 mb-1.5 text-emerald-500/80" aria-hidden="true" />
                     <dd className="text-2xl font-bold tracking-tighter text-emerald-500 leading-none">
                         {arsenalStats.productionReady}
@@ -222,7 +251,7 @@ export default function NeuralSkills() {
                         Production Ready
                     </dt>
                 </div>
-                <div className="flex flex-col items-center justify-center rounded-[24px] md:rounded-2xl border border-blue-500/20 bg-blue-500/5 backdrop-blur-xl md:backdrop-blur-none p-4 text-center shadow-sm md:shadow-none">
+                <div className="flex flex-col items-center justify-center rounded-[24px] md:rounded-2xl border border-blue-500/20 bg-blue-500/5 backdrop-blur-xl md:backdrop-blur-none p-4 text-center shadow-sm md:shadow-none relative overflow-hidden">
                     <FlaskConical className="w-5 h-5 mb-1.5 text-blue-500/80" aria-hidden="true" />
                     <dd className="text-2xl font-bold tracking-tighter text-blue-500 leading-none">
                         {arsenalStats.exploring}

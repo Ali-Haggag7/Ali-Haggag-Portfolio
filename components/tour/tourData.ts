@@ -26,7 +26,7 @@ export const TOUR_PERSONAS: readonly TourPersona[] = Object.freeze([
         steps: [
             {
                 id: "step-recruiter-1",
-                targetId: "hero",
+                targetId: "hero-terminal",
                 title: "AliOS Terminal & Interactive CLI",
                 subtitle: "First Impression & Identity",
                 commentary:

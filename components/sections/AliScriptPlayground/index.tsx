@@ -4,6 +4,9 @@ import { useEffect, useState } from "react";
 import type React from "react";
 import { PlaygroundEditor } from "./PlaygroundEditor";
 import { Code, ChevronRight, Cpu, Zap, Shield, GitBranch } from "lucide-react";
+import { FlowingGrid } from "@/components/ui/FlowingGrid";
+import { DecryptedText } from "@/components/ui/DecryptedText";
+import { BorderBeam } from "@/components/ui/BorderBeam";
 
 // ── Compilation Pipeline ──────────────────────────────────────────────────────
 const PIPELINE: { label: string; sub: string; accent: string }[] = [
@@ -73,7 +76,10 @@ export default function AliScriptPlaygroundSection() {
             id="aliscript-playground"
             className="relative w-full py-20 bg-transparent overflow-hidden"
         >
-            {/* Radial emerald glow — centered in section, decays naturally to transparent at borders */}
+            {/* React Bits 3D Perspective Flowing Grid */}
+            <FlowingGrid className="opacity-20 dark:opacity-30" horizon={0.3} speed={0.4} gridColor="rgba(16, 185, 129, 0.25)" />
+
+            {/* Radial emerald glow */}
             <div
                 className="absolute inset-0 pointer-events-none -z-10 opacity-70 dark:opacity-100"
                 style={{
@@ -82,11 +88,13 @@ export default function AliScriptPlaygroundSection() {
                 }}
             />
 
-            <div className="container mx-auto px-4 md:px-6 relative">
+            <div className="container mx-auto px-4 md:px-6 relative z-10">
 
                 {/* ── Section Header ───────────────────────────────────────── */}
                 <div className="flex flex-col items-center text-center mb-12 max-w-4xl mx-auto">
-                    <p className="section-eyebrow mb-3">Custom DSL Engine</p>
+                    <p className="section-eyebrow mb-3">
+                        <DecryptedText text="Custom DSL Compiler & VM" speed={30} sequential={true} animateOn="view" />
+                    </p>
 
                     <h2 className="section-title text-4xl md:text-5xl mb-4">
                         AliScript{" "}

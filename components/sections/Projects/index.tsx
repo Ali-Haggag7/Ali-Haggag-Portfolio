@@ -6,6 +6,8 @@ import { AnimatePresence } from "framer-motion";
 import { projectsData, ProjectFeature } from "./projects.data";
 import { BentoCard } from "./BentoCard";
 import { ProjectModal } from "./ProjectModal";
+import { DecryptedText } from "@/components/ui/DecryptedText";
+import { SplitFlapText } from "@/components/ui/SplitFlapText";
 
 /**
  * Factory for stable click handlers to ensure BentoCard's memo works perfectly.
@@ -55,8 +57,22 @@ export default function ProjectsSection() {
         <section
             aria-label="Projects Portfolio"
             id="projects"
-            className="relative flex w-full max-w-5xl flex-col items-center justify-center mt-8 scroll-mt-24 mx-auto"
+            className="relative flex w-full max-w-5xl flex-col items-center justify-center mt-16 scroll-mt-24 mx-auto"
         >
+            {/* ── Section Header ─────────────────────────────────── */}
+            <div className="flex flex-col items-center text-center mb-8 px-4 w-full max-w-3xl mx-auto">
+                <p className="section-eyebrow mb-3">
+                    <DecryptedText text="Production Shipments" speed={30} sequential={true} animateOn="view" />
+                </p>
+                <h2 className="section-title text-4xl md:text-5xl mb-3 flex items-center justify-center gap-3 flex-wrap">
+                    <span>Featured</span>
+                    <SplitFlapText text="SYSTEMS" speed={35} charClassName="text-[hsl(var(--accent-blue))] text-2xl md:text-3xl" />
+                </h2>
+                <p className="text-muted-foreground text-sm md:text-base leading-relaxed max-w-xl">
+                    High-throughput architectures, distributed engines, and mission-critical full-stack applications.
+                </p>
+            </div>
+
             {/* Bento Grid Layout */}
             <div className="grid w-full grid-cols-1 md:grid-cols-3 gap-6 relative p-4 md:p-8">
                 {projectsData.map((feature, index) => (

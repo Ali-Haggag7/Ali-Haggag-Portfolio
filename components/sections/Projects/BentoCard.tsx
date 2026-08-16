@@ -12,6 +12,8 @@ import { Activity } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import { ProjectFeature, PILL_CATEGORY_VAR } from "./projects.data";
+import { BorderBeam } from "@/components/ui/BorderBeam";
+import { DecryptedText } from "@/components/ui/DecryptedText";
 
 /** Max pills shown on a card to keep it compact */
 const CARD_PILL_LIMIT = 4;
@@ -107,10 +109,18 @@ export const BentoCard = memo(function BentoCard({
                 className
             )}
         >
+            {/* React Bits Border Beam Glow */}
+            <BorderBeam
+                duration={10}
+                borderWidth={1.5}
+                colorFrom="hsl(var(--accent-blue))"
+                colorTo="hsl(var(--accent-purple))"
+            />
+
             {/* Top HUD Spec Node Header */}
             <div className="absolute top-3 left-3 right-3 z-30 flex items-center justify-between pointer-events-none">
                 <span className="hud-tag bg-slate-900/85 backdrop-blur-md border border-slate-700/60 text-slate-200 font-mono text-[10px]">
-                    NODE // {feature.id.toUpperCase()}
+                    <DecryptedText text={`NODE // ${feature.id.toUpperCase()}`} speed={30} sequential={true} animateOn="view" />
                 </span>
                 {demoHref && (
                     <span className="hud-tag bg-slate-900/85 backdrop-blur-md border border-emerald-500/40 text-emerald-400 font-mono text-[10px]">
@@ -164,8 +174,11 @@ export const BentoCard = memo(function BentoCard({
                 )}
             </div>
 
-            {/* Overlays & Content */}
-            <div aria-hidden="true" className="absolute inset-0 z-10 bg-gradient-to-t from-slate-950/95 via-slate-950/70 to-slate-950/20 pointer-events-none transition-opacity duration-300 group-hover:opacity-90" />
+            {/* Overlays & Content — Lightened gradient so project screenshot shines through clearly */}
+            <div
+                aria-hidden="true"
+                className="absolute inset-0 z-10 bg-gradient-to-t from-slate-950/85 via-slate-950/35 via-45% to-transparent pointer-events-none transition-opacity duration-300 group-hover:opacity-80"
+            />
 
             <div className="relative z-20 flex flex-col gap-2 p-6 mt-auto">
                 {/* Icon row */}
@@ -175,11 +188,11 @@ export const BentoCard = memo(function BentoCard({
                     </div>
                 </div>
 
-                <h3 className="text-xl font-bold font-display tracking-tight text-white transition-transform duration-300 group-hover:translate-x-1">
+                <h3 className="text-xl font-bold font-display tracking-tight text-white drop-shadow-md transition-transform duration-300 group-hover:translate-x-1">
                     {name}
                 </h3>
 
-                <p className="text-xs md:text-sm text-slate-300 font-medium max-w-lg leading-relaxed transition-transform duration-300 delay-75 group-hover:translate-x-1">
+                <p className="text-xs md:text-sm text-slate-200 font-medium max-w-lg leading-relaxed drop-shadow transition-transform duration-300 delay-75 group-hover:translate-x-1">
                     {description}
                 </p>
 

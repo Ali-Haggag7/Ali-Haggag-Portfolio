@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils";
 import { servicesData, type ServiceCategory } from "./services.data";
 import { ServiceCard } from "./ServiceCard";
 import { SecurityPostureCard } from "./SecurityPostureCard";
+import { DecryptedText } from "@/components/ui/DecryptedText";
 
 type FilterValue = "all" | ServiceCategory;
 
@@ -53,7 +54,9 @@ export default function Services() {
 
             <div className="container mx-auto px-4 relative z-10">
                 <div className="flex flex-col items-center text-center mb-12 max-w-3xl mx-auto animate-fade-in">
-                    <p className="section-eyebrow mb-3">Technical Capabilities</p>
+                    <p className="section-eyebrow mb-3">
+                        <DecryptedText text="Technical Capabilities" speed={30} sequential={true} animateOn="view" />
+                    </p>
                     <h2 className="section-title text-4xl md:text-5xl mb-3">
                         What I{" "}
                         <span className="accent-word">Offer</span>
@@ -67,7 +70,7 @@ export default function Services() {
                 <div
                     role="group"
                     aria-label="Filter services by category"
-                    className="mb-12 flex items-center justify-start sm:justify-center gap-2 sm:gap-3 overflow-x-auto no-scrollbar py-1 w-full px-2"
+                    className="mb-12 flex items-center justify-start sm:justify-center gap-2 sm:gap-3 overflow-x-auto no-scrollbar py-2 w-full px-2"
                 >
                     {FILTERS.map((f) => {
                         const active = filter === f.value;

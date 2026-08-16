@@ -48,7 +48,6 @@ function getProjectFallbackIcon(id: string) {
 export const EcosystemMap = memo(function EcosystemMap() {
     const [hoveredNodeId, setHoveredNodeId] = useState<string | null>(null);
     const [selectedNodeId, setSelectedNodeId] = useState<string>("logic-arena");
-    const [debouncedActiveId, setDebouncedActiveId] = useState<string>("logic-arena");
 
     // SSR-safe mobile detection for dynamic SVG viewBox scaling
     const [isMobile, setIsMobile] = useState(false);
@@ -63,51 +62,43 @@ export const EcosystemMap = memo(function EcosystemMap() {
     const width = isMobile ? 440 : 800;
     const height = isMobile ? 620 : 450;
 
-    // Instant active ID for high-frequency SVG canvas line highlights
-    const activeId = hoveredNodeId || selectedNodeId;
+    // Active ID for SVG laser line highlights (hovered node or currently selected node)
+    const activeLineId = hoveredNodeId || selectedNodeId;
 
-    // Debounced active ID for the bottom inspector card (prevents flickering on rapid mouse movement)
-    useEffect(() => {
-        const timer = setTimeout(() => {
-            setDebouncedActiveId(activeId);
-        }, 120);
-        return () => clearTimeout(timer);
-    }, [activeId]);
-
-    // Active connections logic (instant response on canvas)
+    // Active connections logic for canvas laser lines (high-frequency, lightweight)
     const connectedNodeIds = useMemo(() => {
-        if (!activeId) return new Set<string>();
+        if (!activeLineId) return new Set<string>();
 
-        const connected = new Set<string>([activeId]);
+        const connected = new Set<string>([activeLineId]);
         for (const edge of ECOSYSTEM_EDGES) {
-            if (edge.source === activeId) connected.add(edge.target);
-            if (edge.target === activeId) connected.add(edge.source);
+            if (edge.source === activeLineId) connected.add(edge.target);
+            if (edge.target === activeLineId) connected.add(edge.source);
         }
         return connected;
-    }, [activeId]);
+    }, [activeLineId]);
 
-    // Inspector card active node data (debounced)
-    const activeNode = useMemo(() => {
-        return ECOSYSTEM_NODES.find((n) => n.id === debouncedActiveId) || ECOSYSTEM_NODES[0];
-    }, [debouncedActiveId]);
+    // Inspector card displays strictly the SELECTED node (locked on click, zero hover jitter)
+    const selectedNode = useMemo(() => {
+        return ECOSYSTEM_NODES.find((n) => n.id === selectedNodeId) || ECOSYSTEM_NODES[0];
+    }, [selectedNodeId]);
 
-    // Connected node count for inspector card
-    const debouncedConnectedCount = useMemo(() => {
-        const connected = new Set<string>([debouncedActiveId]);
+    // Connected node count for selected node
+    const selectedConnectedCount = useMemo(() => {
+        const connected = new Set<string>([selectedNodeId]);
         for (const edge of ECOSYSTEM_EDGES) {
-            if (edge.source === debouncedActiveId) connected.add(edge.target);
-            if (edge.target === debouncedActiveId) connected.add(edge.source);
+            if (edge.source === selectedNodeId) connected.add(edge.target);
+            if (edge.target === selectedNodeId) connected.add(edge.source);
         }
         return connected.size - 1;
-    }, [debouncedActiveId]);
+    }, [selectedNodeId]);
 
     const getCoords = (node: EcosystemNode) => ({
         x: (node.x / 100) * width,
         y: (node.y / 100) * height,
     });
 
-    const ActiveProjectFallbackIcon = activeNode.type === "project" ? getProjectFallbackIcon(activeNode.id) : null;
-    const ActiveTechFallbackIcon = activeNode.type === "tech" ? getTechFallbackIcon(activeNode.id) : null;
+    const SelectedProjectFallbackIcon = selectedNode.type === "project" ? getProjectFallbackIcon(selectedNode.id) : null;
+    const SelectedTechFallbackIcon = selectedNode.type === "tech" ? getTechFallbackIcon(selectedNode.id) : null;
 
     // Responsive node sizes
     const projDim = isMobile ? 54 : 46;
@@ -187,8 +178,8 @@ export const EcosystemMap = memo(function EcosystemMap() {
                         const targetNode = ECOSYSTEM_NODES.find((n) => n.id === edge.target);
                         if (!sourceNode || !targetNode) return null;
 
-                        const isSourceActive = edge.source === activeId;
-                        const isTargetActive = edge.target === activeId;
+                        const isSourceActive = edge.source === activeLineId;
+                        const isTargetActive = edge.target === activeLineId;
                         const isHighlighted =
                             connectedNodeIds.has(edge.source) && connectedNodeIds.has(edge.target);
 
@@ -201,7 +192,7 @@ export const EcosystemMap = memo(function EcosystemMap() {
                         }
 
                         // Wire glow color takes the signature color of the active node
-                        const activeNodeObj = ECOSYSTEM_NODES.find((n) => n.id === activeId);
+                        const activeNodeObj = ECOSYSTEM_NODES.find((n) => n.id === activeLineId);
                         const wireColor = isHighlighted
                             ? (activeNodeObj ? activeNodeObj.color : sourceNode.color)
                             : "hsl(var(--border) / 0.5)";
@@ -277,7 +268,7 @@ export const EcosystemMap = memo(function EcosystemMap() {
                     {ECOSYSTEM_NODES.map((node) => {
                         const { x, y } = getCoords(node);
                         const isConnected = connectedNodeIds.has(node.id);
-                        const isSelected = activeId === node.id;
+                        const isSelected = selectedNodeId === node.id;
                         const isProject = node.type === "project";
                         const FallbackProjectIcon = isProject ? getProjectFallbackIcon(node.id) : null;
                         const FallbackTechIcon = !isProject ? getTechFallbackIcon(node.id) : null;
@@ -288,10 +279,7 @@ export const EcosystemMap = memo(function EcosystemMap() {
                                 transform={`translate(${x}, ${y})`}
                                 onMouseEnter={() => setHoveredNodeId(node.id)}
                                 onMouseLeave={() => setHoveredNodeId(null)}
-                                onClick={() => {
-                                    setSelectedNodeId(node.id);
-                                    setDebouncedActiveId(node.id);
-                                }}
+                                onClick={() => setSelectedNodeId(node.id)}
                                 className="cursor-pointer group"
                             >
                                 {/* Selection Glow Pulse Ring */}
@@ -319,8 +307,8 @@ export const EcosystemMap = memo(function EcosystemMap() {
                                             height={projDim}
                                             rx={isMobile ? 15 : 13}
                                             fill="hsl(var(--card))"
-                                            stroke={isConnected ? node.color : "hsl(var(--border))"}
-                                            strokeWidth={isConnected ? "3" : "1.5"}
+                                            stroke={isConnected || isSelected ? node.color : "hsl(var(--border))"}
+                                            strokeWidth={isSelected ? "3.5" : isConnected ? "2.5" : "1.5"}
                                             className="transition-all duration-300 group-hover:scale-125 shadow-xl"
                                         />
                                         {node.iconUrl ? (
@@ -357,23 +345,27 @@ export const EcosystemMap = memo(function EcosystemMap() {
                                             height={techDim}
                                             rx={isMobile ? 10 : 7}
                                             fill="hsl(var(--card))"
-                                            stroke={isConnected ? node.color : "hsl(var(--border))"}
-                                            strokeWidth={isConnected ? "2.5" : "1"}
+                                            stroke={isConnected || isSelected ? node.color : "hsl(var(--border))"}
+                                            strokeWidth={isSelected ? "3" : isConnected ? "2" : "1"}
                                             className="transition-all duration-300 group-hover:scale-125 shadow-md"
                                         />
                                         {node.iconUrl ? (
                                             node.themeable ? (
                                                 <foreignObject x={-techIconHalf} y={-techIconHalf} width={techIconDim} height={techIconDim} className="pointer-events-none">
-                                                    <div
-                                                        className="w-full h-full bg-foreground opacity-80 group-hover:opacity-100 transition-opacity"
-                                                        style={{
-                                                            maskImage: `url(${node.iconUrl})`,
-                                                            WebkitMaskImage: `url(${node.iconUrl})`,
-                                                            maskSize: "contain",
-                                                            maskRepeat: "no-repeat",
-                                                            maskPosition: "center",
-                                                        }}
-                                                    />
+                                                    <div className="w-full h-full flex items-center justify-center">
+                                                        <div
+                                                            className="bg-foreground transition-transform group-hover:scale-110"
+                                                            style={{
+                                                                width: techIconDim,
+                                                                height: techIconDim,
+                                                                maskImage: `url(${node.iconUrl})`,
+                                                                WebkitMaskImage: `url(${node.iconUrl})`,
+                                                                maskSize: "contain",
+                                                                maskRepeat: "no-repeat",
+                                                                maskPosition: "center",
+                                                            }}
+                                                        />
+                                                    </div>
                                                 </foreignObject>
                                             ) : (
                                                 <image
@@ -403,7 +395,7 @@ export const EcosystemMap = memo(function EcosystemMap() {
                                 <text
                                     y={isProject ? (isMobile ? "44" : "38") : (isMobile ? "32" : "30")}
                                     textAnchor="middle"
-                                    fill={isConnected ? "hsl(var(--foreground))" : "hsl(var(--muted-foreground))"}
+                                    fill={isSelected ? node.color : isConnected ? "hsl(var(--foreground))" : "hsl(var(--muted-foreground))"}
                                     fontSize={isProject ? (isMobile ? "13" : "11") : (isMobile ? "11" : "10")}
                                     fontWeight={isProject ? "bold" : "600"}
                                     fontFamily="var(--font-display), sans-serif"
@@ -417,17 +409,17 @@ export const EcosystemMap = memo(function EcosystemMap() {
                 </svg>
             </div>
 
-            {/* Selected Node Inspector Details Card (Debounced, Flicker-Free) */}
+            {/* Selected Node Inspector Details Card (Locked to Click Selection) */}
             <div className="rounded-3xl border border-border/80 bg-card/90 backdrop-blur-xl cyber-card tactical-corner-reticles p-5 md:p-6 shadow-xl flex flex-col md:flex-row md:items-center justify-between gap-4 transition-all duration-200">
                 <div className="space-y-1.5 flex-1 min-w-0">
                     <div className="flex items-center gap-3 flex-wrap">
-                        {activeNode.iconUrl ? (
-                            activeNode.themeable ? (
+                        {selectedNode.iconUrl ? (
+                            selectedNode.themeable ? (
                                 <div
                                     className="w-6 h-6 bg-foreground shrink-0"
                                     style={{
-                                        maskImage: `url(${activeNode.iconUrl})`,
-                                        WebkitMaskImage: `url(${activeNode.iconUrl})`,
+                                        maskImage: `url(${selectedNode.iconUrl})`,
+                                        WebkitMaskImage: `url(${selectedNode.iconUrl})`,
                                         maskSize: "contain",
                                         maskRepeat: "no-repeat",
                                         maskPosition: "center",
@@ -435,43 +427,46 @@ export const EcosystemMap = memo(function EcosystemMap() {
                                 />
                             ) : (
                                 <img
-                                    src={activeNode.iconUrl}
-                                    alt={activeNode.label}
+                                    src={selectedNode.iconUrl}
+                                    alt={selectedNode.label}
                                     className="w-6 h-6 object-contain shrink-0"
                                 />
                             )
-                        ) : ActiveProjectFallbackIcon ? (
-                            <ActiveProjectFallbackIcon className="w-6 h-6 shrink-0" style={{ color: activeNode.color }} />
-                        ) : ActiveTechFallbackIcon ? (
-                            <ActiveTechFallbackIcon className="w-6 h-6 shrink-0" style={{ color: activeNode.color }} />
+                        ) : SelectedProjectFallbackIcon ? (
+                            <SelectedProjectFallbackIcon className="w-6 h-6 shrink-0" style={{ color: selectedNode.color }} />
+                        ) : SelectedTechFallbackIcon ? (
+                            <SelectedTechFallbackIcon className="w-6 h-6 shrink-0" style={{ color: selectedNode.color }} />
                         ) : (
-                            <span className="h-3 w-3 rounded-full shrink-0 shadow-sm" style={{ backgroundColor: activeNode.color }} />
+                            <span className="h-3 w-3 rounded-full shrink-0 shadow-sm" style={{ backgroundColor: selectedNode.color }} />
                         )}
 
                         <h4 className="text-base sm:text-lg font-bold font-display text-foreground tracking-tight">
-                            {activeNode.label}
+                            {selectedNode.label}
                         </h4>
                         <span
                             className="hud-tag"
                             style={{
-                                color: activeNode.color,
-                                borderColor: `color-mix(in srgb, ${activeNode.color} 40%, transparent)`,
-                                backgroundColor: `color-mix(in srgb, ${activeNode.color} 12%, transparent)`,
+                                color: selectedNode.color,
+                                borderColor: `color-mix(in srgb, ${selectedNode.color} 40%, transparent)`,
+                                backgroundColor: `color-mix(in srgb, ${selectedNode.color} 12%, transparent)`,
                             }}
                         >
-                            {activeNode.type === "project" ? "PROJECT HUB" : "TECH CLUSTER"}
+                            {selectedNode.type === "project" ? "PROJECT HUB" : "TECH CLUSTER"}
+                        </span>
+                        <span className="hidden sm:inline text-[10px] font-mono text-muted-foreground/60 tracking-wider">
+                            ● CLICK ANY NODE TO PIN SPEC
                         </span>
                     </div>
-                    {activeNode.description && (
+                    {selectedNode.description && (
                         <p className="text-xs sm:text-sm text-muted-foreground font-medium leading-relaxed">
-                            {activeNode.description}
+                            {selectedNode.description}
                         </p>
                     )}
                 </div>
 
                 <div className="flex items-center gap-2 text-xs font-mono text-muted-foreground shrink-0 pt-2 md:pt-0 border-t md:border-t-0 border-border/60">
                     <Sparkles className="h-4 w-4 text-[hsl(var(--accent-purple))] shrink-0" aria-hidden="true" />
-                    <span>Connected to <strong className="text-foreground">{debouncedConnectedCount}</strong> shared architecture nodes</span>
+                    <span>Connected to <strong className="text-foreground">{selectedConnectedCount}</strong> shared architecture nodes</span>
                 </div>
             </div>
         </div>

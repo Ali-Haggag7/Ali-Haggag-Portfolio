@@ -5,6 +5,7 @@ import { motion, useScroll, useSpring } from "framer-motion";
 import { evolutionData } from "./evolution.data";
 import { EvolutionCard } from "./EvolutionCard";
 import { NarrativeConnector } from "./NarrativeConnector";
+import { DecryptedText } from "@/components/ui/DecryptedText";
 
 const SPRING_CONFIG = { stiffness: 200, damping: 40, restDelta: 0.001, mass: 0.5 } as const;
 const SCROLL_OFFSET: any = ["start center", "end end"];
@@ -65,7 +66,9 @@ export default function EvolutionArc() {
 
             <div className="container mx-auto px-4 md:px-6">
                 <div className="flex flex-col items-center text-center mb-10 max-w-3xl mx-auto animate-fade-in">
-                    <p className="section-eyebrow mb-3">Chapter by Chapter</p>
+                    <p className="section-eyebrow mb-3">
+                        <DecryptedText text="Chapter by Chapter" speed={30} sequential={true} animateOn="view" />
+                    </p>
                     <h2 className="section-title text-4xl md:text-5xl mb-3">
                         My Engineering{" "}
                         <span className="accent-word">Evolution</span>
@@ -78,7 +81,7 @@ export default function EvolutionArc() {
                 {/* Quick-nav buttons */}
                 <nav
                     aria-label="Jump to chapter"
-                    className="mb-16 flex items-center justify-start sm:justify-center gap-2 sm:gap-3 overflow-x-auto no-scrollbar py-1 w-full px-2"
+                    className="mb-16 flex items-center justify-start sm:justify-center gap-2 sm:gap-3 overflow-x-auto no-scrollbar py-2 w-full px-2"
                 >
                     {anchors.map(({ title, id, year }) => (
                         <button

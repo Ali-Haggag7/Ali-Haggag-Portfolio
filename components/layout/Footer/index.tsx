@@ -7,6 +7,8 @@ import { cn } from "@/lib/utils";
 import { footerLinks, socialLinks, handleSmoothScroll, currentYear } from "./footer.data";
 import { LocalTime } from "./LocalTime";
 import { NewsletterForm } from "./NewsletterForm";
+import { DecryptedText } from "@/components/ui/DecryptedText";
+import { BorderBeam } from "@/components/ui/BorderBeam";
 
 const fadeIn = {
     hidden: { opacity: 0 },
@@ -63,7 +65,7 @@ export default function Footer() {
                                     whileTap={{ scale: 0.95 }}
                                     transition={socialSpring}
                                     className={cn(
-                                        "group p-3 rounded-full bg-card border border-border text-muted-foreground transition-colors duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 min-h-11 min-w-11 flex items-center justify-center",
+                                        "group p-3 rounded-full bg-card border border-border text-muted-foreground transition-colors duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 min-h-11 min-w-11 flex items-center justify-center cursor-pointer",
                                         social.hoverClass
                                     )}
                                 >
@@ -75,7 +77,9 @@ export default function Footer() {
 
                     {/* ── Nav links column ── */}
                     <div className="lg:col-span-2">
-                        <h3 className="text-foreground font-bold mb-3 md:mb-4 text-xs md:text-sm uppercase tracking-wider pl-1 md:pl-0">Explore</h3>
+                        <h3 className="text-foreground font-bold mb-3 md:mb-4 text-xs md:text-sm uppercase tracking-wider pl-1 md:pl-0">
+                            <DecryptedText text="Explore" speed={30} sequential={true} animateOn="view" />
+                        </h3>
                         <ul className="flex flex-col bg-card/40 md:bg-transparent backdrop-blur-xl md:backdrop-blur-none border border-border/50 md:border-none rounded-[24px] md:rounded-none overflow-hidden space-y-0 md:space-y-1 shadow-sm md:shadow-none">
                             {footerLinks.map((link) => (
                                 <li key={link.name} className={cn("border-b border-border/50 md:border-none last:border-b-0")}>
@@ -107,9 +111,14 @@ export default function Footer() {
                     <div className="lg:col-span-3 flex flex-col">
                         <div className="flex items-center gap-2 mb-3 md:mb-4 pl-1 md:pl-0">
                             <Terminal size={14} className="text-muted-foreground" />
-                            <h3 className="text-foreground font-bold text-xs md:text-sm uppercase tracking-wider">Diagnostics</h3>
+                            <h3 className="text-foreground font-bold text-xs md:text-sm uppercase tracking-wider">
+                                <DecryptedText text="Diagnostics" speed={30} sequential={true} animateOn="view" />
+                            </h3>
                         </div>
                         <div className="relative overflow-hidden rounded-[24px] md:rounded-2xl border border-border/50 bg-card/40 md:bg-foreground/3 dark:md:bg-white/3 backdrop-blur-xl md:backdrop-blur-none p-5 md:p-4 font-mono text-[12px] md:text-[11px] leading-relaxed shadow-sm md:shadow-inner">
+                            {/* React Bits Border Beam on Diagnostics */}
+                            <BorderBeam duration={8} borderWidth={1.5} colorFrom="hsl(var(--accent-emerald))" colorTo="hsl(var(--accent-blue))" />
+
                             <div className="flex flex-col gap-2 md:gap-1.5 text-muted-foreground select-none">
                                 <div className="flex justify-between items-center">
                                     <span>SYS_INTEGRITY:</span>

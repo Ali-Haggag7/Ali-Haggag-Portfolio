@@ -14,6 +14,7 @@
     "@ai-sdk/react": "^3.0.96",
     "@google/generative-ai": "^0.24.1",
     "@tailwindcss/postcss": "^4.1.18",
+    "@types/three": "^0.185.4",
     "ai": "^6.0.94",
     "clsx": "^2.1.1",
     "cobe": "^0.6.5",
@@ -27,7 +28,8 @@
     "react-markdown": "^10.1.0",
     "tailwind-merge": "^3.4.1",
     "tailwindcss": "^4.1.18",
-    "tailwindcss-animate": "^1.0.7"
+    "tailwindcss-animate": "^1.0.7",
+    "three": "^0.185.1"
   },
   "devDependencies": {
     "@types/node": "^20",

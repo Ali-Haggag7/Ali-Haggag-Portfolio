@@ -38,12 +38,14 @@
   --animate-fade-in: fadeIn 0.5s ease-in-out forwards;
   --animate-mesh-spin: mesh-spin 30s linear infinite;
   --animate-twinkle: twinkle 4s ease-in-out infinite;
+  --animate-orbital-float-1: orbitalFloat1 6s ease-in-out infinite;
+  --animate-orbital-float-2: orbitalFloat2 7.5s ease-in-out infinite;
+  --animate-orbital-float-3: orbitalFloat3 5.5s ease-in-out infinite;
 
   @keyframes marquee {
     from {
       transform: translateX(0);
     }
-
     to {
       transform: translateX(calc(-100% - var(--marquee-gap)));
     }
@@ -53,19 +55,15 @@
     from {
       transform: translateY(0);
     }
-
     to {
       transform: translateY(calc(-100% - var(--marquee-gap)));
     }
   }
 
-  /* Shimmer: translate a pseudo-element instead of animating background-position.
-     background-position triggers Paint every frame — transform is Composite-only. */
   @keyframes shimmer {
     from {
       transform: translateX(-100%);
     }
-
     to {
       transform: translateX(100%);
     }
@@ -75,18 +73,15 @@
     from {
       opacity: 0;
     }
-
     to {
       opacity: 1;
     }
   }
 
   @keyframes live-pulse {
-    0%,
-    100% {
+    0%, 100% {
       opacity: 1;
     }
-
     50% {
       opacity: 0.4;
     }
@@ -113,6 +108,32 @@
     }
   }
 
+  @keyframes orbitalFloat1 {
+    0%, 100% {
+      transform: translateY(0px) rotate(0deg);
+    }
+    50% {
+      transform: translateY(-12px) rotate(1.2deg);
+    }
+  }
+
+  @keyframes orbitalFloat2 {
+    0%, 100% {
+      transform: translateY(0px) rotate(0deg);
+    }
+    50% {
+      transform: translateY(14px) rotate(-1.5deg);
+    }
+  }
+
+  @keyframes orbitalFloat3 {
+    0%, 100% {
+      transform: translateY(0px) rotate(0deg);
+    }
+    50% {
+      transform: translateY(-10px) rotate(-1deg);
+    }
+  }
 }
 
 @layer base {
@@ -776,7 +797,8 @@ html.modal-open .fixed-right-compensate {
 }
 
 @media (max-width: 768px) {
-  .animate-mesh-spin {
+  .animate-mesh-spin,
+  .animate-twinkle {
     animation: none !important;
   }
 }
@@ -987,4 +1009,30 @@ html.modal-open .fixed-right-compensate {
   -ms-overflow-style: none !important;  /* IE and Edge */
   scrollbar-width: none !important;  /* Firefox */
 }
+
+/* React Bits Border Beam Animation */
+@keyframes border-beam {
+  100% {
+    offset-distance: 100%;
+  }
+}
+
+.animate-border-beam {
+  animation: border-beam var(--duration) infinite linear;
+}
+
+/* React Bits Aurora Animation */
+@keyframes aurora {
+  from {
+    background-position: 50% 50%, 50% 50%;
+  }
+  to {
+    background-position: 350% 50%, 350% 50%;
+  }
+}
+
+.animate-aurora {
+  animation: aurora 60s linear infinite;
+}
+
 

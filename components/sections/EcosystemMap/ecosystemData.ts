@@ -27,10 +27,10 @@ export const ECOSYSTEM_NODES: readonly EcosystemNode[] = Object.freeze([
 
     // Tech Cluster Constellation Hubs
     { id: "tech-nestjs", label: "NestJS 11", type: "tech", x: 50, y: 28, color: "#e11d48", iconUrl: "/skills/nestjs.svg" },
-    { id: "tech-socketio", label: "Socket.io", type: "tech", x: 35, y: 48, color: "#000000", iconUrl: "/skills/socketio.svg", themeable: true },
+    { id: "tech-socketio", label: "Socket.io", type: "tech", x: 35, y: 48, color: "hsl(var(--foreground))", iconUrl: "/skills/socketio.svg", themeable: true },
     { id: "tech-redis", label: "Redis", type: "tech", x: 65, y: 48, color: "#dc2626", iconUrl: "/skills/redis.svg" },
-    { id: "tech-webrtc", label: "WebRTC", type: "tech", x: 18, y: 48, color: "#2563eb", iconUrl: "/skills/webrtc.svg", themeable: true },
-    { id: "tech-nextjs", label: "Next.js 16", type: "tech", x: 50, y: 52, color: "#000000", iconUrl: "/skills/nextjs.svg", themeable: true },
+    { id: "tech-webrtc", label: "WebRTC", type: "tech", x: 18, y: 48, color: "hsl(var(--foreground))", iconUrl: "/skills/webrtc.svg", themeable: true },
+    { id: "tech-nextjs", label: "Next.js 16", type: "tech", x: 50, y: 52, color: "hsl(var(--foreground))", iconUrl: "/skills/nextjs.svg", themeable: true },
     { id: "tech-zod", label: "Zod", type: "tech", x: 66, y: 72, color: "#3b82f6", iconUrl: "/skills/zod.svg" },
     { id: "tech-pwa", label: "PWA & SW", type: "tech", x: 34, y: 72, color: "#5b21b6", iconUrl: "/skills/pwa.svg" },
 ]);

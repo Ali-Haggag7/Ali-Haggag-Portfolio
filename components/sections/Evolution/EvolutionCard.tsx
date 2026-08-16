@@ -1,10 +1,12 @@
 "use client";
 
-import { memo, useState, useId } from "react";
+import { memo, useState, useId, useRef, useCallback } from "react";
 import { motion, AnimatePresence, type Variants } from "framer-motion";
 import { ChevronDown, ExternalLink, Briefcase } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { EvolutionChapter } from "./evolution.data";
+import { BorderBeam } from "@/components/ui/BorderBeam";
+import { DecryptedText } from "@/components/ui/DecryptedText";
 
 const cardVariants: Variants = {
     hidden: { opacity: 0, y: 30 },
@@ -210,7 +212,7 @@ export const EvolutionCard = memo(function EvolutionCard({
                         : undefined
                 }
                 className={cn(
-                    "ml-20 md:ml-0 w-full md:w-[45%] rounded-2xl p-6 relative z-10 cyber-card cyber-card-interactive tactical-corner-reticles",
+                    "ml-20 md:ml-0 w-full md:w-[45%] rounded-2xl p-6 relative z-10 cyber-card cyber-card-interactive tactical-corner-reticles overflow-hidden",
                     hasDetails ? "cursor-pointer" : "cursor-default",
                     "focus:outline-none focus-visible:ring-2 focus-visible:ring-ring",
                 )}
@@ -220,9 +222,14 @@ export const EvolutionCard = memo(function EvolutionCard({
                         : undefined
                 }
             >
+                {/* React Bits Border Beam for Active / Ongoing Chapter */}
+                {chapter.isActive && (
+                    <BorderBeam duration={8} borderWidth={1.5} colorFrom={chapter.accentVar} colorTo="hsl(var(--accent-blue))" />
+                )}
+
                 {/* Year badge */}
                 <span
-                    className="hud-tag"
+                    className="hud-tag inline-flex items-center gap-1.5"
                     style={{
                         color: chapter.accentVar,
                         borderColor: `color-mix(in srgb, ${chapter.accentVar} 40%, transparent)`,
@@ -230,7 +237,7 @@ export const EvolutionCard = memo(function EvolutionCard({
                     }}
                 >
                     <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: chapter.accentVar }} />
-                    {chapter.year}
+                    <DecryptedText text={chapter.year} speed={40} sequential={true} animateOn="view" />
                 </span>
 
                 {/* Title */}

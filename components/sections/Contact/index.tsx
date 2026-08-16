@@ -7,6 +7,7 @@ import { Suspense } from "react";
 import { GitHubStatsPanel } from "./GitHubStatsPanel";
 import { useIsMobile } from "@/hooks/useIsMobile";
 import { Cpu, Terminal, Shield, Zap } from "lucide-react";
+import { AuroraBackground } from "@/components/ui/AuroraBackground";
 
 const fadeUp: Variants = {
     hidden: { opacity: 0, y: 20 },
@@ -81,6 +82,11 @@ export default function ContactSection({ statsPanel }: { statsPanel: React.React
             id="contact"
             className="py-32 w-full relative overflow-hidden flex items-center justify-center"
         >
+            {/* React Bits Aurora Ambient Background */}
+            <div className="absolute inset-0 pointer-events-none -z-10">
+                <AuroraBackground className="w-full h-full" />
+            </div>
+
             <div className="contact-glow" aria-hidden="true" />
 
             <div className="container mx-auto px-4 flex flex-col lg:flex-row items-center justify-between gap-16 relative z-10">

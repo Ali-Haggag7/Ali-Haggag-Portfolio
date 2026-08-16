@@ -6,6 +6,8 @@ import { ArchitectureMapSVG } from "./ArchitectureMapSVG";
 import { NodeInspector } from "./NodeInspector";
 import { Server } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { FlowingGrid } from "@/components/ui/FlowingGrid";
+import { DecryptedText } from "@/components/ui/DecryptedText";
 
 export default function ArchitectureVisualizerSection() {
     const [selectedMapId, setSelectedMapId] = useState<ArchitectureMap["id"]>("logic-arena");
@@ -35,10 +37,15 @@ export default function ArchitectureVisualizerSection() {
 
     return (
         <section id="architecture" className="relative w-full py-20 bg-transparent overflow-hidden">
-            <div className="container mx-auto px-4 md:px-6">
+            {/* React Bits 3D Perspective Flowing Cyber Grid Background */}
+            <FlowingGrid className="opacity-25 dark:opacity-35" horizon={0.25} speed={0.4} />
+
+            <div className="container mx-auto px-4 md:px-6 relative z-10">
                 {/* Section Header */}
                 <div className="flex flex-col items-center text-center mb-10 max-w-3xl mx-auto">
-                    <p className="section-eyebrow mb-3">System Architecture</p>
+                    <p className="section-eyebrow mb-3">
+                        <DecryptedText text="System Architecture" speed={30} sequential={true} animateOn="view" />
+                    </p>
                     <h2 className="section-title text-4xl md:text-5xl mb-3">
                         Interactive{" "}
                         <span className="accent-word">Node Graphs</span>

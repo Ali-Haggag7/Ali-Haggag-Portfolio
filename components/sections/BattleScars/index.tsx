@@ -10,6 +10,9 @@ import { ScarCard } from "./ScarCard";
 import { ScarsTimelineView } from "./ScarsTimelineView";
 import { useSearchParams } from "next/navigation";
 import { cn } from "@/lib/utils";
+import { GlitchText } from "@/components/ui/GlitchText";
+import { DecryptedText } from "@/components/ui/DecryptedText";
+import { BorderBeam } from "@/components/ui/BorderBeam";
 
 export default function BattleScars() {
     const searchParams = useSearchParams();
@@ -183,13 +186,15 @@ export default function BattleScars() {
             className="py-24 px-4 md:px-8 w-full max-w-5xl mx-auto"
         >
             <div className="flex flex-col items-center text-center mb-10 max-w-3xl mx-auto animate-fade-in">
-                <p className="section-eyebrow mb-3">Engineering Logs</p>
+                <p className="section-eyebrow mb-3">
+                    <DecryptedText text="Engineering Incident Logs" speed={30} sequential={true} animateOn="view" />
+                </p>
                 <h2
                     id="battle-scars-title"
-                    className="section-title text-4xl md:text-5xl mb-3"
+                    className="section-title text-4xl md:text-5xl mb-3 flex items-center justify-center gap-3"
                 >
-                    Battle{" "}
-                    <span style={{ color: "var(--scar-critical)" }}>Scars</span>
+                    <span>Battle</span>
+                    <GlitchText text="SCARS" className="text-red-500 font-extrabold" />
                 </h2>
                 <p className="text-muted-foreground text-sm md:text-base leading-relaxed max-w-xl">
                     Real engineering isn&apos;t just writing code. It&apos;s about the decisions made when systems fail, latency spikes, and requirements shift.
@@ -204,7 +209,8 @@ export default function BattleScars() {
                     <dd className="text-3xl font-extrabold tracking-tighter text-foreground order-1 leading-none">{stats.total}</dd>
                 </div>
 
-                <div className="flex flex-col items-center justify-center rounded-[24px] border border-red-500/30 dark:border-red-500/20 bg-red-500/10 dark:bg-red-500/5 backdrop-blur-xl p-5 text-center shadow-sm">
+                <div className="relative overflow-hidden flex flex-col items-center justify-center rounded-[24px] border border-red-500/30 dark:border-red-500/20 bg-red-500/10 dark:bg-red-500/5 backdrop-blur-xl p-5 text-center shadow-sm">
+                    <BorderBeam duration={8} borderWidth={1.5} colorFrom="#ef4444" colorTo="#f97316" />
                     <ShieldAlert className="w-5 h-5 mb-2 text-red-600 dark:text-red-500/80" aria-hidden="true" />
                     <dt className="text-[10px] font-bold tracking-widest text-red-600 dark:text-red-500/80 uppercase order-2 mt-1">Critical</dt>
                     <dd className="text-3xl font-extrabold tracking-tighter text-red-600 dark:text-red-500 order-1 leading-none">{stats.critical}</dd>

@@ -40,16 +40,19 @@ export const SpotlightCutoutOverlay = memo(function SpotlightCutoutOverlay({
             return;
         }
 
-        // Scroll to center the element, then measure after scroll settles
-        el.scrollIntoView({ behavior: "smooth", block: "center" });
+        // Scroll to center or start of element, then measure after scroll settles
+        el.scrollIntoView({ behavior: "smooth", block: step.targetId === "hero-terminal" ? "start" : "center" });
 
-        // Wait for scroll animation to settle before measuring
+        // Immediate measurement
+        setTargetRect(el.getBoundingClientRect());
+
+        // Wait for smooth scroll animation to settle before re-measuring accurately
         const measureTimeout = setTimeout(() => {
             const rect = el.getBoundingClientRect();
             setTargetRect(rect);
-        }, 600);
+        }, 500);
 
-        // Also update on scroll/resize for live tracking
+        // Live tracking on scroll and resize
         const updateRect = () => {
             setTargetRect(el.getBoundingClientRect());
         };
@@ -65,28 +68,28 @@ export const SpotlightCutoutOverlay = memo(function SpotlightCutoutOverlay({
 
     if (!step) return null;
 
-    // Spotlight cutout geometry — 16px padding around the element
-    const PAD = 16;
-    const cutoutX = targetRect ? targetRect.left - PAD : window.innerWidth / 2 - 200;
-    const cutoutY = targetRect ? targetRect.top - PAD : window.innerHeight / 2 - 150;
+    // Spotlight cutout geometry — 12px padding around the element
+    const PAD = 12;
+    const cutoutX = targetRect ? Math.max(0, targetRect.left - PAD) : window.innerWidth / 2 - 200;
+    const cutoutY = targetRect ? Math.max(0, targetRect.top - PAD) : window.innerHeight / 2 - 150;
     const cutoutW = targetRect ? targetRect.width + PAD * 2 : 400;
     const cutoutH = targetRect ? targetRect.height + PAD * 2 : 300;
 
     return (
-        <div className="fixed inset-0 z-[400] overflow-hidden pointer-events-auto">
-            {/* SVG Darkened Screen Mask with Cutout Spotlight Hole */}
-            <svg className="absolute inset-0 w-full h-full pointer-events-none" aria-hidden="true">
+        <div className="fixed inset-0 z-[400] overflow-hidden pointer-events-none">
+            {/* SVG Darkened Screen Mask with Cutout Spotlight Hole (Deep Game Tutorial Vignette) */}
+            <svg className="absolute inset-0 w-full h-full pointer-events-auto" aria-hidden="true">
                 <defs>
                     <mask id="tour-spotlight-mask">
                         {/* Full white = fully darkened */}
                         <rect x="0" y="0" width="100%" height="100%" fill="white" />
-                        {/* Black cutout = transparent hole */}
+                        {/* Black cutout = crystal-clear transparent hole */}
                         <rect
                             x={cutoutX}
                             y={cutoutY}
                             width={cutoutW}
                             height={cutoutH}
-                            rx="16"
+                            rx="18"
                             fill="black"
                         />
                     </mask>
@@ -96,12 +99,13 @@ export const SpotlightCutoutOverlay = memo(function SpotlightCutoutOverlay({
                     y="0"
                     width="100%"
                     height="100%"
-                    fill="rgba(0,0,0,0.84)"
+                    fill="rgba(0,0,0,0.88)"
                     mask="url(#tour-spotlight-mask)"
+                    onClick={onEndTour}
                 />
             </svg>
 
-            {/* Animated Glowing Pulse Ring around Spotlight Cutout */}
+            {/* Animated Game Tutorial Focus Reticle & Pulse Ring around Target Element */}
             {targetRect && (
                 <div
                     style={{
@@ -110,13 +114,25 @@ export const SpotlightCutoutOverlay = memo(function SpotlightCutoutOverlay({
                         width: `${cutoutW}px`,
                         height: `${cutoutH}px`,
                     }}
-                    className="absolute pointer-events-none rounded-2xl border-2 border-purple-500 shadow-[0_0_30px_rgba(168,85,247,0.7)] animate-pulse"
-                />
+                    className="absolute pointer-events-none rounded-[18px] border-2 border-[hsl(var(--accent-purple))] shadow-[0_0_40px_hsl(var(--accent-purple)/0.7),inset_0_0_20px_hsl(var(--accent-purple)/0.25)] transition-all duration-300"
+                >
+                    {/* Game Tutorial "Interactive Target" Badge */}
+                    <div className="absolute -top-7 left-4 px-2.5 py-0.5 rounded-md bg-[hsl(var(--accent-purple))] text-white font-mono text-[10px] font-bold tracking-wider flex items-center gap-1.5 shadow-lg animate-bounce">
+                        <span className="w-1.5 h-1.5 rounded-full bg-white animate-ping" />
+                        <span>INTERACTIVE FOCUS ZONE</span>
+                    </div>
+
+                    {/* Corner Reticle Accents */}
+                    <div className="absolute -top-1 -left-1 w-3 h-3 border-t-2 border-l-2 border-white rounded-tl-sm" />
+                    <div className="absolute -top-1 -right-1 w-3 h-3 border-t-2 border-r-2 border-white rounded-tr-sm" />
+                    <div className="absolute -bottom-1 -left-1 w-3 h-3 border-b-2 border-l-2 border-white rounded-bl-sm" />
+                    <div className="absolute -bottom-1 -right-1 w-3 h-3 border-b-2 border-r-2 border-white rounded-br-sm" />
+                </div>
             )}
 
-            {/* Speech Bubble Card — fixed to bottom center of viewport */}
-            <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[420] w-[94%] max-w-xl animate-in slide-in-from-bottom-8 duration-300">
-                <div className="relative rounded-3xl border border-[hsl(var(--accent-purple)/0.5)] cyber-card tactical-corner-reticles p-6 md:p-7 shadow-2xl space-y-5 text-foreground">
+            {/* Speech Bubble Card — fixed to bottom center of viewport with full pointer-events */}
+            <div className="fixed bottom-4 md:bottom-6 left-1/2 -translate-x-1/2 z-[420] w-[94%] max-w-xl animate-in slide-in-from-bottom-8 duration-300 pointer-events-auto">
+                <div className="relative rounded-3xl border border-[hsl(var(--accent-purple)/0.5)] cyber-card tactical-corner-reticles p-5 md:p-6 shadow-2xl space-y-4 text-foreground bg-card/95 backdrop-blur-2xl">
 
                     {/* Header Row */}
                     <div className="flex items-center justify-between border-b border-border/60 pb-3.5">

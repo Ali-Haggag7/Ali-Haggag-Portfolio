@@ -10,8 +10,10 @@ import {
     useMotionTemplate,
     Variants,
 } from "framer-motion";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, Terminal } from "lucide-react";
 import type { Service, ServiceCategory } from "./services.data";
+import { BorderBeam } from "@/components/ui/BorderBeam";
+import { DecryptedText } from "@/components/ui/DecryptedText";
 
 // Human-readable label + CSS-variable accent per category. CSS vars only.
 const CATEGORY_META: Record<ServiceCategory, { label: string; accent: string }> = {
@@ -31,11 +33,33 @@ const cardVariants: Variants = {
     }),
 };
 
-// Expansion variants — opacity + translateY only (GPU-composited, no layout props).
+// Expansion variants — smooth height expansion matching evolution cards
 const expandVariants: Variants = {
-    hidden: { opacity: 0, y: -8 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.25, ease: "easeOut" } },
-    exit: { opacity: 0, y: -8, transition: { duration: 0.18, ease: "easeIn" } },
+    hidden: {
+        opacity: 0,
+        height: 0,
+        y: -6,
+    },
+    visible: {
+        opacity: 1,
+        height: "auto",
+        y: 0,
+        transition: {
+            height: { duration: 0.35, ease: [0.16, 1, 0.3, 1] },
+            opacity: { duration: 0.25, delay: 0.05 },
+            y: { duration: 0.3, ease: "easeOut" },
+        },
+    },
+    exit: {
+        opacity: 0,
+        height: 0,
+        y: -6,
+        transition: {
+            height: { duration: 0.3, ease: [0.7, 0, 0.84, 0] },
+            opacity: { duration: 0.18 },
+            y: { duration: 0.2 },
+        },
+    },
 };
 
 export function ServiceCard({
@@ -72,19 +96,30 @@ export function ServiceCard({
     const Icon = service.icon;
     const category = CATEGORY_META[service.category];
 
-    // The implementations detail body is shared between the Framer (desktop)
-    // and CSS-transition (mobile) expansion paths.
+    // Bespoke Technical Architecture Specification Drawer
     const detailBody = (
-        <div className="mt-5 rounded-xl border border-l-4 border-border border-l-[hsl(var(--accent-blue))] bg-muted/20 p-4 shadow-sm space-y-2 text-left">
-            <div className="flex items-center gap-2">
-                <span className="hud-tag" style={{ color: "hsl(var(--accent-blue))", backgroundColor: "hsl(var(--accent-blue) / 0.15)", borderColor: "hsl(var(--accent-blue) / 0.3)" }}>
-                    PROD SPEC
+        <div className="mt-4 pt-4 border-t border-border/60 text-left space-y-2.5">
+            <div className="flex items-center justify-between gap-2">
+                <div className="flex items-center gap-1.5 font-mono text-[11px] font-bold uppercase tracking-wider text-[hsl(var(--accent-blue))]">
+                    <Terminal className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
+                    <span>Production Architecture</span>
+                </div>
+                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded font-mono text-[10px] font-semibold bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                    SHIPPED
                 </span>
-                <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-[hsl(var(--accent-blue))]">Production Implementation</span>
             </div>
-            <p className="text-xs md:text-sm font-medium text-foreground/90 leading-relaxed pl-0.5">
-                {service.implementations}
-            </p>
+
+            <div className="relative overflow-hidden rounded-xl border border-border/60 bg-muted/20 dark:bg-black/30 p-3.5 shadow-inner">
+                <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-[hsl(var(--accent-blue))] to-[hsl(var(--accent-purple))]" />
+                <p className="text-xs md:text-sm font-medium text-foreground/90 leading-relaxed pl-1">
+                    {service.implementations}
+                </p>
+                <div className="mt-2.5 pt-2 border-t border-border/30 flex items-center justify-between text-[10px] font-mono text-muted-foreground/70">
+                    <span>STATUS: ACTIVE // PRODUCTION</span>
+                    <span>VERIFIED SPEC</span>
+                </div>
+            </div>
         </div>
     );
 
@@ -110,6 +145,9 @@ export function ServiceCard({
                     "hover:border-[hsl(var(--accent-blue)/0.6)] focus:border-[hsl(var(--accent-blue)/0.6)] hover:shadow-xl"
                 )}
             >
+                {/* React Bits Border Beam Glow */}
+                <BorderBeam duration={9 + (index % 3) * 2} borderWidth={1.5} colorFrom="hsl(var(--accent-blue))" colorTo="hsl(var(--accent-purple))" />
+
                 {/* Spotlight overlay — driven by motion values, zero re-renders */}
                 <motion.div
                     className="pointer-events-none absolute -inset-px opacity-0 transition-opacity duration-500 ease-out group-hover:opacity-100 group-focus:opacity-100 rounded-2xl"
@@ -128,7 +166,7 @@ export function ServiceCard({
                             }}
                         >
                             <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ backgroundColor: category.accent }} />
-                            {category.label}
+                            <DecryptedText text={category.label} speed={30} sequential={true} animateOn="view" />
                         </span>
                     </div>
 
@@ -206,31 +244,22 @@ export function ServiceCard({
                         />
                     </button>
 
-                    {/* Expansion: Framer Motion on desktop, CSS transition on mobile */}
-                    {isMobile ? (
-                        <div
-                            id={detailId}
-                            className="grid transition-[grid-template-rows] duration-300 ease-out"
-                            style={{ gridTemplateRows: expanded ? "1fr" : "0fr" }}
-                        >
-                            <div className="overflow-hidden">{detailBody}</div>
-                        </div>
-                    ) : (
-                        <AnimatePresence initial={false}>
-                            {expanded && (
-                                <motion.div
-                                    id={detailId}
-                                    variants={expandVariants}
-                                    initial="hidden"
-                                    animate="visible"
-                                    exit="exit"
-                                    style={{ willChange: "transform, opacity" }}
-                                >
-                                    {detailBody}
-                                </motion.div>
-                            )}
-                        </AnimatePresence>
-                    )}
+                    {/* Smooth Height Expansion via Framer Motion */}
+                    <AnimatePresence initial={false}>
+                        {expanded && (
+                            <motion.div
+                                id={detailId}
+                                variants={expandVariants}
+                                initial="hidden"
+                                animate="visible"
+                                exit="exit"
+                                className="overflow-hidden"
+                                style={{ willChange: "height, opacity, transform" }}
+                            >
+                                {detailBody}
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
                 </div>
 
                 {/* Accent line on bottom — 100% flush at bottom edge with zero gap */}

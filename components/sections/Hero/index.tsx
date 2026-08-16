@@ -1,13 +1,26 @@
 "use client";
 
-import { Code2, ExternalLink, RotateCcw } from "lucide-react";
+import { RotateCcw } from "lucide-react";
 import { memo, useRef, useEffect, useState, useMemo } from "react";
 import { cn } from "@/lib/utils";
 import dynamic from "next/dynamic";
-import MagicButton from "./magic-button";
 import { useTerminal } from "./Terminal/useTerminal";
 import { CurrentlyBuildingTicker } from "./CurrentlyBuildingTicker";
 import { EasterEggController } from "./EasterEggController";
+import { HeroOrbitalBeacons } from "./HeroOrbitalBeacons";
+
+import { useTheme } from "next-themes";
+
+// Dark Mode: Deep Molten Violet & Electric Orchid (Signature Cyberpunk)
+const DARK_FLUID_COLORS = ['#5227FF', '#FF9FFC', '#B497CF'];
+
+// Light Mode: Luminous Cyan, Royal Azure & Soft Violet (Clean, airy, crystal-clear)
+const LIGHT_FLUID_COLORS = ['#06B6D4', '#3B82F6', '#8B5CF6'];
+
+// Dynamically import LiquidEther WebGL background from React Bits
+const LiquidEther = dynamic(() => import("@/components/ui/LiquidEther"), {
+    ssr: false,
+});
 
 // Dynamically import TerminalWindow to separate heavy command engine from initial bundle
 const TerminalWindow = dynamic(
@@ -95,7 +108,8 @@ export default function HeroSection() {
     const stars = useMemo(() => {
         if (!mounted) return [];
         const isMobile = window.innerWidth <= 768;
-        const count = isMobile ? 15 : 50;
+        // Fewer stars on mobile = less DOM + fewer CSS animations running simultaneously
+        const count = isMobile ? 10 : 40;
         return Array.from({ length: count }, (_, i) => ({
             id: i,
             top: Math.random() * 100,
@@ -107,7 +121,12 @@ export default function HeroSection() {
     }, [mounted]);
 
     // Derived state for cleaner JSX logic
+    const { resolvedTheme } = useTheme();
+    const isDark = !mounted || resolvedTheme === "dark";
+    const fluidColors = isDark ? DARK_FLUID_COLORS : LIGHT_FLUID_COLORS;
     const showUIElements = !terminal.isClosed && !terminal.isFullScreen;
+    // Lower fluid resolution on mobile — halves GPU fill rate at the cost of imperceptible sharpness
+    const isMobile = mounted && window.innerWidth <= 768;
 
     return (
         <section
@@ -116,23 +135,36 @@ export default function HeroSection() {
             aria-label="Hero Section Terminal"
             className="relative flex min-h-[90vh] w-full flex-col items-center justify-center pt-24 pb-12 px-4 bg-transparent"
         >
-            {/* Animated Mesh Gradient Background */}
-            <div className="absolute inset-0 pointer-events-none -z-20 opacity-30 dark:opacity-40">
-                <div
-                    className="absolute top-0 left-0 w-[60%] h-[60%] rounded-full blur-[40px] md:blur-[100px] mix-blend-screen animate-mesh-spin"
-                    style={{
-                        background: "radial-gradient(circle, var(--tl-accent-blue) 0%, transparent 70%)",
-                        animationDuration: "25s",
-                    }}
-                />
-                <div
-                    className="absolute bottom-0 right-0 w-[60%] h-[120%] rounded-full blur-[40px] md:blur-[100px] mix-blend-screen animate-mesh-spin"
-                    style={{
-                        background: "radial-gradient(ellipse, var(--tl-accent-purple) 0%, transparent 70%)",
-                        animationDuration: "35s",
-                        animationDelay: "-10s",
-                        animationDirection: "reverse",
-                    }}
+            {/* React Bits Liquid Ether Fluid Background — theme adaptive & seamless section bleeding */}
+            {/* transform-gpu+will-change promotes the canvas to its own GPU compositor layer */}
+            <div
+                className={cn(
+                    "absolute top-0 left-0 right-0 -bottom-64 md:-bottom-96 -z-10 pointer-events-none transform-gpu transition-opacity duration-500",
+                    isDark ? "opacity-100" : "opacity-60"
+                )}
+                style={{
+                    willChange: 'transform',
+                    maskImage: 'linear-gradient(to bottom, black 75%, transparent 100%)',
+                    WebkitMaskImage: 'linear-gradient(to bottom, black 75%, transparent 100%)',
+                }}
+            >
+                <LiquidEther
+                    interactiveElementId="hero"
+                    colors={fluidColors}
+                    mouseForce={25}
+                    cursorSize={110}
+                    isViscous={false}
+                    viscous={30}
+                    iterationsViscous={isMobile ? 8 : 16}
+                    iterationsPoisson={isMobile ? 12 : 20}
+                    resolution={isMobile ? 0.3 : 0.45}
+                    isBounce={false}
+                    autoDemo
+                    autoSpeed={0.5}
+                    autoIntensity={2.2}
+                    takeoverDuration={0.25}
+                    autoResumeDelay={3000}
+                    autoRampDuration={0.6}
                 />
             </div>
 
@@ -184,52 +216,11 @@ export default function HeroSection() {
                 System Online &amp; Ready for Deployment
             </div>
 
-            {/* TERMINAL WINDOW */}
-            <TerminalWindow terminal={terminal} />
-
-            {/* ACTION LINKS */}
-            <nav
-                aria-label="Hero Action Links"
-                className={cn(
-                    "flex flex-wrap justify-center items-center gap-4 md:gap-5 relative z-20 mt-8",
-                    "transition-all duration-700 transform-gpu will-change-[opacity,transform]",
-                    terminal.step >= 7 && showUIElements ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4 pointer-events-none"
-                )}
-            >
-                <a
-                    href="https://github.com/Ali-Haggag7"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label="Visit Ali Haggag's GitHub Profile"
-                    className={cn(
-                        "group relative flex items-center justify-center gap-2 px-6 py-3 md:px-8 md:py-4 min-h-[44px] cursor-pointer",
-                        "border-2 border-border bg-card/80 text-foreground rounded-full font-bold",
-                        "transition-all duration-300 ease-out",
-                        "hover:bg-[hsl(var(--accent-emerald)/0.05)] hover:border-[hsl(var(--accent-emerald))/0.5] hover:text-[hsl(var(--accent-emerald))] active:scale-95 hover:scale-105 hover:shadow-[0_0_20px_hsl(var(--accent-emerald)/0.15)] shadow-sm"
-                    )}
-                >
-                    <Code2 className="w-5 h-5 text-[hsl(var(--accent-emerald))] transition-transform duration-300 group-hover:rotate-12 group-hover:scale-110" aria-hidden="true" />
-                    GitHub
-                </a>
-
-                <a
-                    href="https://www.linkedin.com/in/ali-haggag7/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label="Visit Ali Haggag's LinkedIn Profile"
-                    className={cn(
-                        "group flex items-center justify-center gap-2 px-6 py-3 md:px-8 md:py-4 min-h-[44px] cursor-pointer",
-                        "border-2 border-border bg-card/80 text-foreground rounded-full font-bold",
-                        "transition-all duration-300 ease-out",
-                        "hover:bg-[hsl(var(--accent-blue)/0.05)] hover:border-[hsl(var(--accent-blue)/0.5)] hover:text-[hsl(var(--accent-blue))] active:scale-95 hover:scale-105 hover:shadow-[0_0_20px_hsl(var(--accent-blue)/0.15)] shadow-sm"
-                    )}
-                >
-                    <ExternalLink className="w-5 h-5 text-[hsl(var(--accent-blue))] transition-transform duration-300 group-hover:-translate-y-1 group-hover:translate-x-1 group-hover:scale-110" aria-hidden="true" />
-                    LinkedIn
-                </a>
-
-                <MagicButton />
-            </nav>
+            {/* TERMINAL & CYBERNETIC ORBITAL BEACONS */}
+            <div className="relative w-full max-w-5xl mx-auto flex flex-col items-center justify-center">
+                <TerminalWindow terminal={terminal} />
+                <HeroOrbitalBeacons isVisible={terminal.step >= 7 && showUIElements} />
+            </div>
         </section>
     );
 }

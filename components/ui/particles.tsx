@@ -8,6 +8,13 @@ export default function Particles() {
     const { theme, resolvedTheme } = useTheme();
     const [mounted, setMounted] = useState(false);
 
+    // Keep theme state in a stable ref so RAF loop can read it without recreating particles
+    const isLightRef = useRef(false);
+    useEffect(() => {
+        const currentTheme = theme === "system" ? resolvedTheme : theme;
+        isLightRef.current = currentTheme === "light";
+    }, [theme, resolvedTheme]);
+
     useEffect(() => {
         setMounted(true);
     }, []);
@@ -21,19 +28,11 @@ export default function Particles() {
         const ctx = canvas.getContext("2d", { alpha: true });
         if (!ctx) return;
 
-        // PERF: Prevent context state resets
         let width = (canvas.width = window.innerWidth);
         let height = (canvas.height = window.innerHeight);
 
-        const currentTheme = theme === "system" ? resolvedTheme : theme;
-        const isLight = currentTheme === "light";
-
-        const particleColor = isLight ? "rgba(0, 0, 0, 0.4)" : "rgba(255, 255, 255, 0.4)";
-        const lineColor = isLight ? "rgba(0, 0, 0, 0.08)" : "rgba(255, 255, 255, 0.08)";
-
         const particleCount = window.innerWidth < 768 ? 30 : 60;
-        
-        // Define particle class directly inside to capture width/height automatically
+
         class Particle {
             x: number;
             y: number;
@@ -64,6 +63,10 @@ export default function Particles() {
 
         const animate = () => {
             ctx.clearRect(0, 0, width, height);
+
+            const isLight = isLightRef.current;
+            const particleColor = isLight ? "rgba(0, 0, 0, 0.4)" : "rgba(255, 255, 255, 0.4)";
+            const lineColor = isLight ? "rgba(0, 0, 0, 0.08)" : "rgba(255, 255, 255, 0.08)";
 
             // Update positions
             for (let i = 0; i < particleCount; i++) {
@@ -105,24 +108,25 @@ export default function Particles() {
 
         animate();
 
-        // PERF: Debounced resize handler to prevent CPU spiking when resizing window
+        // Debounced resize handler
         let resizeTimeout: NodeJS.Timeout;
         const handleResize = () => {
             clearTimeout(resizeTimeout);
             resizeTimeout = setTimeout(() => {
+                if (!canvas) return;
                 width = canvas.width = window.innerWidth;
                 height = canvas.height = window.innerHeight;
-            }, 100); // Wait 100ms after resizing stops before recalculating
+            }, 100);
         };
 
-        window.addEventListener("resize", handleResize);
+        window.addEventListener("resize", handleResize, { passive: true });
 
         return () => {
             window.removeEventListener("resize", handleResize);
             clearTimeout(resizeTimeout);
             cancelAnimationFrame(animationFrameId);
         };
-    }, [theme, resolvedTheme, mounted]);
+    }, [mounted]);
 
     if (!mounted) return null;
 

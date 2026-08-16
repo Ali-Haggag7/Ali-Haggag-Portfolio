@@ -9,6 +9,8 @@ import type { TerminalState } from "./useTerminal";
 export type HistoryItem = { id: number; command: string; output: React.ReactNode };
 
 import { TerminalMascot } from "./TerminalMascot";
+import { BorderBeam } from "@/components/ui/BorderBeam";
+import { DecryptedText } from "@/components/ui/DecryptedText";
 
 const BootSequence = memo(function BootSequence({ step }: { step: number }) {
     return (
@@ -21,8 +23,12 @@ const BootSequence = memo(function BootSequence({ step }: { step: number }) {
             )}
             {step >= 2 && (
                 <div className="pl-4 border-l-2 border-blue-500/30 ml-2 w-full break-words">
-                    <span className="text-white font-bold text-lg">Ali Haggag</span><br />
-                    <span className="text-blue-300 font-semibold">Full-Stack Software Engineer | Real-time Systems Architect</span>
+                    <span className="text-white font-bold text-lg">
+                        <DecryptedText text="Ali Haggag" speed={30} sequential={true} animateOn="view" />
+                    </span><br />
+                    <span className="text-blue-300 font-semibold">
+                        <DecryptedText text="Full-Stack Software Engineer | Real-time Systems Architect" speed={18} sequential={true} animateOn="view" />
+                    </span>
                 </div>
             )}
             {step >= 3 && (
@@ -580,7 +586,12 @@ Status .......... Available`}
         : "p-4 md:p-6 space-y-3 text-gray-300 h-[300px] overflow-y-auto overflow-x-hidden break-words terminal-scrollbar text-xs md:text-sm flex flex-col items-start w-full";
 
     return (
-        <article className={wrapperClasses} onClick={handleTerminalClick}>
+        <article id="hero-terminal" className={wrapperClasses} onClick={handleTerminalClick}>
+            {/* React Bits Border Beam Glow */}
+            {!terminal.isFullScreen && !terminal.isClosed && (
+                <BorderBeam duration={6} borderWidth={2} colorFrom="hsl(var(--accent-blue))" colorTo="hsl(var(--accent-purple))" />
+            )}
+
             {/* Interactive Cyber Mascot companion resting on top-right border */}
             {!terminal.isFullScreen && !terminal.isClosed && !terminal.isMinimized && (
                 <TerminalMascot isFocused={isFocused} isTyping={isTyping} />
