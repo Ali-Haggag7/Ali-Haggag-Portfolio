@@ -28,13 +28,31 @@ export const TiltedCard = memo(function TiltedCard({
   const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], [maxAngle, -maxAngle]);
   const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], [-maxAngle, maxAngle]);
 
+  const cachedRectRef = useRef<DOMRect | null>(null);
+  const lastRectTimeRef = useRef<number>(0);
+
+  const handleMouseEnter = useCallback(() => {
+    if (ref.current) {
+      cachedRectRef.current = ref.current.getBoundingClientRect();
+      lastRectTimeRef.current = performance.now();
+    }
+  }, []);
+
   const handleMouseMove = useCallback(
     (e: React.MouseEvent<HTMLDivElement>) => {
       if (!ref.current) return;
 
-      const rect = ref.current.getBoundingClientRect();
+      const now = performance.now();
+      if (!cachedRectRef.current || now - lastRectTimeRef.current > 300) {
+        cachedRectRef.current = ref.current.getBoundingClientRect();
+        lastRectTimeRef.current = now;
+      }
+
+      const rect = cachedRectRef.current;
       const width = rect.width;
       const height = rect.height;
+
+      if (width === 0 || height === 0) return;
 
       const mouseX = e.clientX - rect.left;
       const mouseY = e.clientY - rect.top;
@@ -49,6 +67,7 @@ export const TiltedCard = memo(function TiltedCard({
   );
 
   const handleMouseLeave = useCallback(() => {
+    cachedRectRef.current = null;
     x.set(0);
     y.set(0);
   }, [x, y]);
@@ -56,6 +75,7 @@ export const TiltedCard = memo(function TiltedCard({
   return (
     <motion.div
       ref={ref}
+      onMouseEnter={handleMouseEnter}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
       style={{

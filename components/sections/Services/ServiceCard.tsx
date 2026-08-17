@@ -1,4 +1,3 @@
-// services/ServiceCard.tsx
 "use client";
 
 import { useRef, useCallback, useState, useId } from "react";
@@ -85,7 +84,6 @@ export function ServiceCard({
             mouseX.set(e.clientX - rect.left);
             mouseY.set(e.clientY - rect.top);
         },
-        // Motion values are stable refs themselves, safe as deps.
         [mouseX, mouseY]
     );
 
@@ -132,7 +130,6 @@ export function ServiceCard({
             custom={index}
             viewport={{ once: true, margin: "-50px" }}
             className="h-full"
-            // GPU-composited layer — keeps hover transforms off the main thread.
             style={{ willChange: "transform" }}
         >
             <div

@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState, useCallback, memo } from "react";
+import { useRef, useCallback, memo } from "react";
 import { cn } from "@/lib/utils";
 
 interface SpotlightCardProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -18,70 +18,94 @@ export const SpotlightCard = memo(function SpotlightCard({
   ...props
 }: SpotlightCardProps) {
   const divRef = useRef<HTMLDivElement>(null);
-  const [isFocused, setIsFocused] = useState(false);
-  const [position, setPosition] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
-  const [opacity, setOpacity] = useState(0);
+  const cachedRectRef = useRef<DOMRect | null>(null);
+  const lastRectTimeRef = useRef<number>(0);
 
-  const handleMouseMove = useCallback(
-    (e: React.MouseEvent<HTMLDivElement>) => {
-      if (!divRef.current || isFocused) return;
+  const handlePointerEnter = useCallback(() => {
+    if (divRef.current) {
+      cachedRectRef.current = divRef.current.getBoundingClientRect();
+      lastRectTimeRef.current = performance.now();
+      divRef.current.style.setProperty("--spotlight-opacity", "1");
+    }
+  }, []);
 
-      const rect = divRef.current.getBoundingClientRect();
-      setPosition({ x: e.clientX - rect.left, y: e.clientY - rect.top });
+  const handlePointerMove = useCallback(
+    (e: React.PointerEvent<HTMLDivElement>) => {
+      if (!divRef.current) return;
+
+      const now = performance.now();
+      if (!cachedRectRef.current || now - lastRectTimeRef.current > 300) {
+        cachedRectRef.current = divRef.current.getBoundingClientRect();
+        lastRectTimeRef.current = now;
+      }
+
+      const rect = cachedRectRef.current;
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+
+      divRef.current.style.setProperty("--spotlight-x", `${x}px`);
+      divRef.current.style.setProperty("--spotlight-y", `${y}px`);
     },
-    [isFocused]
+    []
   );
 
-  const handleFocus = () => {
-    setIsFocused(true);
-    setOpacity(0.6);
-  };
+  const handlePointerLeave = useCallback(() => {
+    cachedRectRef.current = null;
+    if (divRef.current) {
+      divRef.current.style.setProperty("--spotlight-opacity", "0");
+    }
+  }, []);
 
-  const handleBlur = () => {
-    setIsFocused(false);
-    setOpacity(0);
-  };
+  const handleFocus = useCallback(() => {
+    if (divRef.current) {
+      divRef.current.style.setProperty("--spotlight-opacity", "0.6");
+    }
+  }, []);
 
-  const handleMouseEnter = () => {
-    setOpacity(1);
-  };
-
-  const handleMouseLeave = () => {
-    setOpacity(0);
-  };
+  const handleBlur = useCallback(() => {
+    if (divRef.current) {
+      divRef.current.style.setProperty("--spotlight-opacity", "0");
+    }
+  }, []);
 
   return (
     <div
       ref={divRef}
-      onMouseMove={handleMouseMove}
+      onPointerEnter={handlePointerEnter}
+      onPointerMove={handlePointerMove}
+      onPointerLeave={handlePointerLeave}
       onFocus={handleFocus}
       onBlur={handleBlur}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
       className={cn(
         "relative rounded-2xl border border-border/70 bg-card overflow-hidden transition-all duration-300",
         className
       )}
+      style={{
+        // Initialize default CSS vars for the spotlight
+        ["--spotlight-x" as any]: "0px",
+        ["--spotlight-y" as any]: "0px",
+        ["--spotlight-opacity" as any]: "0",
+      }}
       {...props}
     >
-      {/* Dynamic Cursor Spotlight Layer */}
+      {/* Dynamic Cursor Spotlight Layer — purely GPU-driven via CSS variables */}
       <div
         className="pointer-events-none absolute -inset-px transition-opacity duration-300 -z-0"
         style={{
-          opacity,
-          background: `radial-gradient(${spotlightSize}px circle at ${position.x}px ${position.y}px, ${spotlightColor}, transparent 80%)`,
+          opacity: "var(--spotlight-opacity, 0)",
+          background: `radial-gradient(${spotlightSize}px circle at var(--spotlight-x, 0px) var(--spotlight-y, 0px), ${spotlightColor}, transparent 80%)`,
         }}
       />
       {/* Glowing border highlight */}
       <div
         className="pointer-events-none absolute inset-0 rounded-[inherit] transition-opacity duration-300 z-10"
         style={{
-          opacity,
+          opacity: "var(--spotlight-opacity, 0)",
           WebkitMask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
           WebkitMaskComposite: "xor",
           maskComposite: "exclude",
           padding: "1.5px",
-          background: `radial-gradient(${spotlightSize * 0.8}px circle at ${position.x}px ${position.y}px, ${spotlightColor.replace("0.15", "0.6").replace("0.2", "0.7")}, transparent 70%)`,
+          background: `radial-gradient(${spotlightSize * 0.8}px circle at var(--spotlight-x, 0px) var(--spotlight-y, 0px), ${spotlightColor.replace("0.15", "0.6").replace("0.2", "0.7")}, transparent 70%)`,
         }}
       />
       <div className="relative z-10">{children}</div>

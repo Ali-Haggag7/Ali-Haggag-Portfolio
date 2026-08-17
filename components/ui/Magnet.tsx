@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef, memo } from "react";
+import { useCallback, useRef, memo } from "react";
 import { motion, useSpring } from "framer-motion";
 
 interface MagnetProps {
@@ -20,68 +20,58 @@ export const Magnet = memo(function Magnet({
   maxDistance = 8,
   className = "",
 }: MagnetProps) {
-  const [isActive, setIsActive] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
+  const cachedRectRef = useRef<DOMRect | null>(null);
+  const lastRectTimeRef = useRef<number>(0);
 
   const springX = useSpring(0, { damping: 20, stiffness: 250, mass: 0.1 });
   const springY = useSpring(0, { damping: 20, stiffness: 250, mass: 0.1 });
 
-  useEffect(() => {
-    if (disabled) {
-      springX.set(0);
-      springY.set(0);
-      return;
-    }
+  const handlePointerEnter = useCallback(() => {
+    if (disabled || !ref.current) return;
+    cachedRectRef.current = ref.current.getBoundingClientRect();
+    lastRectTimeRef.current = performance.now();
+  }, [disabled]);
 
-    const handleMouseMove = (e: MouseEvent) => {
-      if (!ref.current) return;
+  const handlePointerMove = useCallback(
+    (e: React.PointerEvent<HTMLDivElement>) => {
+      if (disabled || !ref.current) return;
 
-      const { left, top, width, height } = ref.current.getBoundingClientRect();
-      const centerX = left + width / 2;
-      const centerY = top + height / 2;
-
-      // Check if mouse is directly over or immediately adjacent to button (within small padding)
-      if (
-        e.clientX >= left - padding &&
-        e.clientX <= left + width + padding &&
-        e.clientY >= top - padding &&
-        e.clientY <= top + height + padding
-      ) {
-        setIsActive(true);
-        const rawOffsetX = (e.clientX - centerX) / magnetStrength;
-        const rawOffsetY = (e.clientY - centerY) / magnetStrength;
-
-        // Clamp translation strictly to prevent adjacent buttons from overlapping
-        const clampedX = Math.max(-maxDistance, Math.min(maxDistance, rawOffsetX));
-        const clampedY = Math.max(-maxDistance, Math.min(maxDistance, rawOffsetY));
-
-        springX.set(clampedX);
-        springY.set(clampedY);
-      } else {
-        setIsActive(false);
-        springX.set(0);
-        springY.set(0);
+      const now = performance.now();
+      if (!cachedRectRef.current || now - lastRectTimeRef.current > 300) {
+        cachedRectRef.current = ref.current.getBoundingClientRect();
+        lastRectTimeRef.current = now;
       }
-    };
 
-    const handleMouseLeave = () => {
-      setIsActive(false);
-      springX.set(0);
-      springY.set(0);
-    };
+      const rect = cachedRectRef.current;
+      const centerX = rect.left + rect.width / 2;
+      const centerY = rect.top + rect.height / 2;
 
-    window.addEventListener("mousemove", handleMouseMove, { passive: true });
-    window.addEventListener("mouseleave", handleMouseLeave);
+      const rawOffsetX = (e.clientX - centerX) / magnetStrength;
+      const rawOffsetY = (e.clientY - centerY) / magnetStrength;
 
-    return () => {
-      window.removeEventListener("mousemove", handleMouseMove);
-      window.removeEventListener("mouseleave", handleMouseLeave);
-    };
-  }, [padding, disabled, magnetStrength, maxDistance, springX, springY]);
+      // Clamp translation strictly to prevent elements from drifting too far
+      const clampedX = Math.max(-maxDistance, Math.min(maxDistance, rawOffsetX));
+      const clampedY = Math.max(-maxDistance, Math.min(maxDistance, rawOffsetY));
+
+      springX.set(clampedX);
+      springY.set(clampedY);
+    },
+    [disabled, magnetStrength, maxDistance, springX, springY]
+  );
+
+  const handlePointerLeave = useCallback(() => {
+    cachedRectRef.current = null;
+    springX.set(0);
+    springY.set(0);
+  }, [springX, springY]);
 
   return (
     <motion.div
       ref={ref}
+      onPointerEnter={handlePointerEnter}
+      onPointerMove={handlePointerMove}
+      onPointerLeave={handlePointerLeave}
       style={{ x: springX, y: springY }}
       className={`inline-block ${className}`}
     >

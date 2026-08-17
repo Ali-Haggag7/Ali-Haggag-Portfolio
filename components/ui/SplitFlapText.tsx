@@ -57,12 +57,12 @@ const SplitFlapChar = memo(function SplitFlapChar({
       className={cn(
         "relative inline-flex items-center justify-center font-mono font-black select-none",
         "h-[1.25em] min-w-[0.75em] px-1 mx-0.5 rounded-md",
-        "bg-slate-900/90 text-slate-100 border border-slate-700/80 shadow-md",
+        "bg-card/90 text-foreground border border-border/80 shadow-md",
         "perspective-[400px]",
         className
       )}
       style={{
-        boxShadow: "inset 0 1px 0 rgba(255,255,255,0.15), 0 4px 10px rgba(0,0,0,0.5)",
+        boxShadow: "inset 0 1px 0 rgba(255,255,255,0.08), 0 4px 10px rgba(0,0,0,0.25)",
       }}
     >
       <span
@@ -76,7 +76,7 @@ const SplitFlapChar = memo(function SplitFlapChar({
       {/* Horizontal split line across center */}
       <span
         aria-hidden="true"
-        className="absolute inset-x-0 top-1/2 h-px bg-slate-950/80 pointer-events-none shadow-[0_1px_0_rgba(255,255,255,0.08)]"
+        className="absolute inset-x-0 top-1/2 h-px bg-border/60 pointer-events-none shadow-[0_1px_0_rgba(255,255,255,0.05)]"
       />
     </span>
   );
