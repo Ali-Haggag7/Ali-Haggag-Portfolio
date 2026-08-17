@@ -530,6 +530,7 @@
     background-color: var(--color-background);
     color: var(--color-foreground);
     overscroll-behavior-y: none;
+    transition: background-color 0.3s ease, color 0.3s ease;
   }
 
   /* Scales with theme — hardcoded rgba(59,130,246) fails on .light */
@@ -600,7 +601,7 @@
 
   .glitch-text {
     position: relative;
-    color: white;
+    color: currentColor;
     transform: translateZ(0);
     will-change: transform;
   }
@@ -613,13 +614,12 @@
     left: 0;
     width: 100%;
     height: 100%;
-    /* var(--color-background) is reliable; `inherit` is undefined on pseudo-elements */
-    background: var(--color-background);
+    background: transparent;
+    pointer-events: none;
   }
 
   .glitch-text::before {
     left: 2px;
-    /* Theme-aware: adapts to .light without hardcoded red/blue */
     text-shadow: -1px 0 hsl(var(--destructive));
     clip-path: inset(24px 0 90px 0);
     animation: glitch-anim-2 3s infinite linear alternate-reverse;

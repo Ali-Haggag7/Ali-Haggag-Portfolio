@@ -51,7 +51,6 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
           attribute="class"
           defaultTheme="dark"
           enableSystem={false}
-          disableTransitionOnChange
         >
           <PwaRegister />
           {children}

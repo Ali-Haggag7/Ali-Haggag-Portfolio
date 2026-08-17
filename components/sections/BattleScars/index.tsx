@@ -194,7 +194,7 @@ export default function BattleScars() {
                     className="section-title text-4xl md:text-5xl mb-3 flex items-center justify-center gap-3"
                 >
                     <span>Battle</span>
-                    <GlitchText text="SCARS" className="text-red-500 font-extrabold" />
+                    <GlitchText text="SCARS" className="text-red-600 dark:text-red-500 font-extrabold" />
                 </h2>
                 <p className="text-muted-foreground text-sm md:text-base leading-relaxed max-w-xl">
                     Real engineering isn&apos;t just writing code. It&apos;s about the decisions made when systems fail, latency spikes, and requirements shift.
