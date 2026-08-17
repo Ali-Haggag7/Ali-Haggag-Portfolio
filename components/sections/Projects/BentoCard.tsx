@@ -14,28 +14,10 @@ import Image from "next/image";
 import { ProjectFeature, PILL_CATEGORY_VAR } from "./projects.data";
 import { BorderBeam } from "@/components/ui/BorderBeam";
 import { DecryptedText } from "@/components/ui/DecryptedText";
+import { useIsMobile } from "@/hooks/useIsMobile";
 
 /** Max pills shown on a card to keep it compact */
 const CARD_PILL_LIMIT = 4;
-
-// Custom hook to detect mobile view using ResizeObserver for better performance and responsiveness
-function useIsMobile(): boolean {
-    const [isMobile, setIsMobile] = useState<boolean>(false);
-
-    useEffect(() => {
-        const updateMode = () => {
-            setIsMobile(window.innerWidth <= 768);
-        };
-
-        updateMode();
-        const observer = new ResizeObserver(updateMode);
-        observer.observe(document.body);
-
-        return () => observer.disconnect();
-    }, []);
-
-    return isMobile;
-}
 
 export const BentoCard = memo(function BentoCard({
     feature,

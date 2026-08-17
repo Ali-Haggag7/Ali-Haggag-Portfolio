@@ -24,8 +24,23 @@ export const DeploymentGlobe = memo(function DeploymentGlobe() {
 
     const selectedNode = DEPLOYMENT_NODES.find((n) => n.id === selectedNodeId) || DEPLOYMENT_NODES[0];
 
+    const containerRef = useRef<HTMLDivElement>(null);
+    const [isInView, setIsInView] = useState(false);
+
     useEffect(() => {
-        if (isMobile) return;
+        const container = containerRef.current;
+        if (!container) return;
+
+        const observer = new IntersectionObserver(([entry]) => {
+            setIsInView(entry.isIntersecting);
+        }, { threshold: 0.05 });
+
+        observer.observe(container);
+        return () => observer.disconnect();
+    }, []);
+
+    useEffect(() => {
+        if (isMobile || !isInView) return;
         let phi = 0;
         let width = 0;
         const currentCanvas = canvasRef.current;
@@ -40,14 +55,14 @@ export const DeploymentGlobe = memo(function DeploymentGlobe() {
         onResize();
 
         const globe = createGlobe(currentCanvas, {
-            devicePixelRatio: 2,
+            devicePixelRatio: Math.min(window.devicePixelRatio || 1, 2),
             width: width * 2,
             height: width * 2,
             phi: 0,
             theta: 0.25,
             dark: 1,
             diffuse: 1.2,
-            mapSamples: 12000,
+            mapSamples: 10000,
             mapBrightness: 6,
             baseColor: [0.1, 0.15, 0.25],
             markerColor: [0.1, 0.8, 0.5],
@@ -72,10 +87,10 @@ export const DeploymentGlobe = memo(function DeploymentGlobe() {
             globe.destroy();
             window.removeEventListener("resize", onResize);
         };
-    }, [isMobile]);
+    }, [isMobile, isInView]);
 
     return (
-        <div className="w-full max-w-4xl mx-auto my-12 p-6 rounded-2xl border border-border bg-card shadow-2xl space-y-6">
+        <div ref={containerRef} className="w-full max-w-4xl mx-auto my-12 p-6 rounded-2xl border border-border bg-card shadow-2xl space-y-6">
             {/* Header */}
             <div className="flex flex-wrap items-center justify-between gap-4 pb-4 border-b border-border/60">
                 <div className="flex items-center gap-3">

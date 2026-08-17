@@ -59,9 +59,12 @@ export default function Particles() {
 
         const particles: Particle[] = Array.from({ length: particleCount }, () => new Particle());
 
-        let animationFrameId: number;
+        let animationFrameId: number | null = null;
+        let isRunning = true;
 
         const animate = () => {
+            if (!isRunning) return;
+
             ctx.clearRect(0, 0, width, height);
 
             const isLight = isLightRef.current;
@@ -106,7 +109,24 @@ export default function Particles() {
             animationFrameId = requestAnimationFrame(animate);
         };
 
-        animate();
+        animationFrameId = requestAnimationFrame(animate);
+
+        const handleVisibilityChange = () => {
+            if (document.hidden) {
+                isRunning = false;
+                if (animationFrameId) {
+                    cancelAnimationFrame(animationFrameId);
+                    animationFrameId = null;
+                }
+            } else {
+                if (!isRunning) {
+                    isRunning = true;
+                    animationFrameId = requestAnimationFrame(animate);
+                }
+            }
+        };
+
+        document.addEventListener("visibilitychange", handleVisibilityChange);
 
         // Debounced resize handler
         let resizeTimeout: NodeJS.Timeout;
@@ -122,9 +142,10 @@ export default function Particles() {
         window.addEventListener("resize", handleResize, { passive: true });
 
         return () => {
+            document.removeEventListener("visibilitychange", handleVisibilityChange);
             window.removeEventListener("resize", handleResize);
             clearTimeout(resizeTimeout);
-            cancelAnimationFrame(animationFrameId);
+            if (animationFrameId) cancelAnimationFrame(animationFrameId);
         };
     }, [mounted]);
 

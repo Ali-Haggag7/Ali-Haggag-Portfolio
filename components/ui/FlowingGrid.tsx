@@ -29,11 +29,16 @@ export const FlowingGrid = memo(function FlowingGrid({
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    let animId: number;
+    let animId: number | null = null;
+    let isRunning = false;
+    let cachedWidth = 0;
+    let cachedHeight = 0;
 
     const handleResize = () => {
       if (!canvas || !container) return;
       const rect = container.getBoundingClientRect();
+      cachedWidth = rect.width;
+      cachedHeight = rect.height;
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
       canvas.width = rect.width * dpr;
       canvas.height = rect.height * dpr;
@@ -44,21 +49,16 @@ export const FlowingGrid = memo(function FlowingGrid({
     const resizeObserver = new ResizeObserver(handleResize);
     resizeObserver.observe(container);
 
-    const observer = new IntersectionObserver(([entry]) => {
-      isVisibleRef.current = entry.isIntersecting;
-    }, { threshold: 0 });
-    observer.observe(container);
-
     const draw = () => {
       if (!canvas || !ctx || !container) return;
       if (!isVisibleRef.current) {
-        animId = requestAnimationFrame(draw);
-        return;
+        isRunning = false;
+        animId = null;
+        return; // Fully pause loop when off-screen
       }
 
-      const rect = container.getBoundingClientRect();
-      const width = rect.width;
-      const height = rect.height;
+      const width = cachedWidth;
+      const height = cachedHeight;
 
       if (width === 0 || height === 0) {
         animId = requestAnimationFrame(draw);
@@ -117,21 +117,43 @@ export const FlowingGrid = memo(function FlowingGrid({
       animId = requestAnimationFrame(draw);
     };
 
-    animId = requestAnimationFrame(draw);
+    const startLoop = () => {
+      if (!isRunning && isVisibleRef.current) {
+        isRunning = true;
+        animId = requestAnimationFrame(draw);
+      }
+    };
 
+    const observer = new IntersectionObserver(([entry]) => {
+      isVisibleRef.current = entry.isIntersecting;
+      if (entry.isIntersecting) {
+        startLoop();
+      }
+    }, { threshold: 0 });
+    observer.observe(container);
+
+    startLoop();
+
+    let lastMouseTime = 0;
     const handleMouseMove = (e: MouseEvent) => {
-      if (!container) return;
-      const rect = container.getBoundingClientRect();
-      mouseRef.current = {
-        x: (e.clientX - rect.left) / rect.width,
-        y: (e.clientY - rect.top) / rect.height,
-      };
+      if (!container || !isVisibleRef.current) return;
+      const now = performance.now();
+      if (now - lastMouseTime < 32) return;
+      lastMouseTime = now;
+
+      if (cachedWidth > 0 && cachedHeight > 0) {
+        const rect = container.getBoundingClientRect();
+        mouseRef.current = {
+          x: (e.clientX - rect.left) / cachedWidth,
+          y: (e.clientY - rect.top) / cachedHeight,
+        };
+      }
     };
 
     window.addEventListener("mousemove", handleMouseMove, { passive: true });
 
     return () => {
-      cancelAnimationFrame(animId);
+      if (animId) cancelAnimationFrame(animId);
       resizeObserver.disconnect();
       observer.disconnect();
       window.removeEventListener("mousemove", handleMouseMove);

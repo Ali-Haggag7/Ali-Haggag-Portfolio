@@ -1,11 +1,19 @@
 "use client";
 
-import { useState, useCallback, useRef, memo } from "react";
+import { useState, useCallback, useRef, useEffect, memo } from "react";
 import { Volume2, VolumeX } from "lucide-react";
 
 export const AudioSynthesizer = memo(function AudioSynthesizer() {
     const [audioEnabled, setAudioEnabled] = useState(false);
     const audioCtxRef = useRef<AudioContext | null>(null);
+
+    useEffect(() => {
+        return () => {
+            if (audioCtxRef.current && audioCtxRef.current.state !== "closed") {
+                audioCtxRef.current.close().catch(() => {});
+            }
+        };
+    }, []);
 
     const initAudio = useCallback(() => {
         if (!audioCtxRef.current) {

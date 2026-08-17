@@ -36,11 +36,16 @@ export function Squares({
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    let animationFrameId: number;
+    let animationFrameId: number | null = null;
+    let isRunning = false;
+    let cachedWidth = 0;
+    let cachedHeight = 0;
 
     const handleResize = () => {
       if (!canvas || !container) return;
       const rect = container.getBoundingClientRect();
+      cachedWidth = rect.width;
+      cachedHeight = rect.height;
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
       canvas.width = rect.width * dpr;
       canvas.height = rect.height * dpr;
@@ -54,26 +59,17 @@ export function Squares({
     });
     resizeObserver.observe(container);
 
-    // Pause rendering when offscreen
-    const intersectionObserver = new IntersectionObserver(
-      ([entry]) => {
-        isVisibleRef.current = entry.isIntersecting;
-      },
-      { threshold: 0 }
-    );
-    intersectionObserver.observe(container);
-
     const draw = () => {
       if (!canvas || !ctx || !container) return;
 
       if (!isVisibleRef.current) {
-        animationFrameId = requestAnimationFrame(draw);
-        return;
+        isRunning = false;
+        animationFrameId = null;
+        return; // Fully pause loop when off-screen
       }
 
-      const rect = container.getBoundingClientRect();
-      const width = rect.width;
-      const height = rect.height;
+      const width = cachedWidth;
+      const height = cachedHeight;
 
       if (width === 0 || height === 0) {
         animationFrameId = requestAnimationFrame(draw);
@@ -173,10 +169,34 @@ export function Squares({
       animationFrameId = requestAnimationFrame(draw);
     };
 
-    animationFrameId = requestAnimationFrame(draw);
+    const startLoop = () => {
+      if (!isRunning && isVisibleRef.current) {
+        isRunning = true;
+        animationFrameId = requestAnimationFrame(draw);
+      }
+    };
 
+    // Pause rendering when offscreen
+    const intersectionObserver = new IntersectionObserver(
+      ([entry]) => {
+        isVisibleRef.current = entry.isIntersecting;
+        if (entry.isIntersecting) {
+          startLoop();
+        }
+      },
+      { threshold: 0 }
+    );
+    intersectionObserver.observe(container);
+
+    startLoop();
+
+    let lastMouseTime = 0;
     const handleMouseMove = (event: MouseEvent) => {
-      if (!container) return;
+      if (!container || !isVisibleRef.current) return;
+      const now = performance.now();
+      if (now - lastMouseTime < 32) return;
+      lastMouseTime = now;
+
       const rect = container.getBoundingClientRect();
       if (
         event.clientX >= rect.left &&
@@ -201,7 +221,7 @@ export function Squares({
     window.addEventListener("mouseleave", handleMouseLeave);
 
     return () => {
-      cancelAnimationFrame(animationFrameId);
+      if (animationFrameId) cancelAnimationFrame(animationFrameId);
       resizeObserver.disconnect();
       intersectionObserver.disconnect();
       window.removeEventListener("mousemove", handleMouseMove);

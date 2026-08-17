@@ -52,15 +52,24 @@ export const SpotlightCutoutOverlay = memo(function SpotlightCutoutOverlay({
             setTargetRect(rect);
         }, 500);
 
-        // Live tracking on scroll and resize
+        // Live tracking on scroll and resize with RAF throttling
+        let rafId: number | null = null;
         const updateRect = () => {
-            setTargetRect(el.getBoundingClientRect());
+            if (rafId) return;
+            rafId = requestAnimationFrame(() => {
+                rafId = null;
+                const element = document.getElementById(step.targetId);
+                if (element) {
+                    setTargetRect(element.getBoundingClientRect());
+                }
+            });
         };
         window.addEventListener("scroll", updateRect, { passive: true });
         window.addEventListener("resize", updateRect, { passive: true });
 
         return () => {
             clearTimeout(measureTimeout);
+            if (rafId) cancelAnimationFrame(rafId);
             window.removeEventListener("scroll", updateRect);
             window.removeEventListener("resize", updateRect);
         };

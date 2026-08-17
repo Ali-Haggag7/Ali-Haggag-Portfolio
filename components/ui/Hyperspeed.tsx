@@ -28,11 +28,16 @@ export const Hyperspeed = memo(function Hyperspeed({
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    let animId: number;
+    let animId: number | null = null;
+    let isRunning = false;
+    let cachedWidth = 0;
+    let cachedHeight = 0;
 
     const handleResize = () => {
       if (!canvas || !container) return;
       const rect = container.getBoundingClientRect();
+      cachedWidth = rect.width;
+      cachedHeight = rect.height;
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
       canvas.width = rect.width * dpr;
       canvas.height = rect.height * dpr;
@@ -42,11 +47,6 @@ export const Hyperspeed = memo(function Hyperspeed({
     handleResize();
     const resizeObserver = new ResizeObserver(handleResize);
     resizeObserver.observe(container);
-
-    const observer = new IntersectionObserver(([entry]) => {
-      isVisibleRef.current = entry.isIntersecting;
-    }, { threshold: 0 });
-    observer.observe(container);
 
     // Initialize 3D starfield particles
     interface Star {
@@ -77,13 +77,13 @@ export const Hyperspeed = memo(function Hyperspeed({
     const draw = () => {
       if (!canvas || !ctx || !container) return;
       if (!isVisibleRef.current) {
-        animId = requestAnimationFrame(draw);
-        return;
+        isRunning = false;
+        animId = null;
+        return; // Fully pause loop when off-screen to save GPU/CPU cycles
       }
 
-      const rect = container.getBoundingClientRect();
-      const width = rect.width;
-      const height = rect.height;
+      const width = cachedWidth;
+      const height = cachedHeight;
 
       if (width === 0 || height === 0) {
         animId = requestAnimationFrame(draw);
@@ -135,21 +135,43 @@ export const Hyperspeed = memo(function Hyperspeed({
       animId = requestAnimationFrame(draw);
     };
 
-    animId = requestAnimationFrame(draw);
+    const startLoop = () => {
+      if (!isRunning && isVisibleRef.current) {
+        isRunning = true;
+        animId = requestAnimationFrame(draw);
+      }
+    };
 
+    const observer = new IntersectionObserver(([entry]) => {
+      isVisibleRef.current = entry.isIntersecting;
+      if (entry.isIntersecting) {
+        startLoop();
+      }
+    }, { threshold: 0 });
+    observer.observe(container);
+
+    startLoop();
+
+    let lastMouseTime = 0;
     const handleMouseMove = (e: MouseEvent) => {
-      if (!container) return;
-      const rect = container.getBoundingClientRect();
-      mouseRef.current = {
-        x: (e.clientX - rect.left) / rect.width - 0.5,
-        y: (e.clientY - rect.top) / rect.height - 0.5,
-      };
+      if (!container || !isVisibleRef.current) return;
+      const now = performance.now();
+      if (now - lastMouseTime < 32) return; // ~30fps throttle for background tilt
+      lastMouseTime = now;
+
+      if (cachedWidth > 0 && cachedHeight > 0) {
+        const rect = container.getBoundingClientRect();
+        mouseRef.current = {
+          x: (e.clientX - rect.left) / cachedWidth - 0.5,
+          y: (e.clientY - rect.top) / cachedHeight - 0.5,
+        };
+      }
     };
 
     window.addEventListener("mousemove", handleMouseMove, { passive: true });
 
     return () => {
-      cancelAnimationFrame(animId);
+      if (animId) cancelAnimationFrame(animId);
       resizeObserver.disconnect();
       observer.disconnect();
       window.removeEventListener("mousemove", handleMouseMove);

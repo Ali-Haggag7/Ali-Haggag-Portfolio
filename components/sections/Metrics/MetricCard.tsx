@@ -25,6 +25,7 @@ export const MetricCard = memo(function MetricCard({
         const duration = 1500; // ms
         const target = metric.value;
         const startTime = performance.now();
+        let rafId: number | null = null;
 
         const animate = (now: number) => {
             const elapsed = now - startTime;
@@ -36,13 +37,16 @@ export const MetricCard = memo(function MetricCard({
             setCount(currentCount);
 
             if (progress < 1) {
-                requestAnimationFrame(animate);
+                rafId = requestAnimationFrame(animate);
             } else {
                 setCount(target);
             }
         };
 
-        requestAnimationFrame(animate);
+        rafId = requestAnimationFrame(animate);
+        return () => {
+            if (rafId) cancelAnimationFrame(rafId);
+        };
     }, [isInView, metric.value]);
 
     return (
