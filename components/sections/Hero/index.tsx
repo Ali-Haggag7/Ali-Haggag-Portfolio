@@ -151,8 +151,8 @@ export default function HeroSection() {
                 <LiquidEther
                     interactiveElementId="hero"
                     colors={fluidColors}
-                    mouseForce={25}
-                    cursorSize={110}
+                    mouseForce={isMobile ? 18 : 25}
+                    cursorSize={isMobile ? 80 : 110}
                     isViscous={false}
                     viscous={30}
                     iterationsViscous={isMobile ? 8 : 16}

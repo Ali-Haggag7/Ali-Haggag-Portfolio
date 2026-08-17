@@ -57,26 +57,26 @@ interface HeroOrbitalBeaconsProps {
 export const HeroOrbitalBeacons = memo(function HeroOrbitalBeacons({
     isVisible,
 }: HeroOrbitalBeaconsProps) {
-    const visibilityClasses = isVisible
-        ? "opacity-100 translate-y-0 pointer-events-auto"
-        : "opacity-0 translate-y-6 pointer-events-none";
-
     return (
         <>
             {/* =========================================================================
                 DESKTOP ORBITAL BEACONS (Flanking the Terminal in Open 3D Space)
                 lg: and above — zero occlusion by bottom floating dock, floating cosmos feel
+                The outer wrapper MUST STAY pointer-events-none so it doesn't block clicks on the Terminal!
                ========================================================================= */}
             <div
                 aria-label="Orbital Action Beacons"
                 className={cn(
                     "hidden lg:block absolute inset-0 pointer-events-none z-20 transition-all duration-1000 ease-out",
-                    visibilityClasses
+                    isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
                 )}
             >
                 {/* 🛰️ BEACON 01: GITHUB RELAY (Left Flank) */}
                 <div
-                    className="absolute -left-12 xl:-left-24 top-[24%] -translate-y-1/2 pointer-events-auto animate-[orbitalFloat1_6s_ease-in-out_infinite]"
+                    className={cn(
+                        "absolute -left-12 xl:-left-24 top-[24%] -translate-y-1/2 animate-[orbitalFloat1_6s_ease-in-out_infinite]",
+                        isVisible ? "pointer-events-auto" : "pointer-events-none"
+                    )}
                     style={{ willChange: "transform" }}
                 >
                     <a
@@ -129,7 +129,10 @@ export const HeroOrbitalBeacons = memo(function HeroOrbitalBeacons({
 
                 {/* 🛰️ BEACON 02: LINKEDIN QUANTUM LINK (Right Flank) */}
                 <div
-                    className="absolute -right-12 xl:-right-24 top-[20%] -translate-y-1/2 pointer-events-auto animate-[orbitalFloat2_7.5s_ease-in-out_infinite]"
+                    className={cn(
+                        "absolute -right-12 xl:-right-24 top-[20%] -translate-y-1/2 animate-[orbitalFloat2_7.5s_ease-in-out_infinite]",
+                        isVisible ? "pointer-events-auto" : "pointer-events-none"
+                    )}
                     style={{ willChange: "transform" }}
                 >
                     <a
@@ -182,7 +185,10 @@ export const HeroOrbitalBeacons = memo(function HeroOrbitalBeacons({
 
                 {/* 🛰️ BEACON 03: QUANTUM DOSSIER / CV CRYSTAL (Lower-Right Flank) */}
                 <div
-                    className="absolute -right-6 xl:-right-16 bottom-[-10px] pointer-events-auto animate-[orbitalFloat3_5.5s_ease-in-out_infinite]"
+                    className={cn(
+                        "absolute -right-6 xl:-right-16 bottom-[-10px] animate-[orbitalFloat3_5.5s_ease-in-out_infinite]",
+                        isVisible ? "pointer-events-auto" : "pointer-events-none"
+                    )}
                     style={{ willChange: "transform" }}
                 >
                     <a
@@ -200,7 +206,7 @@ export const HeroOrbitalBeacons = memo(function HeroOrbitalBeacons({
                         {/* Spinning Conic Hologram Border */}
                         <span
                             aria-hidden="true"
-                            className="absolute inset-[-1000%] animate-[spin_4s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,hsl(var(--accent-blue))_0%,hsl(var(--accent-purple))_50%,hsl(var(--accent-blue))_100%)] opacity-75 group-hover:opacity-100 transition-opacity duration-300"
+                            className="absolute inset-[-1000%] animate-[spin_4s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,hsl(var(--accent-blue))_0%,hsl(var(--accent-purple))_50%,hsl(var(--accent-blue))_100%)] opacity-75 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
                         />
 
                         {/* Inner High-Tech Card */}
@@ -243,7 +249,7 @@ export const HeroOrbitalBeacons = memo(function HeroOrbitalBeacons({
                 className={cn(
                     "flex lg:hidden flex-wrap justify-center items-center gap-3 relative z-20 mt-6 w-full max-w-lg px-2",
                     "transition-all duration-700 transform-gpu",
-                    visibilityClasses
+                    isVisible ? "opacity-100 translate-y-0 pointer-events-auto" : "opacity-0 translate-y-6 pointer-events-none"
                 )}
             >
                 {/* Mobile GitHub Beacon */}
@@ -295,7 +301,7 @@ export const HeroOrbitalBeacons = memo(function HeroOrbitalBeacons({
                 >
                     <span
                         aria-hidden="true"
-                        className="absolute inset-[-1000%] animate-[spin_4s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,hsl(var(--accent-blue))_0%,hsl(var(--accent-purple))_50%,hsl(var(--accent-blue))_100%)] opacity-80"
+                        className="absolute inset-[-1000%] animate-[spin_4s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,hsl(var(--accent-blue))_0%,hsl(var(--accent-purple))_50%,hsl(var(--accent-blue))_100%)] opacity-80 pointer-events-none"
                     />
                     <span className="relative z-10 flex items-center gap-2 px-3.5 py-2 min-h-[44px] rounded-xl bg-card/95 dark:bg-card/90 backdrop-blur-md text-xs font-bold text-foreground">
                         <ResumeSkillIcon className="w-4 h-4 shrink-0" />

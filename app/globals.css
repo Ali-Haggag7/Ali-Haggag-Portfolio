@@ -797,6 +797,7 @@ html.modal-open .fixed-right-compensate {
 }
 
 @media (max-width: 768px) {
+  /* Kill heavy CSS animations on mobile to free up the GPU for WebGL fluid sim */
   .animate-mesh-spin,
   .animate-twinkle {
     animation: none !important;

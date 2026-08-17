@@ -196,20 +196,40 @@ export default function LiquidEther({
       takeoverTo = new THREE.Vector2();
       interactiveElementId?: string;
       onInteract: (() => void) | null = null;
+      // Scroll-state guard: prevents the fluid from firing during a touch-scroll
+      // which causes a GPU pipeline stall (fluid render vs browser scroll composite)
+      private _isScrolling = false;
+      private _scrollEndTimer: number | null = null;
       private _onMouseMove = this.onDocumentMouseMove.bind(this);
       private _onTouchStart = this.onDocumentTouchStart.bind(this);
       private _onTouchMove = this.onDocumentTouchMove.bind(this);
       private _onTouchEnd = this.onTouchEnd.bind(this);
       private _onDocumentLeave = this.onDocumentLeave.bind(this);
-      private _onScroll = this.updateRect.bind(this);
+      private _onScroll = this.onScrollEvent.bind(this);
       private _cachedRect: DOMRect | null = null;
       private _lastRectTime = 0;
+      // Cache interactiveBottom alongside rect to avoid per-frame forced reflow
+      private _cachedInteractiveBottom: number | null = null;
 
       updateRect() {
         if (this.container) {
           this._cachedRect = this.container.getBoundingClientRect();
           this._lastRectTime = performance.now();
+          // Invalidate interactive bottom cache on rect update
+          this._cachedInteractiveBottom = null;
         }
+      }
+
+      onScrollEvent() {
+        // Mark scrolling state so touchmove doesn't feed the fluid during scroll
+        this._isScrolling = true;
+        if (this._scrollEndTimer) window.clearTimeout(this._scrollEndTimer);
+        this._scrollEndTimer = window.setTimeout(() => {
+          this._isScrolling = false;
+          this._scrollEndTimer = null;
+          // Refresh rect after scroll settles
+          this.updateRect();
+        }, 150);
       }
 
       private getRect(): DOMRect | null {
@@ -218,19 +238,26 @@ export default function LiquidEther({
         if (!this._cachedRect || now - this._lastRectTime > 200) {
           this._cachedRect = this.container.getBoundingClientRect();
           this._lastRectTime = now;
+          // Invalidate interactive bottom cache when rect refreshes
+          this._cachedInteractiveBottom = null;
         }
         return this._cachedRect;
       }
 
       private getInteractiveBottom(): number {
+        // Return cached value to avoid forced layout reflow every animation frame
+        if (this._cachedInteractiveBottom !== null) return this._cachedInteractiveBottom;
         if (this.interactiveElementId && typeof document !== "undefined") {
           const el = document.getElementById(this.interactiveElementId);
           if (el) {
-            return el.getBoundingClientRect().bottom;
+            this._cachedInteractiveBottom = el.getBoundingClientRect().bottom;
+            return this._cachedInteractiveBottom;
           }
         }
         const rect = this.getRect();
-        return rect ? rect.bottom : 0;
+        const bottom = rect ? rect.bottom : 0;
+        this._cachedInteractiveBottom = bottom;
+        return bottom;
       }
 
       init(container: HTMLElement) {
@@ -252,6 +279,7 @@ export default function LiquidEther({
         this.docTarget?.addEventListener("mouseleave", this._onDocumentLeave);
       }
       dispose() {
+        if (this._scrollEndTimer) window.clearTimeout(this._scrollEndTimer);
         if (this.listenerTarget) {
           this.listenerTarget.removeEventListener("mousemove", this._onMouseMove);
           this.listenerTarget.removeEventListener("touchstart", this._onTouchStart);
@@ -266,6 +294,7 @@ export default function LiquidEther({
         this.docTarget = null;
         this.container = null;
         this._cachedRect = null;
+        this._cachedInteractiveBottom = null;
       }
       private isPointInside(clientX: number, clientY: number) {
         const rect = this.getRect();
@@ -317,6 +346,8 @@ export default function LiquidEther({
       }
       onDocumentTouchStart(event: TouchEvent) {
         if (event.touches.length !== 1) return;
+        // Reset scrolling flag on new touch — user might be tapping, not scrolling
+        this._isScrolling = false;
         const t = event.touches[0];
         if (!this.updateHoverState(t.clientX, t.clientY)) {
           this.isHoverInside = false;
@@ -328,6 +359,10 @@ export default function LiquidEther({
       }
       onDocumentTouchMove(event: TouchEvent) {
         if (event.touches.length !== 1) return;
+        // CRITICAL: Skip fluid interaction entirely while user is scrolling.
+        // Feeding the GPU fluid sim during scroll causes a pipeline stall
+        // that makes both the scroll AND the animation janky on mobile.
+        if (this._isScrolling) return;
         const t = event.touches[0];
         if (!this.updateHoverState(t.clientX, t.clientY)) {
           this.isHoverInside = false;

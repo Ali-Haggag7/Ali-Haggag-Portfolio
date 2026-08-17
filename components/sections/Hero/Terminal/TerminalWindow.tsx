@@ -572,7 +572,7 @@ Status .......... Available`}
     const wrapperClasses = terminal.isFullScreen
         ? "fixed inset-0 z-[99999] w-screen h-screen max-w-none m-0 p-0 rounded-none border-none bg-[#090d16] flex flex-col text-left overflow-hidden terminal-scanlines shadow-2xl"
         : cn(
-            "w-full max-w-3xl mx-auto rounded-xl border border-[hsl(var(--terminal-border-forced))] mb-8 text-left flex flex-col terminal-scanlines relative overflow-visible terminal-glow-container",
+            "w-full max-w-3xl mx-auto rounded-xl border border-[hsl(var(--terminal-border-forced))] mb-8 text-left flex flex-col terminal-scanlines relative z-10 overflow-visible terminal-glow-container",
             "transition-[transform,opacity] duration-300 transform-gpu will-change-[transform,opacity]",
             terminal.isClosed
                 ? "scale-95 opacity-0 pointer-events-none"
