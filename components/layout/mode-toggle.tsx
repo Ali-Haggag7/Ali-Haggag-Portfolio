@@ -28,6 +28,18 @@ export const ModeToggle = memo(function ModeToggle() {
 
     const toggle = useCallback(() => {
         const nextTheme = isDark ? "light" : "dark";
+
+        if (
+            typeof document !== "undefined" &&
+            "startViewTransition" in document &&
+            !window.matchMedia("(prefers-reduced-motion: reduce)").matches
+        ) {
+            (document as any).startViewTransition(() => {
+                setTheme(nextTheme);
+            });
+            return;
+        }
+
         setTheme(nextTheme);
     }, [isDark, setTheme]);
 

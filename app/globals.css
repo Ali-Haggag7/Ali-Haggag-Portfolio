@@ -530,7 +530,31 @@
     background-color: var(--color-background);
     color: var(--color-foreground);
     overscroll-behavior-y: none;
-    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+
+  /* ─── GPU-Accelerated Circular Theme Reveal Wave ────────────────────────────── */
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none;
+    mix-blend-mode: normal;
+  }
+
+  ::view-transition-old(root) {
+    z-index: 1;
+  }
+
+  ::view-transition-new(root) {
+    z-index: 9999;
+    animation: theme-reveal-wave 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  @keyframes theme-reveal-wave {
+    from {
+      clip-path: circle(0px at calc(100% - 2.5rem) 2.5rem);
+    }
+    to {
+      clip-path: circle(160vmax at calc(100% - 2.5rem) 2.5rem);
+    }
   }
 
   /* Scales with theme — hardcoded rgba(59,130,246) fails on .light */

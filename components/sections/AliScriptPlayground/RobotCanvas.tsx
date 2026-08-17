@@ -134,23 +134,6 @@ function EntityPanel({ label, position, hp, energy, dotColor, icon }: EntityPane
 export const RobotCanvas = memo(function RobotCanvas({ robot, target }: RobotCanvasProps) {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const { resolvedTheme } = useTheme();
-    const [themeTick, setThemeTick] = useState(0);
-
-    // Real-time MutationObserver to catch every single <html> class toggle (light <-> dark)
-    useEffect(() => {
-        if (typeof document === "undefined") return;
-
-        const observer = new MutationObserver(() => {
-            setThemeTick((t) => t + 1);
-        });
-
-        observer.observe(document.documentElement, {
-            attributes: true,
-            attributeFilter: ["class"],
-        });
-
-        return () => observer.disconnect();
-    }, []);
 
     useEffect(() => {
         const canvas = canvasRef.current;
@@ -308,7 +291,7 @@ export const RobotCanvas = memo(function RobotCanvas({ robot, target }: RobotCan
             ctx.stroke();
             ctx.shadowBlur = 0;
         }
-    }, [robot, target, resolvedTheme, themeTick]);
+    }, [robot, target, resolvedTheme]);
 
     const dirNames = ["N", "E", "S", "W"];
 
