@@ -22,18 +22,7 @@ const LiquidEther = dynamic(() => import("@/components/ui/LiquidEther"), {
     ssr: false,
 });
 
-// Dynamically import TerminalWindow to separate heavy command engine from initial bundle
-const TerminalWindow = dynamic(
-    () => import("./Terminal/TerminalWindow").then((mod) => mod.TerminalWindow),
-    {
-        ssr: false,
-        loading: () => (
-            <div className="w-full max-w-3xl mx-auto mb-8 h-[360px] bg-slate-950/40 rounded-xl border border-slate-800/40 flex items-center justify-center font-mono text-gray-500 animate-pulse">
-                Initializing Terminal...
-            </div>
-        ),
-    }
-);
+import { TerminalWindow } from "./Terminal/TerminalWindow";
 
 const SystemOffline = memo(function SystemOffline({
     onReboot,

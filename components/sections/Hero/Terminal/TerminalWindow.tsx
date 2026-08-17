@@ -649,6 +649,8 @@ Status .......... Available`}
                 <button
                     type="button"
                     onClick={(e) => { e.stopPropagation(); terminal.setIsMuted(p => !p); }}
+                    aria-label={terminal.isMuted ? "Unmute terminal sound effects" : "Mute terminal sound effects"}
+                    title={terminal.isMuted ? "Unmute sound" : "Mute sound"}
                     className="cursor-pointer p-2 -mr-2 text-gray-400 hover:text-white transition-colors outline-none focus-visible:ring-2 focus-visible:ring-gray-400 rounded-sm min-h-[44px] min-w-[44px] flex items-center justify-center"
                 >
                     {terminal.isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}

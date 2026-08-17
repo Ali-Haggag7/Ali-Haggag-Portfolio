@@ -17,7 +17,7 @@ export type TerminalState = {
     skipBootSequence: () => void;
 };
 
-const BOOT_DELAYS = [100, 300, 1000, 1500, 2200, 2800, 3300] as const;
+const BOOT_DELAYS = [50, 150, 400, 650, 900, 1150, 1400] as const;
 
 export function useTerminal(): TerminalState {
     const [step, setStep] = useState(0);
