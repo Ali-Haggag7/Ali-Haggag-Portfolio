@@ -26,25 +26,43 @@ export const TerminalMascot = memo(function TerminalMascot({
             return;
         }
 
+        let rect = mascotRef.current?.getBoundingClientRect();
+        let mascotCenterX = rect ? rect.left + rect.width / 2 : 0;
+        let mascotCenterY = rect ? rect.top + rect.height / 2 : 0;
+
+        let rafId: number | null = null;
         const handleMouseMove = (e: MouseEvent) => {
-            if (!mascotRef.current) return;
-            const rect = mascotRef.current.getBoundingClientRect();
-            const mascotCenterX = rect.left + rect.width / 2;
-            const mascotCenterY = rect.top + rect.height / 2;
+            if (rafId !== null) return;
+            rafId = requestAnimationFrame(() => {
+                rafId = null;
+                const dx = e.clientX - mascotCenterX;
+                const dy = e.clientY - mascotCenterY;
+                const dist = Math.hypot(dx, dy) || 1;
+                const maxRadius = 4.5;
 
-            const dx = e.clientX - mascotCenterX;
-            const dy = e.clientY - mascotCenterY;
-            const dist = Math.hypot(dx, dy) || 1;
-            const maxRadius = 4.5;
+                const x = (dx / dist) * Math.min(dist * 0.05, maxRadius);
+                const y = (dy / dist) * Math.min(dist * 0.05, maxRadius);
 
-            const x = (dx / dist) * Math.min(dist * 0.05, maxRadius);
-            const y = (dy / dist) * Math.min(dist * 0.05, maxRadius);
-
-            setPupilOffset({ x, y });
+                setPupilOffset({ x, y });
+            });
         };
 
-        window.addEventListener("mousemove", handleMouseMove);
-        return () => window.removeEventListener("mousemove", handleMouseMove);
+        const handleResize = () => {
+            if (mascotRef.current) {
+                rect = mascotRef.current.getBoundingClientRect();
+                mascotCenterX = rect.left + rect.width / 2;
+                mascotCenterY = rect.top + rect.height / 2;
+            }
+        };
+
+        window.addEventListener("mousemove", handleMouseMove, { passive: true });
+        window.addEventListener("resize", handleResize, { passive: true });
+
+        return () => {
+            if (rafId !== null) cancelAnimationFrame(rafId);
+            window.removeEventListener("mousemove", handleMouseMove);
+            window.removeEventListener("resize", handleResize);
+        };
     }, [isFocused]);
 
     // Show temporary status speech bubble when state changes

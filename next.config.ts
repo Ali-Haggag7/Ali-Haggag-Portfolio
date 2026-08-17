@@ -9,6 +9,10 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  reactStrictMode: true,
+  experimental: {
+    optimizePackageImports: ["lucide-react", "framer-motion", "@ai-sdk/react", "cobe"],
+  },
 };
 
 export default nextConfig;

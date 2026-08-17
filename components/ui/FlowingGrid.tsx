@@ -33,10 +33,12 @@ export const FlowingGrid = memo(function FlowingGrid({
     let isRunning = false;
     let cachedWidth = 0;
     let cachedHeight = 0;
+    let cachedRect: DOMRect | null = null;
 
     const handleResize = () => {
       if (!canvas || !container) return;
       const rect = container.getBoundingClientRect();
+      cachedRect = rect;
       cachedWidth = rect.width;
       cachedHeight = rect.height;
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -142,7 +144,8 @@ export const FlowingGrid = memo(function FlowingGrid({
       lastMouseTime = now;
 
       if (cachedWidth > 0 && cachedHeight > 0) {
-        const rect = container.getBoundingClientRect();
+        const rect = cachedRect || container.getBoundingClientRect();
+        if (!cachedRect) cachedRect = rect;
         mouseRef.current = {
           x: (e.clientX - rect.left) / cachedWidth,
           y: (e.clientY - rect.top) / cachedHeight,

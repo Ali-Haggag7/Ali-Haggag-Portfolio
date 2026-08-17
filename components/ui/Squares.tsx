@@ -40,10 +40,12 @@ export function Squares({
     let isRunning = false;
     let cachedWidth = 0;
     let cachedHeight = 0;
+    let cachedRect: DOMRect | null = null;
 
     const handleResize = () => {
       if (!canvas || !container) return;
       const rect = container.getBoundingClientRect();
+      cachedRect = rect;
       cachedWidth = rect.width;
       cachedHeight = rect.height;
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -197,7 +199,8 @@ export function Squares({
       if (now - lastMouseTime < 32) return;
       lastMouseTime = now;
 
-      const rect = container.getBoundingClientRect();
+      const rect = cachedRect || container.getBoundingClientRect();
+      if (!cachedRect) cachedRect = rect;
       if (
         event.clientX >= rect.left &&
         event.clientX <= rect.right &&

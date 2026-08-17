@@ -76,11 +76,21 @@ export function ServiceCard({
     const [expanded, setExpanded] = useState(false);
     const detailId = useId();
 
-    // Stable ref across renders — no new function allocated on each paint.
+    const cachedRectRef = useRef<DOMRect | null>(null);
+
+    const handleMouseEnter = useCallback(() => {
+        if (divRef.current) {
+            cachedRectRef.current = divRef.current.getBoundingClientRect();
+        }
+    }, []);
+
     const handleMouseMove = useCallback(
         (e: React.MouseEvent<HTMLDivElement>) => {
-            if (!divRef.current) return;
-            const rect = divRef.current.getBoundingClientRect();
+            if (!cachedRectRef.current && divRef.current) {
+                cachedRectRef.current = divRef.current.getBoundingClientRect();
+            }
+            const rect = cachedRectRef.current;
+            if (!rect) return;
             mouseX.set(e.clientX - rect.left);
             mouseY.set(e.clientY - rect.top);
         },
@@ -134,6 +144,7 @@ export function ServiceCard({
         >
             <div
                 ref={divRef}
+                onMouseEnter={handleMouseEnter}
                 onMouseMove={handleMouseMove}
                 tabIndex={0}
                 className={cn(
