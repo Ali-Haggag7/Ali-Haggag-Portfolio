@@ -151,17 +151,18 @@ export default function HeroSection() {
                 <LiquidEther
                     interactiveElementId="hero"
                     colors={fluidColors}
-                    mouseForce={isMobile ? 18 : 25}
-                    cursorSize={isMobile ? 80 : 110}
+                    mouseForce={isMobile ? 24 : 36}
+                    cursorSize={isMobile ? 85 : 110}
                     isViscous={false}
                     viscous={30}
-                    iterationsViscous={isMobile ? 8 : 16}
-                    iterationsPoisson={isMobile ? 12 : 20}
-                    resolution={isMobile ? 0.3 : 0.45}
+                    iterationsViscous={isMobile ? 6 : 10}
+                    iterationsPoisson={isMobile ? 8 : 14}
+                    resolution={isMobile ? 0.25 : 0.35}
+                    BFECC={false}
                     isBounce={false}
                     autoDemo
-                    autoSpeed={0.5}
-                    autoIntensity={2.2}
+                    autoSpeed={0.45}
+                    autoIntensity={2.0}
                     takeoverDuration={0.25}
                     autoResumeDelay={3000}
                     autoRampDuration={0.6}

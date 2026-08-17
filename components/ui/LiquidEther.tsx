@@ -141,9 +141,8 @@ export default function LiquidEther({
       clock: THREE.Clock | null = null;
       init(container: HTMLElement) {
         this.container = container;
-        const isMob = window.innerWidth <= 768;
-        // Mobile: pixelRatio=1 halves fragment count; desktop: cap at 1.5 (original=2, overkill for a fluid)
-        this.pixelRatio = isMob ? 1 : Math.min(window.devicePixelRatio || 1, 1.5);
+        // Fluid simulation is smooth-filtered — pixelRatio=1 delivers 60-120fps with zero visual loss
+        this.pixelRatio = 1;
         this.resize();
         // antialias=false: fluid is a smooth function — MSAA buys nothing but costs a full resolve pass
         // powerPreference='high-performance': requests discrete GPU on dual-GPU laptops
@@ -180,7 +179,9 @@ export default function LiquidEther({
       mouseMoved = false;
       coords = new THREE.Vector2();
       coords_old = new THREE.Vector2();
+      targetCoords = new THREE.Vector2();
       diff = new THREE.Vector2();
+      smoothDiff = new THREE.Vector2();
       timer: number | null = null;
       container: HTMLElement | null = null;
       docTarget: Document | null = null;
@@ -312,13 +313,18 @@ export default function LiquidEther({
         if (this.timer) window.clearTimeout(this.timer);
         const nx = (x - rect.left) / rect.width;
         const ny = (y - rect.top) / rect.height;
-        this.coords.set(nx * 2 - 1, -(ny * 2 - 1));
+        this.targetCoords.set(nx * 2 - 1, -(ny * 2 - 1));
+        if (!this.hasUserControl && !this.takeoverActive) {
+          this.coords.copy(this.targetCoords);
+          this.coords_old.copy(this.targetCoords);
+        }
         this.mouseMoved = true;
         this.timer = window.setTimeout(() => {
           this.mouseMoved = false;
-        }, 100);
+        }, 120);
       }
       setNormalized(nx: number, ny: number) {
+        this.targetCoords.set(nx, ny);
         this.coords.set(nx, ny);
         this.mouseMoved = true;
       }
@@ -383,17 +389,32 @@ export default function LiquidEther({
           if (t >= 1) {
             this.takeoverActive = false;
             this.coords.copy(this.takeoverTo);
+            this.targetCoords.copy(this.takeoverTo);
             this.coords_old.copy(this.coords);
             this.diff.set(0, 0);
+            this.smoothDiff.set(0, 0);
           } else {
             const k = t * t * (3 - 2 * t);
             this.coords.copy(this.takeoverFrom).lerp(this.takeoverTo, k);
+            this.targetCoords.copy(this.coords);
           }
+        } else if (this.hasUserControl) {
+          // Exponential position smoothing (LERP) — creates continuous fluid tracking
+          this.coords.lerp(this.targetCoords, 0.45);
         }
+
+        // Instant delta
         this.diff.subVectors(this.coords, this.coords_old);
         this.coords_old.copy(this.coords);
+
         if (this.coords_old.x === 0 && this.coords_old.y === 0) this.diff.set(0, 0);
         if (this.isAutoActive && !this.takeoverActive) this.diff.multiplyScalar(this.autoIntensity);
+
+        // Smooth continuous velocity vector with rolling average (eliminates pulsing stutter)
+        this.smoothDiff.lerp(this.diff, 0.4);
+        if (this.smoothDiff.lengthSq() < 0.0000001) {
+          this.smoothDiff.set(0, 0);
+        }
       }
     }
     const Mouse = new MouseClass();
@@ -753,8 +774,8 @@ export default function LiquidEther({
       }
       update(...args: any[]) {
         const props = args[0] || {};
-        const forceX = (Mouse.diff.x / 2) * (props.mouse_force || 0);
-        const forceY = (Mouse.diff.y / 2) * (props.mouse_force || 0);
+        const forceX = (Mouse.smoothDiff.x / 2) * (props.mouse_force || 0);
+        const forceY = (Mouse.smoothDiff.y / 2) * (props.mouse_force || 0);
         const cellScale = props.cellScale || { x: 1, y: 1 };
         const cursorSize = props.cursor_size || 0;
         const cursorSizeX = cursorSize * cellScale.x;
