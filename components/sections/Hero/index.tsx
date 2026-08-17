@@ -31,15 +31,12 @@ const SystemOffline = memo(function SystemOffline({
     onReboot: () => void;
     isActive: boolean;
 }) {
+    if (!isActive) return null;
+
     return (
         <section
             aria-label="System Offline State"
-            aria-hidden={!isActive}
-            className={cn(
-                "absolute inset-0 z-20 flex w-full flex-col items-center justify-center text-center px-4",
-                "transition-[opacity,transform] duration-500 transform-gpu will-change-[opacity,transform]",
-                isActive ? "opacity-100 scale-100 pointer-events-auto" : "opacity-0 scale-95 pointer-events-none"
-            )}
+            className="absolute inset-0 z-20 flex w-full flex-col items-center justify-center text-center px-4 transition-[opacity,transform] duration-500 transform-gpu will-change-[opacity,transform] opacity-100 scale-100 pointer-events-auto"
         >
             <div
                 aria-hidden="true"
@@ -53,7 +50,6 @@ const SystemOffline = memo(function SystemOffline({
                 type="button"
                 onClick={onReboot}
                 aria-label="Reboot System"
-                tabIndex={isActive ? 0 : -1}
                 className="flex items-center gap-2 px-8 py-4 bg-emerald-600 hover:bg-emerald-700 text-white rounded-full font-bold transition-[background-color,transform] duration-200 hover:scale-105 active:scale-95 shadow-[0_0_20px_rgba(16,185,129,0.4)] will-change-transform transform-gpu cursor-pointer"
             >
                 <RotateCcw className="w-5 h-5" aria-hidden="true" />

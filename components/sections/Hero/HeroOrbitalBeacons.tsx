@@ -25,7 +25,8 @@ function LinkedInSkillIcon({ className }: { className?: string }) {
     return (
         <img
             src="/skills/linkedin.svg"
-            alt="LinkedIn"
+            alt=""
+            aria-hidden="true"
             className={cn("w-5 h-5 object-contain select-none", className)}
             loading="lazy"
             decoding="async"

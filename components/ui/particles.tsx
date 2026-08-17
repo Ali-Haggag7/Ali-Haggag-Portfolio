@@ -22,6 +22,11 @@ export default function Particles() {
     useEffect(() => {
         if (!mounted) return;
 
+        // Skip particle calculation completely if user prefers reduced motion
+        if (typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+            return;
+        }
+
         const canvas = canvasRef.current;
         if (!canvas) return;
 
@@ -31,7 +36,8 @@ export default function Particles() {
         let width = (canvas.width = window.innerWidth);
         let height = (canvas.height = window.innerHeight);
 
-        const particleCount = window.innerWidth < 768 ? 30 : 60;
+        const isMobile = window.innerWidth < 768;
+        const particleCount = isMobile ? 35 : 70;
 
         class Particle {
             x: number;
@@ -43,9 +49,9 @@ export default function Particles() {
             constructor() {
                 this.x = Math.random() * width;
                 this.y = Math.random() * height;
-                this.vx = (Math.random() - 0.5) * 0.5;
-                this.vy = (Math.random() - 0.5) * 0.5;
-                this.size = Math.random() * 2;
+                this.vx = (Math.random() - 0.5) * 0.45;
+                this.vy = (Math.random() - 0.5) * 0.45;
+                this.size = Math.random() * 2 + 0.5;
             }
 
             update() {
@@ -68,8 +74,8 @@ export default function Particles() {
             ctx.clearRect(0, 0, width, height);
 
             const isLight = isLightRef.current;
-            const particleColor = isLight ? "rgba(0, 0, 0, 0.4)" : "rgba(255, 255, 255, 0.4)";
-            const lineColor = isLight ? "rgba(0, 0, 0, 0.08)" : "rgba(255, 255, 255, 0.08)";
+            const particleColor = isLight ? "rgba(37, 99, 235, 0.5)" : "rgba(255, 255, 255, 0.55)";
+            const lineColor = isLight ? "rgba(37, 99, 235, 0.12)" : "rgba(255, 255, 255, 0.14)";
 
             // Update positions
             for (let i = 0; i < particleCount; i++) {
@@ -86,7 +92,7 @@ export default function Particles() {
             }
             ctx.fill();
 
-            // Draw all connecting lines in one batch
+            // Draw connecting constellation lines
             ctx.strokeStyle = lineColor;
             ctx.lineWidth = 0.5;
             ctx.beginPath();
@@ -136,7 +142,7 @@ export default function Particles() {
                 if (!canvas) return;
                 width = canvas.width = window.innerWidth;
                 height = canvas.height = window.innerHeight;
-            }, 100);
+            }, 150);
         };
 
         window.addEventListener("resize", handleResize, { passive: true });

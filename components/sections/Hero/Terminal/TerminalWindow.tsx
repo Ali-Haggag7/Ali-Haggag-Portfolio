@@ -23,9 +23,9 @@ const BootSequence = memo(function BootSequence({ step }: { step: number }) {
             )}
             {step >= 2 && (
                 <div className="pl-4 border-l-2 border-blue-500/30 ml-2 w-full break-words">
-                    <span className="text-white font-bold text-lg">
+                    <h1 className="text-white font-bold text-lg inline-block m-0 p-0">
                         <DecryptedText text="Ali Haggag" speed={30} sequential={true} animateOn="view" />
-                    </span><br />
+                    </h1><br />
                     <span className="text-blue-300 font-semibold">
                         <DecryptedText text="Full-Stack Software Engineer | Real-time Systems Architect" speed={18} sequential={true} animateOn="view" />
                     </span>

@@ -48,7 +48,7 @@ const LANG_FACTS: { icon: React.ElementType; label: string; desc: string; accent
 // ── Mobile Code Preview ───────────────────────────────────────────────────────
 // Hard-coded syntax-coloured HTML rendered via inline styles — no runtime tokenizer needed.
 const MOBILE_PREVIEW_LINES: { indent: number; tokens: { text: string; color: string }[] }[] = [
-    { indent: 0, tokens: [{ text: "// AliScript v2.4 — Target Hunt", color: "#64748b" }] },
+    { indent: 0, tokens: [{ text: "// AliScript v2.4 — Target Hunt", color: "#94a3b8" }] },
     { indent: 0, tokens: [] },
     { indent: 0, tokens: [{ text: "WHILE ", color: "#60a5fa" }, { text: "distance ", color: "#a78bfa" }, { text: "> ", color: "#94a3b8" }, { text: "1 ", color: "#67e8f9" }, { text: "DO", color: "#60a5fa" }] },
     { indent: 2, tokens: [{ text: "IF ", color: "#60a5fa" }, { text: "CAN_SEE_ENEMY ", color: "#a78bfa" }, { text: "THEN", color: "#60a5fa" }] },
