@@ -5,7 +5,6 @@ import { cn } from "@/lib/utils";
 import { type TourPersona } from "./tourData";
 import { TourPersonaModal } from "./TourPersonaModal";
 import { SpotlightCutoutOverlay } from "./SpotlightCutoutOverlay";
-import { TourHUDOverlay } from "./TourHUDOverlay";
 import { Compass, Sparkles } from "lucide-react";
 
 export const InteractiveTourGuide = memo(function InteractiveTourGuide() {
@@ -13,13 +12,13 @@ export const InteractiveTourGuide = memo(function InteractiveTourGuide() {
     const [activePersona, setActivePersona] = useState<TourPersona | null>(null);
     const [currentStepIndex, setCurrentStepIndex] = useState(0);
 
-    // Scroll & spotlight are now handled inside SpotlightCutoutOverlay with proper timing.
-
     // Keyboard Listener
     useEffect(() => {
         if (!activePersona) return;
 
         const handleKeyDown = (e: KeyboardEvent) => {
+            if (["INPUT", "TEXTAREA"].includes((e.target as HTMLElement)?.tagName ?? "")) return;
+
             if (e.key === "Escape") {
                 setActivePersona(null);
                 setCurrentStepIndex(0);
