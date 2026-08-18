@@ -5,9 +5,8 @@ import { memo, useRef, useEffect, useState, useMemo } from "react";
 import { cn } from "@/lib/utils";
 import dynamic from "next/dynamic";
 import { useTerminal } from "./Terminal/useTerminal";
-import { CurrentlyBuildingTicker } from "./CurrentlyBuildingTicker";
 import { EasterEggController } from "./EasterEggController";
-import { HeroOrbitalBeacons } from "./HeroOrbitalBeacons";
+import { HeroDesktopOrbitalBeacons, HeroMobileActionCluster } from "./HeroOrbitalBeacons";
 
 import { useTheme } from "next-themes";
 
@@ -186,12 +185,9 @@ export default function HeroSection() {
             {/* EASTER EGG CONTROLLER */}
             <EasterEggController />
 
-            {/* CURRENTLY BUILDING TICKER */}
-            <CurrentlyBuildingTicker />
-
-            {/* SYSTEM ONLINE BADGE (Desktop-only to keep mobile top header spacious & uncluttered) */}
+            {/* SYSTEM ONLINE BADGE (Desktop-only to keep mobile top header clean & focused) */}
             <div className={cn(
-                "hidden sm:inline-flex items-center justify-center gap-2 mb-6 rounded-full border border-slate-300/80 dark:border-border/50 bg-slate-100/90 dark:bg-card/80 px-4 py-2 text-sm font-bold text-slate-800 dark:text-foreground shadow-sm",
+                "hidden lg:inline-flex items-center justify-center gap-2 mb-6 rounded-full border border-slate-300/80 dark:border-border/50 bg-slate-100/90 dark:bg-card/80 px-4 py-2 text-sm font-bold text-slate-800 dark:text-foreground shadow-sm",
                 "transition-all duration-500 transform-gpu relative z-20",
                 showUIElements ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-4 pointer-events-none"
             )}>
@@ -202,10 +198,13 @@ export default function HeroSection() {
                 System Online &amp; Ready for Deployment
             </div>
 
-            {/* TERMINAL & CYBERNETIC ORBITAL BEACONS */}
+            {/* MOBILE ACTION CLUSTER (Positioned elegantly above the Terminal on mobile/tablet) */}
+            <HeroMobileActionCluster isVisible={terminal.step >= 7 && showUIElements} />
+
+            {/* TERMINAL & DESKTOP CYBERNETIC ORBITAL BEACONS */}
             <div className="relative w-full max-w-5xl mx-auto flex flex-col items-center justify-center">
                 <TerminalWindow terminal={terminal} />
-                <HeroOrbitalBeacons isVisible={terminal.step >= 7 && showUIElements} />
+                <HeroDesktopOrbitalBeacons isVisible={terminal.step >= 7 && showUIElements} />
             </div>
         </section>
     );
