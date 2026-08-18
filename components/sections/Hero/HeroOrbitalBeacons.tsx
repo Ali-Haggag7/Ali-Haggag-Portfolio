@@ -352,11 +352,14 @@ export const HeroMobileActionCluster = memo(function HeroMobileActionCluster({
 
         let perp = 0;
         if (rope === "ab") {
-            perp = dx * -0.707 + dy * -0.707;
+            // Top horizontal line
+            perp = -dy;
         } else if (rope === "ac") {
-            perp = dx * 0.707 - dy * 0.707;
+            // Left diagonal line (GitHub -> Resume)
+            perp = dx * -0.674 + dy * -0.738;
         } else if (rope === "bc") {
-            perp = dy;
+            // Right diagonal line (LinkedIn -> Resume)
+            perp = dx * 0.674 - dy * 0.738;
         }
 
         // Clamp stretch range [-45px, +45px] for safe visual aesthetics
@@ -401,13 +404,13 @@ export const HeroMobileActionCluster = memo(function HeroMobileActionCluster({
         const springs = springsRef.current;
         if (node === "github") {
             springs.ab.velocity = -24;
-            springs.ac.velocity = 24;
-        } else if (node === "linkedin") {
-            springs.ab.velocity = 24;
-            springs.bc.velocity = 22;
-        } else if (node === "cv") {
             springs.ac.velocity = -24;
-            springs.bc.velocity = -22;
+        } else if (node === "linkedin") {
+            springs.ab.velocity = -24;
+            springs.bc.velocity = 24;
+        } else if (node === "cv") {
+            springs.ac.velocity = 24;
+            springs.bc.velocity = -24;
         }
         runSpringLoop();
     }, [runSpringLoop]);
@@ -433,23 +436,24 @@ export const HeroMobileActionCluster = memo(function HeroMobileActionCluster({
         };
     }, [isVisible, runSpringLoop]);
 
-    // Compute dynamic Bézier control points using true perpendicular normal vectors
-    const cxAB = (112.5 - offsets.ab * 0.707).toFixed(1);
-    const cyAB = (82.5 - offsets.ab * 0.707).toFixed(1);
-    const pathAB = `M 175 20 Q ${cxAB} ${cyAB} 50 145`;
+    // Compute dynamic Bézier control points for Inverted Cyber Prism ▽
+    // Node A (GitHub): (65, 20) | Node B (LinkedIn): (285, 20) | Node C (Resume): (175, 125)
+    const cyAB = (20 - offsets.ab).toFixed(1);
+    const pathAB = `M 65 20 Q 175 ${cyAB} 285 20`;
 
-    const cxAC = (237.5 + offsets.ac * 0.707).toFixed(1);
-    const cyAC = (82.5 - offsets.ac * 0.707).toFixed(1);
-    const pathAC = `M 175 20 Q ${cxAC} ${cyAC} 300 145`;
+    const cxAC = (120 - offsets.ac * 0.674).toFixed(1);
+    const cyAC = (72.5 - offsets.ac * 0.738).toFixed(1);
+    const pathAC = `M 65 20 Q ${cxAC} ${cyAC} 175 125`;
 
-    const cyBC = (145 + offsets.bc).toFixed(1);
-    const pathBC = `M 50 145 Q 175 ${cyBC} 300 145`;
+    const cxBC = (230 + offsets.bc * 0.674).toFixed(1);
+    const cyBC = (72.5 - offsets.bc * 0.738).toFixed(1);
+    const pathBC = `M 285 20 Q ${cxBC} ${cyBC} 175 125`;
 
     return (
         <div
             aria-label="Hero Mobile Action Constellation"
             className={cn(
-                "flex lg:hidden relative w-full max-w-[350px] sm:max-w-[390px] h-[175px] sm:h-[185px] mx-auto mb-2 sm:mb-4 z-20 select-none",
+                "flex lg:hidden relative w-full max-w-[340px] sm:max-w-[390px] h-[155px] sm:h-[165px] mx-auto mb-6 sm:mb-8 z-20 select-none",
                 "transition-opacity duration-1000 ease-out transform-gpu",
                 isVisible ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
             )}
@@ -457,32 +461,32 @@ export const HeroMobileActionCluster = memo(function HeroMobileActionCluster({
             {/* SVG Interactive Dynamic Elastic Rubber-Band LED Ropes */}
             <svg
                 className="absolute inset-0 w-full h-full z-10 overflow-visible"
-                viewBox="0 0 350 175"
+                viewBox="0 0 350 155"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
                 aria-hidden="true"
             >
                 <defs>
                     {/* Continuous Adaptive LED Gradient for Line AB (Emerald -> Blue) */}
-                    <linearGradient id="ledGradAB" x1="175" y1="20" x2="50" y2="145" gradientUnits="userSpaceOnUse">
+                    <linearGradient id="ledGradAB" x1="65" y1="20" x2="285" y2="20" gradientUnits="userSpaceOnUse">
                         <stop offset="0%" stopColor="#059669" className="dark:[stop-color:#10b981]" />
                         <stop offset="100%" stopColor="#2563eb" className="dark:[stop-color:#38bdf8]" />
                     </linearGradient>
 
                     {/* Continuous Adaptive LED Gradient for Line AC (Emerald -> Purple) */}
-                    <linearGradient id="ledGradAC" x1="175" y1="20" x2="300" y2="145" gradientUnits="userSpaceOnUse">
+                    <linearGradient id="ledGradAC" x1="65" y1="20" x2="175" y2="125" gradientUnits="userSpaceOnUse">
                         <stop offset="0%" stopColor="#059669" className="dark:[stop-color:#10b981]" />
                         <stop offset="100%" stopColor="#7c3aed" className="dark:[stop-color:#c084fc]" />
                     </linearGradient>
 
                     {/* Continuous Adaptive LED Gradient for Line BC (Blue -> Purple) */}
-                    <linearGradient id="ledGradBC" x1="50" y1="145" x2="300" y2="145" gradientUnits="userSpaceOnUse">
+                    <linearGradient id="ledGradBC" x1="285" y1="20" x2="175" y2="125" gradientUnits="userSpaceOnUse">
                         <stop offset="0%" stopColor="#2563eb" className="dark:[stop-color:#38bdf8]" />
                         <stop offset="100%" stopColor="#7c3aed" className="dark:[stop-color:#c084fc]" />
                     </linearGradient>
                 </defs>
 
-                {/* 🌟 ROPE AB: GitHub <-> LinkedIn (Dynamic Elastic Rubber Band) */}
+                {/* 🌟 ROPE AB: GitHub <-> LinkedIn (Top Horizontal Rubber Band) */}
                 <g>
                     {/* Outer Ambient LED Bloom */}
                     <path d={pathAB} stroke="url(#ledGradAB)" strokeWidth="7" strokeOpacity="0.35" strokeLinecap="round" className="blur-[2.5px]" />
@@ -504,7 +508,7 @@ export const HeroMobileActionCluster = memo(function HeroMobileActionCluster({
                     />
                 </g>
 
-                {/* 🌟 ROPE AC: GitHub <-> CV (Dynamic Elastic Rubber Band) */}
+                {/* 🌟 ROPE AC: GitHub <-> CV (Left Diagonal Rubber Band) */}
                 <g>
                     {/* Outer Ambient LED Bloom */}
                     <path d={pathAC} stroke="url(#ledGradAC)" strokeWidth="7" strokeOpacity="0.35" strokeLinecap="round" className="blur-[2.5px]" />
@@ -526,7 +530,7 @@ export const HeroMobileActionCluster = memo(function HeroMobileActionCluster({
                     />
                 </g>
 
-                {/* 🌟 ROPE BC: LinkedIn <-> CV (Dynamic Elastic Rubber Band) */}
+                {/* 🌟 ROPE BC: LinkedIn <-> CV (Right Diagonal Rubber Band) */}
                 <g>
                     {/* Outer Ambient LED Bloom */}
                     <path d={pathBC} stroke="url(#ledGradBC)" strokeWidth="7" strokeOpacity="0.35" strokeLinecap="round" className="blur-[2.5px]" />
@@ -549,11 +553,11 @@ export const HeroMobileActionCluster = memo(function HeroMobileActionCluster({
                 </g>
             </svg>
 
-            {/* 🛰️ NODE A: GITHUB RELAY (Top Apex Vertex — Dynamic Tethered Badge) */}
+            {/* 🛰️ NODE A: GITHUB RELAY (Top-Left Vertex — High Above Mascot) */}
             <div
-                className="absolute left-1/2 top-0 z-20 transition-all duration-75"
+                className="absolute left-2 sm:left-4 top-0 z-20 transition-all duration-75"
                 style={{
-                    transform: `translateX(-50%) rotate(${((offsets.ac - offsets.ab) * 0.2).toFixed(1)}deg) translateY(${(-Math.abs(offsets.ab + offsets.ac) * 0.08).toFixed(1)}px)`,
+                    transform: `rotate(${(offsets.ab * 0.2 - offsets.ac * 0.15).toFixed(1)}deg) translateY(${(-Math.abs(offsets.ab) * 0.08).toFixed(1)}px)`,
                 }}
             >
                 <a
@@ -588,11 +592,11 @@ export const HeroMobileActionCluster = memo(function HeroMobileActionCluster({
                 </a>
             </div>
 
-            {/* 🛰️ NODE B: LINKEDIN UPLINK (Bottom-Left Vertex — Dynamic Tethered Badge) */}
+            {/* 🛰️ NODE B: LINKEDIN UPLINK (Top-Right Vertex — Elevated) */}
             <div
-                className="absolute left-0 sm:left-1 bottom-0 z-20 transition-all duration-75"
+                className="absolute right-2 sm:right-4 top-0 z-20 transition-all duration-75"
                 style={{
-                    transform: `rotate(${(offsets.ab * 0.25 + offsets.bc * 0.1).toFixed(1)}deg) translate(${(offsets.bc * 0.12).toFixed(1)}px, ${(offsets.ab * 0.15).toFixed(1)}px)`,
+                    transform: `rotate(${(-offsets.ab * 0.2 + offsets.bc * 0.15).toFixed(1)}deg) translateY(${(-Math.abs(offsets.ab) * 0.08).toFixed(1)}px)`,
                 }}
             >
                 <a
@@ -627,11 +631,11 @@ export const HeroMobileActionCluster = memo(function HeroMobileActionCluster({
                 </a>
             </div>
 
-            {/* 🛰️ NODE C: CV DOSSIER (Bottom-Right Vertex — Dynamic Tethered Badge) */}
+            {/* 🛰️ NODE C: CV DOSSIER (Bottom-Center Apex — Centered Dead on Vertex) */}
             <div
-                className="absolute right-0 sm:right-1 bottom-0 z-20 transition-all duration-75"
+                className="absolute left-1/2 bottom-0 z-20 transition-all duration-75"
                 style={{
-                    transform: `rotate(${(-offsets.ac * 0.25 - offsets.bc * 0.1).toFixed(1)}deg) translate(${(-offsets.bc * 0.12).toFixed(1)}px, ${(offsets.ac * 0.15).toFixed(1)}px)`,
+                    transform: `translateX(-50%) rotate(${((offsets.bc - offsets.ac) * 0.25).toFixed(1)}deg) translateY(${(offsets.ac * 0.12 + offsets.bc * 0.12).toFixed(1)}px)`,
                 }}
             >
                 <a
