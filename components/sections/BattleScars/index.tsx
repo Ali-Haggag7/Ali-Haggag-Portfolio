@@ -21,12 +21,20 @@ export default function BattleScars() {
     const [expandedId, setExpandedId] = useState<string | null>(scarsData[0].id);
 
     const [revealStage, setRevealStage] = useState<0 | 1 | 2>(0);
+    const [hasSkipped, setHasSkipped] = useState(false);
     const sectionRef = useRef<HTMLElement>(null);
     const containerRef = useRef<HTMLDivElement>(null);
     const progressTextRef = useRef<HTMLSpanElement>(null);
     const activeIndicesRef = useRef<Set<number>>(new Set());
 
-    const isInView = useInView(containerRef, { margin: "0px 0px -200px 0px" });
+    const isInView = useInView(sectionRef, { margin: "-50px 0px -300px 0px" });
+
+    // Reset skipped state when leaving the section
+    useEffect(() => {
+        if (!isInView) {
+            setHasSkipped(false);
+        }
+    }, [isInView]);
 
     // isMobile computed ONCE here and passed down as a prop. SSR-safe: defaults
     // to false on the server, syncs after mount to avoid hydration mismatch.
@@ -268,31 +276,32 @@ export default function BattleScars() {
                 categoryCounts={categoryCounts}
             />
 
+            {/* Floating Skip Button (Active for long Timeline View and fully revealed Grid View) */}
+            {!hasSkipped && ((viewMode === "timeline" && filteredScars.length > 3) || (viewMode === "grid" && revealStage === 2 && filteredScars.length > 3)) && isInView && (
+                <div className="fixed bottom-8 md:bottom-28 left-0 z-50 w-full flex justify-center pointer-events-none animate-in slide-in-from-bottom-8 fade-in duration-300">
+                    <button 
+                        type="button"
+                        onClick={() => {
+                            setHasSkipped(true);
+                            const nextSection = sectionRef.current?.nextElementSibling;
+                            if (nextSection) {
+                                nextSection.scrollIntoView({ behavior: "smooth" });
+                            }
+                        }}
+                        className="pointer-events-auto cursor-pointer bg-foreground/90 backdrop-blur-xl border border-border/50 px-4 py-2 rounded-full text-xs font-semibold shadow-xl hover:bg-foreground active:scale-95 text-background flex items-center gap-1.5 transition-all"
+                        aria-label="Skip to Next Section"
+                        title="Skip to next section"
+                    >
+                        <ArrowDown className="w-3.5 h-3.5 animate-bounce" />
+                        <span>Skip</span>
+                    </button>
+                </div>
+            )}
+
             {viewMode === "timeline" ? (
                 <ScarsTimelineView scars={filteredScars} isMobile={isMobile} />
             ) : (
                 <div ref={containerRef} className="relative min-h-[400px]">
-                    {/* Fixed Skip Button */}
-                    {revealStage === 2 && filteredScars.length > 3 && isInView && (
-                        <div className="fixed bottom-8 md:bottom-28 left-0 z-50 w-full flex justify-center pointer-events-none animate-in slide-in-from-bottom-8 fade-in duration-300">
-                            <button 
-                                type="button"
-                                onClick={() => {
-                                    const nextSection = sectionRef.current?.nextElementSibling;
-                                    if (nextSection) {
-                                        nextSection.scrollIntoView({ behavior: "smooth" });
-                                    }
-                                }}
-                                className="pointer-events-auto cursor-pointer bg-foreground/90 backdrop-blur-xl border border-border/50 px-4 py-2 rounded-full text-xs font-semibold shadow-xl hover:bg-foreground active:scale-95 text-background flex items-center gap-1.5 transition-all"
-                                aria-label="Skip to Next Section"
-                                title="Skip to next section"
-                            >
-                                <ArrowDown className="w-3.5 h-3.5 animate-bounce" />
-                                <span>Skip</span>
-                            </button>
-                        </div>
-                    )}
-
                     <div className="space-y-4">
                         {visibleScars.map((scar, index) => (
                             <ScarCard
@@ -306,32 +315,32 @@ export default function BattleScars() {
                         ))}
                     </div>
 
-                {/* Smart Fade Overlay */}
-                {hasMoreToReveal && revealStage < 2 && (
-                    <div className="absolute bottom-0 left-0 w-full h-[280px] bg-gradient-to-t from-background via-background/90 to-transparent flex items-end justify-center pb-4 z-10 pointer-events-none rounded-b-[32px]">
-                        <button
-                            type="button"
-                            onClick={handleReveal}
-                            className="pointer-events-auto cursor-pointer bg-card border border-border/50 backdrop-blur-xl px-6 py-3 rounded-full font-bold text-sm shadow-[0_8px_30px_rgb(0,0,0,0.12)] hover:bg-muted transition-all active:scale-95 flex items-center gap-2 text-foreground"
-                        >
-                            {revealStage === 0 ? (
-                                <>
-                                    Show {Math.min(7, filteredScars.length - 3)} more <ChevronDown className="w-4 h-4 ml-1" />
-                                </>
-                            ) : (
-                                <>
-                                    Show all ({filteredScars.length - 10} remaining) <ChevronDown className="w-4 h-4 ml-1" />
-                                </>
-                            )}
-                        </button>
-                    </div>
-                )}
-            </div>
+                    {/* Smart Fade Overlay */}
+                    {hasMoreToReveal && revealStage < 2 && (
+                        <div className="absolute bottom-0 left-0 w-full h-[280px] bg-gradient-to-t from-background via-background/90 to-transparent flex items-end justify-center pb-4 z-10 pointer-events-none rounded-b-[32px]">
+                            <button
+                                type="button"
+                                onClick={handleReveal}
+                                className="pointer-events-auto cursor-pointer bg-card border border-border/50 backdrop-blur-xl px-6 py-3 rounded-full font-bold text-sm shadow-[0_8px_30px_rgb(0,0,0,0.12)] hover:bg-muted transition-all active:scale-95 flex items-center gap-2 text-foreground"
+                            >
+                                {revealStage === 0 ? (
+                                    <>
+                                        Show {Math.min(7, filteredScars.length - 3)} more <ChevronDown className="w-4 h-4 ml-1" />
+                                    </>
+                                ) : (
+                                    <>
+                                        Show all ({filteredScars.length - 10} remaining) <ChevronDown className="w-4 h-4 ml-1" />
+                                    </>
+                                )}
+                            </button>
+                        </div>
+                    )}
+                </div>
             )}
 
             {/* Subtle Centered Continue Button at the bottom (after all cards loaded) */}
-            {revealStage === 2 && (
-                <div className="mt-8 flex justify-center">
+            {(viewMode === "timeline" || revealStage === 2) && (
+                <div className="mt-12 flex justify-center">
                     <button
                         type="button"
                         onClick={() => {
@@ -340,11 +349,11 @@ export default function BattleScars() {
                                 nextSection.scrollIntoView({ behavior: "smooth" });
                             }
                         }}
-                        className="cursor-pointer group flex flex-col items-center gap-1.5 text-xs font-mono font-medium tracking-wider text-muted-foreground hover:text-foreground transition-colors py-2 px-4"
+                        className="cursor-pointer group flex flex-col items-center gap-1.5 text-xs font-mono font-bold tracking-wider text-muted-foreground hover:text-foreground transition-all py-2.5 px-5 rounded-full border border-border/60 hover:border-purple-500/50 bg-card/50 backdrop-blur-md shadow-sm"
                         aria-label="Continue to next section"
                     >
-                        <span>Continue</span>
-                        <ArrowDown className="w-4 h-4 animate-bounce text-muted-foreground group-hover:text-foreground transition-colors" />
+                        <span>CONTINUE TO NEXT SECTION</span>
+                        <ArrowDown className="w-4 h-4 animate-bounce text-purple-600 dark:text-purple-400 group-hover:translate-y-1 transition-transform" />
                     </button>
                 </div>
             )}
