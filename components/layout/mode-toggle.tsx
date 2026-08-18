@@ -3,6 +3,7 @@
 import { Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useEffect, useState, useCallback, memo } from "react";
+import { flushSync } from "react-dom";
 import { cn } from "@/lib/utils";
 
 // Static classes computed once at module load — never re-allocated.
@@ -27,20 +28,7 @@ export const ModeToggle = memo(function ModeToggle() {
     const isDark = resolvedTheme === "dark";
 
     const toggle = useCallback(() => {
-        const nextTheme = isDark ? "light" : "dark";
-
-        if (
-            typeof document !== "undefined" &&
-            "startViewTransition" in document &&
-            !window.matchMedia("(prefers-reduced-motion: reduce)").matches
-        ) {
-            (document as any).startViewTransition(() => {
-                setTheme(nextTheme);
-            });
-            return;
-        }
-
-        setTheme(nextTheme);
+        setTheme(isDark ? "light" : "dark");
     }, [isDark, setTheme]);
 
     return (
