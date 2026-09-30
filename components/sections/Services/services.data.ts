@@ -44,7 +44,8 @@ export type Service = {
     icon: string;
     builds: string[];
     skills: string[];
-    implementation: string;
+    implementation?: string;
+    implementations?: string;
     projects: { name: string; url: string }[];
     metrics: { label: string; value: string }[];
 };

@@ -121,7 +121,7 @@ export function ServiceCard({
             <div className="relative overflow-hidden rounded-xl border border-border/60 bg-muted/20 dark:bg-black/30 p-3.5 shadow-inner">
                 <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-[hsl(var(--accent-blue))] to-[hsl(var(--accent-purple))]" />
                 <p className="text-xs md:text-sm font-medium text-foreground/90 leading-relaxed pl-1">
-                    {service.implementations}
+                    {(service as any).implementations || (service as any).implementation}
                 </p>
                 <div className="mt-2.5 pt-2 border-t border-border/30 flex items-center justify-between text-[10px] font-mono text-muted-foreground/70">
                     <span>STATUS: ACTIVE // PRODUCTION</span>
