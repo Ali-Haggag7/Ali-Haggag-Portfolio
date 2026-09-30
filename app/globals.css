@@ -1086,4 +1086,828 @@ html.modal-open .fixed-right-compensate {
   animation: aurora 60s linear infinite;
 }
 
+/* ==========================================================================
+   EVOLUTION SECTION — "Engineering Archive" Workspace
+   A single-viewport, chapter-based interactive system.
+   Completely replaces the old vertical timeline.
+   ========================================================================== */
+
+/* ── Section shell ── */
+.evo-section {
+  position: relative;
+  width: 100%;
+  padding: 4rem 0 2rem;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* ── Section header ── */
+.evo-header {
+  text-align: center;
+  max-width: 40rem;
+  margin: 0 auto 2.5rem;
+  padding: 0 1.5rem;
+}
+
+.evo-title {
+  font-family: var(--font-display), sans-serif;
+  font-size: clamp(1.75rem, 4vw, 2.75rem);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  color: hsl(var(--foreground));
+  margin-top: 0.75rem;
+}
+
+.evo-title-accent {
+  color: hsl(var(--foreground) / 0.45);
+}
+
+.evo-subtitle {
+  margin-top: 0.75rem;
+  font-size: 0.875rem;
+  line-height: 1.6;
+  color: hsl(var(--muted-foreground));
+  max-width: 32rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   CHAPTER RAIL — Desktop indexed navigation
+   ═══════════════════════════════════════════════════════════════════════ */
+
+.evo-chapter-rail {
+  position: relative;
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  gap: 0;
+  width: 100%;
+  max-width: 64rem;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+.evo-rail-track {
+  position: absolute;
+  bottom: 0;
+  left: 1.5rem;
+  right: 1.5rem;
+  height: 1px;
+  background: hsl(var(--border));
+}
+
+.evo-rail-segment {
+  position: relative;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.75rem 0.25rem 1.25rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+  min-height: 44px;
+  min-width: 44px;
+}
+
+.evo-rail-segment:hover {
+  opacity: 1;
+}
+
+.evo-rail-segment:focus-visible {
+  outline: 2px solid hsl(var(--ring));
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+.evo-rail-index {
+  font-family: var(--font-display), sans-serif;
+  font-size: 0.625rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: hsl(var(--muted-foreground) / 0.5);
+  transition: color 0.2s ease;
+}
+
+.evo-rail-segment--active .evo-rail-index,
+.evo-rail-segment:hover .evo-rail-index {
+  color: hsl(var(--foreground));
+}
+
+.evo-rail-segment--past .evo-rail-index {
+  color: hsl(var(--muted-foreground) / 0.7);
+}
+
+.evo-rail-label {
+  font-family: var(--font-display), sans-serif;
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: hsl(var(--muted-foreground) / 0.45);
+  transition: color 0.2s ease;
+  white-space: nowrap;
+}
+
+.evo-rail-segment--active .evo-rail-label {
+  color: hsl(var(--foreground));
+  font-weight: 600;
+}
+
+.evo-rail-segment--past .evo-rail-label {
+  color: hsl(var(--muted-foreground) / 0.65);
+}
+
+.evo-rail-segment:hover .evo-rail-label {
+  color: hsl(var(--foreground) / 0.8);
+}
+
+.evo-rail-dot {
+  position: absolute;
+  bottom: -3px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: hsl(var(--border));
+  transition: all 0.25s ease;
+  z-index: 1;
+}
+
+.evo-rail-dot--active {
+  background: hsl(var(--foreground));
+  box-shadow: 0 0 0 3px hsl(var(--background)), 0 0 0 5px hsl(var(--foreground) / 0.25);
+  width: 9px;
+  height: 9px;
+  bottom: -4px;
+}
+
+.evo-rail-dot--past {
+  background: hsl(var(--muted-foreground) / 0.5);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   PROGRESS BAR
+   ═══════════════════════════════════════════════════════════════════════ */
+
+.evo-progress {
+  width: 100%;
+  max-width: 64rem;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+.evo-progress-track {
+  width: 100%;
+  height: 2px;
+  background: hsl(var(--border) / 0.4);
+  overflow: hidden;
+}
+
+.evo-progress-fill {
+  height: 100%;
+  background: hsl(var(--foreground) / 0.35);
+  will-change: width;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   WORKSPACE CONTAINER
+   ═══════════════════════════════════════════════════════════════════════ */
+
+.evo-workspace-container {
+  position: relative;
+  width: 100%;
+  max-width: 64rem;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+  min-height: 28rem;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   CHAPTER WORKSPACE — Main content area
+   ═══════════════════════════════════════════════════════════════════════ */
+
+.evo-workspace {
+  width: 100%;
+  padding-top: 2rem;
+}
+
+.evo-ws-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1.5rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid hsl(var(--border) / 0.5);
+  margin-bottom: 1.75rem;
+}
+
+.evo-ws-header-left {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.evo-ws-chapter-num {
+  font-family: var(--font-display), sans-serif;
+  font-size: clamp(2.5rem, 5vw, 3.75rem);
+  font-weight: 300;
+  line-height: 1;
+  letter-spacing: -0.04em;
+  color: hsl(var(--foreground) / 0.12);
+  user-select: none;
+  flex-shrink: 0;
+}
+
+.evo-ws-header-text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+  padding-top: 0.25rem;
+}
+
+.evo-ws-title {
+  font-family: var(--font-display), sans-serif;
+  font-size: clamp(1.25rem, 2.5vw, 1.75rem);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.025em;
+  color: hsl(var(--foreground));
+}
+
+.evo-ws-year {
+  font-family: var(--font-display), sans-serif;
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: hsl(var(--muted-foreground) / 0.6);
+}
+
+.evo-ws-shift {
+  font-family: var(--font-display), sans-serif;
+  font-size: 0.8125rem;
+  font-style: italic;
+  font-weight: 400;
+  color: hsl(var(--muted-foreground) / 0.7);
+  text-align: right;
+  max-width: 16rem;
+  line-height: 1.5;
+  padding-top: 0.5rem;
+  flex-shrink: 0;
+}
+
+/* ── Two-column workspace grid ── */
+.evo-ws-grid {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 2.5rem;
+  align-items: start;
+}
+
+.evo-ws-col-main {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.evo-ws-desc {
+  font-size: 0.875rem;
+  line-height: 1.7;
+  color: hsl(var(--muted-foreground));
+}
+
+.evo-ws-block {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.evo-ws-block-label {
+  font-family: var(--font-display), sans-serif;
+  font-size: 0.625rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: hsl(var(--muted-foreground) / 0.5);
+  padding-bottom: 0.25rem;
+  border-bottom: 1px solid hsl(var(--border) / 0.3);
+}
+
+.evo-ws-ideas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.375rem;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.evo-ws-idea {
+  font-family: var(--font-display), sans-serif;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: hsl(var(--foreground) / 0.85);
+  padding: 0.3125rem 0.625rem;
+  border: 1px solid hsl(var(--border) / 0.6);
+  background: hsl(var(--card) / 0.5);
+  line-height: 1;
+}
+
+.evo-ws-evidence {
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.evo-ws-evidence-item {
+  position: relative;
+  font-size: 0.8125rem;
+  line-height: 1.6;
+  color: hsl(var(--muted-foreground) / 0.85);
+  padding-left: 1rem;
+}
+
+.evo-ws-evidence-item::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.5em;
+  width: 4px;
+  height: 4px;
+  background: hsl(var(--muted-foreground) / 0.3);
+}
+
+/* ── Experience block ── */
+.evo-ws-experience {
+  padding: 1rem 1.25rem;
+  border: 1px solid hsl(var(--border) / 0.5);
+  border-left: 2px solid hsl(var(--foreground) / 0.25);
+  background: hsl(var(--card) / 0.3);
+}
+
+.evo-ws-exp-header {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  color: hsl(var(--foreground));
+  font-size: 0.8125rem;
+  font-weight: 600;
+}
+
+.evo-ws-exp-role {
+  font-weight: 600;
+}
+
+.evo-ws-exp-at {
+  color: hsl(var(--muted-foreground) / 0.4);
+  font-weight: 400;
+}
+
+.evo-ws-exp-company {
+  font-weight: 500;
+}
+
+.evo-ws-exp-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  margin-top: 0.25rem;
+  font-size: 0.6875rem;
+  color: hsl(var(--muted-foreground) / 0.6);
+}
+
+.evo-ws-exp-divider {
+  opacity: 0.4;
+}
+
+.evo-ws-exp-metrics {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 0.75rem;
+}
+
+.evo-ws-exp-metric {
+  display: flex;
+  flex-direction: column;
+  gap: 0.0625rem;
+}
+
+.evo-ws-exp-metric-val {
+  font-family: var(--font-display), sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  color: hsl(var(--foreground));
+  letter-spacing: -0.02em;
+}
+
+.evo-ws-exp-metric-label {
+  font-size: 0.625rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: hsl(var(--muted-foreground) / 0.5);
+}
+
+/* ── Right column: Meta panel ── */
+.evo-ws-col-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  padding-left: 1.5rem;
+  border-left: 1px solid hsl(var(--border) / 0.3);
+}
+
+.evo-ws-meta-block {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.evo-ws-meta-label {
+  font-family: var(--font-display), sans-serif;
+  font-size: 0.5625rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: hsl(var(--muted-foreground) / 0.45);
+}
+
+.evo-ws-tech-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3125rem;
+}
+
+.evo-ws-tech-tag {
+  font-family: var(--font-display), sans-serif;
+  font-size: 0.6875rem;
+  font-weight: 500;
+  color: hsl(var(--foreground) / 0.75);
+  padding: 0.25rem 0.5rem;
+  border: 1px solid hsl(var(--border) / 0.5);
+  line-height: 1;
+  letter-spacing: 0.01em;
+}
+
+.evo-ws-capabilities {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3125rem;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.evo-ws-capability {
+  font-size: 0.75rem;
+  color: hsl(var(--muted-foreground) / 0.7);
+  padding-left: 0.875rem;
+  position: relative;
+  line-height: 1.5;
+}
+
+.evo-ws-capability::before {
+  content: "\2192";
+  position: absolute;
+  left: 0;
+  color: hsl(var(--muted-foreground) / 0.3);
+  font-size: 0.625rem;
+}
+
+.evo-ws-mindset {
+  font-size: 0.75rem;
+  line-height: 1.6;
+  color: hsl(var(--muted-foreground) / 0.65);
+  font-style: italic;
+}
+
+.evo-ws-projects {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3125rem;
+}
+
+.evo-ws-project-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  font-family: var(--font-display), sans-serif;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: hsl(var(--foreground) / 0.8);
+  padding: 0.375rem 0;
+  text-decoration: none;
+  transition: color 0.15s ease;
+  min-height: 44px;
+}
+
+.evo-ws-project-link:hover {
+  color: hsl(var(--foreground));
+}
+
+.evo-ws-project-link:focus-visible {
+  outline: 2px solid hsl(var(--ring));
+  outline-offset: 2px;
+}
+
+/* ── Transition quote ── */
+.evo-ws-transition {
+  padding: 0.75rem 0;
+  border-top: 1px solid hsl(var(--border) / 0.2);
+  margin-top: 0.25rem;
+}
+
+.evo-ws-transition-text {
+  font-size: 0.6875rem;
+  font-style: italic;
+  line-height: 1.6;
+  color: hsl(var(--muted-foreground) / 0.5);
+}
+
+/* ── Active chapter badge ── */
+.evo-ws-active-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1.25rem;
+  padding: 0.375rem 0.75rem;
+  font-family: var(--font-display), sans-serif;
+  font-size: 0.625rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: hsl(var(--foreground) / 0.6);
+  border: 1px solid hsl(var(--border) / 0.4);
+}
+
+.evo-ws-active-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: hsl(var(--accent-emerald));
+  animation: evo-pulse 2s ease-in-out infinite;
+}
+
+@keyframes evo-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.35; }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   MOBILE CHAPTER NAVIGATION
+   ═══════════════════════════════════════════════════════════════════════ */
+
+.evo-mobile-nav {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  padding: 1rem 1.5rem 0.5rem;
+  width: 100%;
+}
+
+.evo-mobile-nav-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  background: none;
+  border: 1px solid hsl(var(--border) / 0.5);
+  color: hsl(var(--foreground) / 0.7);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.evo-mobile-nav-btn:hover:not(:disabled) {
+  border-color: hsl(var(--foreground) / 0.3);
+  color: hsl(var(--foreground));
+}
+
+.evo-mobile-nav-btn:disabled {
+  opacity: 0.25;
+  cursor: not-allowed;
+}
+
+.evo-mobile-nav-btn:focus-visible {
+  outline: 2px solid hsl(var(--ring));
+  outline-offset: 2px;
+}
+
+.evo-mobile-nav-center {
+  display: flex;
+  align-items: baseline;
+  gap: 0.25rem;
+  font-family: var(--font-display), sans-serif;
+}
+
+.evo-mobile-nav-index {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: hsl(var(--foreground));
+  letter-spacing: -0.02em;
+}
+
+.evo-mobile-nav-sep {
+  font-size: 0.75rem;
+  color: hsl(var(--muted-foreground) / 0.3);
+  font-weight: 400;
+}
+
+.evo-mobile-nav-total {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: hsl(var(--muted-foreground) / 0.4);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   KEYBOARD HINT — Desktop only
+   ═══════════════════════════════════════════════════════════════════════ */
+
+.evo-kb-hint {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 1.5rem 0 0;
+  font-family: var(--font-display), sans-serif;
+  font-size: 0.625rem;
+  color: hsl(var(--muted-foreground) / 0.3);
+}
+
+.evo-kb-hint span:first-child,
+.evo-kb-hint span:nth-child(2) {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.25rem;
+  height: 1.25rem;
+  border: 1px solid hsl(var(--border) / 0.4);
+  font-size: 0.5625rem;
+  color: hsl(var(--muted-foreground) / 0.4);
+}
+
+.evo-kb-hint-text {
+  margin-left: 0.25rem;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   RESPONSIVE — Tablet
+   ═══════════════════════════════════════════════════════════════════════ */
+
+@media (max-width: 1024px) {
+  .evo-ws-grid {
+    grid-template-columns: 1fr 260px;
+    gap: 1.75rem;
+  }
+
+  .evo-ws-chapter-num {
+    font-size: clamp(2rem, 4vw, 3rem);
+  }
+
+  .evo-ws-shift {
+    max-width: 12rem;
+    font-size: 0.75rem;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   RESPONSIVE — Mobile
+   ═══════════════════════════════════════════════════════════════════════ */
+
+@media (max-width: 768px) {
+  .evo-section {
+    padding: 3rem 0 1.5rem;
+  }
+
+  .evo-header {
+    margin-bottom: 1.5rem;
+  }
+
+  .evo-chapter-rail {
+    display: none;
+  }
+
+  .evo-mobile-nav {
+    display: flex;
+  }
+
+  .evo-kb-hint {
+    display: none;
+  }
+
+  .evo-progress {
+    padding: 0 1rem;
+  }
+
+  .evo-workspace-container {
+    padding: 0 1rem;
+    min-height: auto;
+  }
+
+  .evo-workspace {
+    padding-top: 1.5rem;
+  }
+
+  .evo-ws-header {
+    flex-direction: column;
+    gap: 0.75rem;
+    padding-bottom: 1rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .evo-ws-shift {
+    text-align: left;
+    max-width: none;
+    padding-top: 0;
+  }
+
+  .evo-ws-chapter-num {
+    font-size: 2rem;
+  }
+
+  .evo-ws-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .evo-ws-col-meta {
+    padding-left: 0;
+    border-left: none;
+    padding-top: 1.25rem;
+    border-top: 1px solid hsl(var(--border) / 0.3);
+  }
+
+  .evo-ws-col-main {
+    gap: 1rem;
+  }
+
+  .evo-ws-col-meta {
+    gap: 1rem;
+  }
+
+  .evo-ws-exp-metrics {
+    gap: 1rem;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   RESPONSIVE — Small mobile
+   ═══════════════════════════════════════════════════════════════════════ */
+
+@media (max-width: 480px) {
+  .evo-section {
+    padding: 2rem 0 1rem;
+  }
+
+  .evo-workspace-container {
+    padding: 0 0.75rem;
+  }
+
+  .evo-progress {
+    padding: 0 0.75rem;
+  }
+
+  .evo-ws-header-left {
+    gap: 0.625rem;
+  }
+
+  .evo-ws-chapter-num {
+    font-size: 1.5rem;
+  }
+
+  .evo-ws-title {
+    font-size: 1.125rem;
+  }
+
+  .evo-ws-desc {
+    font-size: 0.8125rem;
+  }
+
+  .evo-ws-evidence-item {
+    font-size: 0.75rem;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   REDUCED MOTION
+   ═══════════════════════════════════════════════════════════════════════ */
+
+@media (prefers-reduced-motion: reduce) {
+  .evo-ws-active-dot {
+    animation: none;
+  }
+
+  .evo-progress-fill {
+    transition: none;
+  }
+}
 
