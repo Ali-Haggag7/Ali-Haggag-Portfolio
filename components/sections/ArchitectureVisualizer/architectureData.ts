@@ -6,15 +6,17 @@ export interface SystemNode {
     details: string;
     scarId?: string;
     category: "client" | "api" | "database" | "cache" | "infra" | "worker";
-    x: number; // 0..100 (percentage coordinates)
+    x: number; // 0..100 (percentage coordinates retained for backwards-compatibility)
     y: number; // 0..100
-    connections: string[]; // ids of nodes connected to this one
+    connections: string[]; // IDs of nodes this node directly connects to
 }
 
 export interface ArchitectureMap {
     id: "logic-arena" | "scout" | "flurry";
     title: string;
     subtitle: string;
+    systemSummary: string;
+    spineDescription: string;
     nodes: SystemNode[];
 }
 
@@ -23,13 +25,15 @@ export const ARCHITECTURE_MAPS: readonly ArchitectureMap[] = Object.freeze([
         id: "logic-arena",
         title: "Logic Arena",
         subtitle: "12-Node Distributed Monorepo & Physics Engine System",
+        systemSummary: "Server-authoritative robot programming arena running a 20 TPS deterministic physics simulation and a sandboxed compiler loop.",
+        spineDescription: "Client UI dispatches input over WebSocket to the NestJS Physics Authority, which reconciles against AliScript execution and commits state to Redis and PostgreSQL.",
         nodes: [
             {
                 id: "client-r3f",
                 label: "Next.js 16 Client",
                 role: "R3F 3D Canvas & UI",
                 tech: "React 19 / R3F / CSS Vars",
-                details: "Client canvas rendering 3D Cyber City / Volcanic Core arenas at 120 FPS via direct mesh mutation inside useFrame.",
+                details: "Client canvas rendering 3D Cyber City and Volcanic Core arenas at 120 FPS via direct mesh mutation inside useFrame.",
                 scarId: "vdom-stuttering",
                 category: "client",
                 x: 15,
@@ -114,6 +118,8 @@ export const ARCHITECTURE_MAPS: readonly ArchitectureMap[] = Object.freeze([
         id: "scout",
         title: "Scout AI Agent",
         subtitle: "Crash-Safe Cognitive Loop & Worker Threads Architecture",
+        systemSummary: "Autonomous job application runner driving isolated CDP browser threads and Groq LLM evaluations with human-in-the-loop safeguards.",
+        spineDescription: "Cognitive Brain Loop on main thread coordinates with isolated Playwright workers and cryptographic claim verifiers, relaying live telemetry to the Tauri control room.",
         nodes: [
             {
                 id: "scout-brain",
@@ -168,6 +174,8 @@ export const ARCHITECTURE_MAPS: readonly ArchitectureMap[] = Object.freeze([
         id: "flurry",
         title: "Flurry Super App",
         subtitle: "WebRTC P2P & Offline-First Service Worker Flow",
+        systemSummary: "Hybrid social super-app leveraging WebRTC for direct client media streaming and Workbox background sync for offline message persistence.",
+        spineDescription: "React PWA client offloads media traffic directly to WebRTC P2P channels after negotiating session handshakes through the Socket.io signaling server.",
         nodes: [
             {
                 id: "flurry-client",
@@ -207,3 +215,103 @@ export const ARCHITECTURE_MAPS: readonly ArchitectureMap[] = Object.freeze([
         ],
     },
 ]);
+
+/* ═══════════════════════════════════════════════════════════════════════
+   CATEGORY SEMANTICS & UTILITIES
+   ═══════════════════════════════════════════════════════════════════════ */
+
+export interface CategorySpec {
+    label: string;
+    badge: string;
+    accentVar: string;
+    color: string;
+    order: number;
+}
+
+export const CATEGORY_SPECS: Record<SystemNode["category"], CategorySpec> = {
+    client: {
+        label: "Entry & Client Layer",
+        badge: "CLIENT VIEWPORT",
+        accentVar: "--accent-blue",
+        color: "hsl(var(--accent-blue))",
+        order: 1,
+    },
+    api: {
+        label: "Core Authority & Execution",
+        badge: "AUTHORITY ENGINE",
+        accentVar: "--accent-purple",
+        color: "hsl(var(--accent-purple))",
+        order: 2,
+    },
+    worker: {
+        label: "Isolated Background Subsystems",
+        badge: "ISOLATED WORKER",
+        accentVar: "--evo-accent-4",
+        color: "#06b6d4",
+        order: 3,
+    },
+    cache: {
+        label: "In-Memory State & Caches",
+        badge: "MEMORY STORE",
+        accentVar: "--accent-emerald",
+        color: "hsl(var(--accent-emerald))",
+        order: 4,
+    },
+    database: {
+        label: "Durable Persistence Engine",
+        badge: "PERSISTENT DB",
+        accentVar: "--tl-accent-yellow",
+        color: "#eab308",
+        order: 5,
+    },
+    infra: {
+        label: "Ingress & Network Gateway",
+        badge: "INFRA GATEWAY",
+        accentVar: "--scar-high",
+        color: "#f97316",
+        order: 6,
+    },
+};
+
+/** Get upstream nodes (nodes that connect TO this node) */
+export function getUpstreamNodes(map: ArchitectureMap, targetNodeId: string): SystemNode[] {
+    return map.nodes.filter((node) => node.connections.includes(targetNodeId));
+}
+
+/** Get downstream nodes (nodes that this node connects TO) */
+export function getDownstreamNodes(map: ArchitectureMap, sourceNodeId: string): SystemNode[] {
+    const source = map.nodes.find((n) => n.id === sourceNodeId);
+    if (!source) return [];
+    return map.nodes.filter((node) => source.connections.includes(node.id));
+}
+
+/** Get all directly connected nodes (both upstream and downstream) */
+export function getAllConnectedNodes(map: ArchitectureMap, nodeId: string): {
+    upstream: SystemNode[];
+    downstream: SystemNode[];
+} {
+    return {
+        upstream: getUpstreamNodes(map, nodeId),
+        downstream: getDownstreamNodes(map, nodeId),
+    };
+}
+
+/** Derive full dependency path from an entry point or active node */
+export function computeDependencyPath(map: ArchitectureMap, activeNodeId: string): SystemNode[] {
+    const path: SystemNode[] = [];
+    const visited = new Set<string>();
+
+    function traverse(currentId: string) {
+        if (visited.has(currentId)) return;
+        visited.add(currentId);
+
+        const node = map.nodes.find((n) => n.id === currentId);
+        if (node) {
+            path.push(node);
+            node.connections.forEach((connId) => traverse(connId));
+        }
+    }
+
+    traverse(activeNodeId);
+    return path;
+}

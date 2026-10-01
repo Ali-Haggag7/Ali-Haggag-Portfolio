@@ -1,29 +1,23 @@
 "use client";
 
-import { useState, useCallback, useEffect } from "react";
-import { ARCHITECTURE_MAPS, type ArchitectureMap } from "./architectureData";
-import { ArchitectureMapSVG } from "./ArchitectureMapSVG";
-import { NodeInspector } from "./NodeInspector";
-import { Server } from "lucide-react";
-import { cn } from "@/lib/utils";
-import { FlowingGrid } from "@/components/ui/FlowingGrid";
+import { useState, useCallback } from "react";
+import {
+    ARCHITECTURE_MAPS,
+    type ArchitectureMap,
+} from "./architectureData";
+import { SystemSpecimenSwitcher } from "./SystemSpecimenSwitcher";
+import { ArchitectureForensicCanvas } from "./ArchitectureForensicCanvas";
+import { ForensicDossierInspector } from "./ForensicDossierInspector";
+import { MobileSystemForensics } from "./MobileSystemForensics";
 import { DecryptedText } from "@/components/ui/DecryptedText";
 
 export default function ArchitectureVisualizerSection() {
     const [selectedMapId, setSelectedMapId] = useState<ArchitectureMap["id"]>("logic-arena");
 
-    const currentMap = ARCHITECTURE_MAPS.find((m) => m.id === selectedMapId) || ARCHITECTURE_MAPS[0];
-    const [selectedNodeId, setSelectedNodeId] = useState<string>(currentMap.nodes[0].id);
+    const currentMap =
+        ARCHITECTURE_MAPS.find((m) => m.id === selectedMapId) || ARCHITECTURE_MAPS[0];
 
-    // Mobile check for static fallbacks
-    const [isMobile, setIsMobile] = useState(false);
-    useEffect(() => {
-        const mql = window.matchMedia("(max-width: 768px)");
-        const update = () => setIsMobile(mql.matches);
-        update();
-        mql.addEventListener("change", update);
-        return () => mql.removeEventListener("change", update);
-    }, []);
+    const [selectedNodeId, setSelectedNodeId] = useState<string>(currentMap.nodes[0].id);
 
     const handleMapChange = useCallback((mapId: ArchitectureMap["id"]) => {
         setSelectedMapId(mapId);
@@ -33,59 +27,82 @@ export default function ArchitectureVisualizerSection() {
         }
     }, []);
 
-    const selectedNode = currentMap.nodes.find((n) => n.id === selectedNodeId) || currentMap.nodes[0];
+    const selectedNode =
+        currentMap.nodes.find((n) => n.id === selectedNodeId) || currentMap.nodes[0];
 
     return (
-        <section id="architecture" className="relative w-full py-20 bg-transparent overflow-hidden">
-            {/* React Bits 3D Perspective Flowing Cyber Grid Background */}
-            <FlowingGrid className="opacity-25 dark:opacity-35" horizon={0.25} speed={0.4} />
-
-            <div className="container mx-auto px-4 md:px-6 relative z-10">
-                {/* Section Header */}
-                <div className="flex flex-col items-center text-center mb-10 max-w-3xl mx-auto">
-                    <p className="section-eyebrow mb-3">
-                        <DecryptedText text="System Architecture" speed={30} sequential={true} animateOn="view" />
+        <section
+            id="architecture"
+            className="relative w-full py-16 sm:py-20 bg-background overflow-hidden"
+            aria-label="System Architecture Forensics"
+        >
+            <div className="container mx-auto px-4 md:px-6 relative z-10 max-w-7xl space-y-6">
+                {/* ═══════════════════════════════════════════════════════════
+                   SECTION HEADER: EDITORIAL & PRECISE
+                   ═══════════════════════════════════════════════════════════ */}
+                <div className="flex flex-col items-center text-center max-w-3xl mx-auto space-y-2.5">
+                    <p className="section-eyebrow">
+                        <DecryptedText
+                            text="Architecture Anatomy & System Forensics"
+                            speed={25}
+                            sequential={true}
+                            animateOn="view"
+                        />
                     </p>
-                    <h2 className="section-title text-4xl md:text-5xl mb-3">
-                        Interactive{" "}
-                        <span className="accent-word">Node Graphs</span>
+                    <h2 className="section-title text-3xl sm:text-4xl md:text-5xl tracking-tight">
+                        Internal System{" "}
+                        <span className="accent-word-emerald">X-Ray</span>
                     </h2>
-                    <p className="text-muted-foreground text-sm md:text-base leading-relaxed max-w-xl">
-                        Explore how Ali structures monorepos, real-time WebSockets, AST parsers, and isolated AI worker threads in production.
+                    <p className="text-muted-foreground text-xs sm:text-sm md:text-base leading-relaxed max-w-2xl font-sans">
+                        Inspect the internal anatomy of production software systems: execution authority,
+                        worker threads, in-memory state pipelines, and historical battle scars.
                     </p>
+                </div>
 
-                    {/* System Map Switcher Tabs */}
-                    <div className="flex items-center justify-start sm:justify-center gap-2 mt-8 overflow-x-auto no-scrollbar py-1 w-full px-2">
-                        {ARCHITECTURE_MAPS.map((map) => (
-                            <button
-                                key={map.id}
-                                type="button"
-                                onClick={() => handleMapChange(map.id)}
-                                className={cn(
-                                    "flex min-h-[44px] shrink-0 items-center gap-2 px-5 rounded-full text-xs font-mono font-bold transition-all cursor-pointer",
-                                    selectedMapId === map.id
-                                        ? "bg-blue-500/20 text-blue-600 dark:text-blue-400 border border-blue-500/40 shadow-[0_0_15px_rgba(59,130,246,0.3)]"
-                                        : "bg-card border border-border text-muted-foreground hover:text-foreground"
-                                )}
-                            >
-                                <Server className="h-3.5 w-3.5" aria-hidden="true" />
-                                {map.title}
-                            </button>
-                        ))}
+                {/* ═══════════════════════════════════════════════════════════
+                   SYSTEM SPECIMEN SWITCHER (COMPACT DECK)
+                   ═══════════════════════════════════════════════════════════ */}
+                <div className="max-w-4xl mx-auto w-full">
+                    <SystemSpecimenSwitcher
+                        activeMapId={selectedMapId}
+                        onSelectMap={handleMapChange}
+                    />
+                </div>
+
+                {/* ═══════════════════════════════════════════════════════════
+                   DESKTOP EXPERIENCE: DUAL-BAY FORENSIC COCKPIT (>= lg)
+                   Fits within ~1 viewport with zero endless scrolling
+                   ═══════════════════════════════════════════════════════════ */}
+                <div className="hidden lg:grid grid-cols-12 gap-5 h-[640px] xl:h-[680px]">
+                    {/* Left: Layered Architectural Spine & Dynamic Bus (7 cols) */}
+                    <div className="col-span-7 xl:col-span-8 h-full min-h-0">
+                        <ArchitectureForensicCanvas
+                            map={currentMap}
+                            selectedNodeId={selectedNodeId}
+                            onSelectNode={setSelectedNodeId}
+                        />
+                    </div>
+
+                    {/* Right: Component Forensic Dossier & Scar Inspector (5 cols) */}
+                    <div className="col-span-5 xl:col-span-4 h-full min-h-0">
+                        <ForensicDossierInspector
+                            node={selectedNode}
+                            map={currentMap}
+                            onSelectNode={setSelectedNodeId}
+                        />
                     </div>
                 </div>
 
-                {/* Main Visualizer Grid */}
-                <div className="max-w-5xl mx-auto space-y-6">
-                    {/* SVG Map */}
-                    <ArchitectureMapSVG
+                {/* ═══════════════════════════════════════════════════════════
+                   MOBILE EXPERIENCE: PURPOSE-BUILT SYSTEM INSPECTOR (< lg)
+                   Zero tiny unreadable canvas nodes; 100% thumb-friendly
+                   ═══════════════════════════════════════════════════════════ */}
+                <div className="block lg:hidden w-full">
+                    <MobileSystemForensics
                         map={currentMap}
                         selectedNodeId={selectedNodeId}
                         onSelectNode={setSelectedNodeId}
                     />
-
-                    {/* Selected Node Inspector Panel */}
-                    <NodeInspector node={selectedNode} />
                 </div>
             </div>
         </section>
