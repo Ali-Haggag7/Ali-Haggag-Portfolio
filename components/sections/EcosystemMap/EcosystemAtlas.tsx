@@ -321,13 +321,16 @@ export const EcosystemAtlas = memo(function EcosystemAtlas({
                     aria-hidden="true"
                 >
                     <defs>
-                        <filter id="atlas-line-glow" x="-20%" y="-20%" width="140%" height="140%">
-                            <feGaussianBlur stdDeviation="2" result="blur" />
-                            <feMerge>
-                                <feMergeNode in="blur" />
-                                <feMergeNode in="SourceGraphic" />
-                            </feMerge>
-                        </filter>
+                        <style>{`
+                            @keyframes signalPulseStream {
+                                0% { stroke-dashoffset: 30; }
+                                100% { stroke-dashoffset: 0; }
+                            }
+                            .signal-wire-stream {
+                                animation: signalPulseStream 1.4s linear infinite;
+                                will-change: stroke-dashoffset;
+                            }
+                        `}</style>
                     </defs>
 
                     {/* Ambient / Passive Connecting Wires */}
@@ -335,28 +338,28 @@ export const EcosystemAtlas = memo(function EcosystemAtlas({
                         const pathData = buildCurve(line.from, line.to);
                         return (
                             <g key={line.id}>
-                                {/* Base Wire */}
+                                {/* Base Architectural Wire */}
                                 <path
                                     d={pathData}
                                     fill="none"
                                     stroke={line.accentColor}
                                     strokeWidth={line.isPrimary ? 2 : 1}
                                     strokeOpacity={line.isPrimary ? 0.75 : 0.25}
-                                    strokeDasharray={line.isPrimary ? "none" : "3 3"}
+                                    strokeDasharray={line.isPrimary ? undefined : "3 3"}
                                     strokeLinecap="round"
                                     className="transition-all duration-300"
                                 />
-                                {/* Pulsing Data Flow Particle */}
+                                {/* Optional High-Frequency Signal Packet Stream (strictly inside wire) */}
                                 {line.isPrimary && (
                                     <path
                                         d={pathData}
                                         fill="none"
                                         stroke="#ffffff"
-                                        strokeWidth="2.5"
-                                        strokeDasharray="6 24"
+                                        strokeWidth="1.5"
+                                        strokeDasharray="4 16"
                                         strokeLinecap="round"
-                                        className="motion-safe:animate-[marquee_2s_linear_infinite]"
-                                        opacity="0.9"
+                                        className="signal-wire-stream"
+                                        opacity="0.7"
                                     />
                                 )}
                             </g>
