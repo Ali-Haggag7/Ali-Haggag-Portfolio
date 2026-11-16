@@ -39,3 +39,9 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# local dumps & unrelated directories
+/hotels/
+*_dump.txt
+temp_user_req.txt
+user_input_*.txt

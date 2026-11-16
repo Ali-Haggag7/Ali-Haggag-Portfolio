@@ -47,6 +47,12 @@ export default function CustomEffects() {
         const maxBufferLength = 15;
 
         const handleKeyDown = (e: KeyboardEvent) => {
+            if (e.key === "Escape") {
+                if (timerRef.current) clearTimeout(timerRef.current);
+                setActiveEffect(null);
+                return;
+            }
+
             if (["INPUT", "TEXTAREA"].includes((e.target as HTMLElement)?.tagName ?? "")) return;
 
             typedKeys += e.key.toLowerCase();
@@ -141,6 +147,9 @@ export default function CustomEffects() {
     // ── Nuke Page-Shake (applies to the whole document) ───────────────────────
     useEffect(() => {
         if (activeEffect !== "nuke") return;
+        if (typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+            return;
+        }
 
         const SHAKE_CLASS = "nuke-shake";
         const STYLE_ID = "nuke-shake-style";
@@ -174,6 +183,7 @@ export default function CustomEffects() {
 
         return () => {
             document.documentElement.classList.remove(SHAKE_CLASS);
+            document.getElementById(STYLE_ID)?.remove();
         };
     }, [activeEffect]);
 

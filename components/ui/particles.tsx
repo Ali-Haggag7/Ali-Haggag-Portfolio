@@ -1,12 +1,35 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { useTheme } from "next-themes";
+
+class Particle {
+    x: number;
+    y: number;
+    vx: number;
+    vy: number;
+    size: number;
+
+    constructor(width: number, height: number) {
+        this.x = Math.random() * width;
+        this.y = Math.random() * height;
+        this.vx = (Math.random() - 0.5) * 0.45;
+        this.vy = (Math.random() - 0.5) * 0.45;
+        this.size = Math.random() * 2 + 0.5;
+    }
+
+    update(width: number, height: number) {
+        this.x += this.vx;
+        this.y += this.vy;
+
+        if (this.x < 0 || this.x > width) this.vx *= -1;
+        if (this.y < 0 || this.y > height) this.vy *= -1;
+    }
+}
 
 export default function Particles() {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const { theme, resolvedTheme } = useTheme();
-    const [mounted, setMounted] = useState(false);
 
     // Keep theme state in a stable ref so RAF loop can read it without recreating particles
     const isLightRef = useRef(false);
@@ -16,12 +39,6 @@ export default function Particles() {
     }, [theme, resolvedTheme]);
 
     useEffect(() => {
-        setMounted(true);
-    }, []);
-
-    useEffect(() => {
-        if (!mounted) return;
-
         // Skip particle calculation completely if user prefers reduced motion
         if (typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
             return;
@@ -39,37 +56,21 @@ export default function Particles() {
         const isMobile = window.innerWidth < 768;
         const particleCount = isMobile ? 35 : 70;
 
-        class Particle {
-            x: number;
-            y: number;
-            vx: number;
-            vy: number;
-            size: number;
-
-            constructor() {
-                this.x = Math.random() * width;
-                this.y = Math.random() * height;
-                this.vx = (Math.random() - 0.5) * 0.45;
-                this.vy = (Math.random() - 0.5) * 0.45;
-                this.size = Math.random() * 2 + 0.5;
-            }
-
-            update() {
-                this.x += this.vx;
-                this.y += this.vy;
-
-                if (this.x < 0 || this.x > width) this.vx *= -1;
-                if (this.y < 0 || this.y > height) this.vy *= -1;
-            }
-        }
-
-        const particles: Particle[] = Array.from({ length: particleCount }, () => new Particle());
+        const particles: Particle[] = Array.from(
+            { length: particleCount },
+            () => new Particle(width, height)
+        );
 
         let animationFrameId: number | null = null;
         let isRunning = true;
+        let isScrolling = false;
+        let scrollTimeout: ReturnType<typeof setTimeout> | null = null;
 
         const animate = () => {
-            if (!isRunning) return;
+            if (!isRunning || isScrolling) {
+                animationFrameId = null;
+                return;
+            }
 
             ctx.clearRect(0, 0, width, height);
 
@@ -79,7 +80,7 @@ export default function Particles() {
 
             // Update positions
             for (let i = 0; i < particleCount; i++) {
-                particles[i].update();
+                particles[i].update(width, height);
             }
 
             // Draw all particles in one batch
@@ -115,29 +116,48 @@ export default function Particles() {
             animationFrameId = requestAnimationFrame(animate);
         };
 
+        const resumeIfEligible = () => {
+            if (isRunning && !isScrolling && !document.hidden && animationFrameId === null) {
+                animationFrameId = requestAnimationFrame(animate);
+            }
+        };
+
         animationFrameId = requestAnimationFrame(animate);
+
+        // Pause canvas repaints during active scroll to eliminate mobile compositor contention
+        const handleScroll = () => {
+            isScrolling = true;
+            if (animationFrameId !== null) {
+                cancelAnimationFrame(animationFrameId);
+                animationFrameId = null;
+            }
+            if (scrollTimeout) clearTimeout(scrollTimeout);
+            scrollTimeout = setTimeout(() => {
+                isScrolling = false;
+                resumeIfEligible();
+            }, 150);
+        };
 
         const handleVisibilityChange = () => {
             if (document.hidden) {
                 isRunning = false;
-                if (animationFrameId) {
+                if (animationFrameId !== null) {
                     cancelAnimationFrame(animationFrameId);
                     animationFrameId = null;
                 }
             } else {
-                if (!isRunning) {
-                    isRunning = true;
-                    animationFrameId = requestAnimationFrame(animate);
-                }
+                isRunning = true;
+                resumeIfEligible();
             }
         };
 
         document.addEventListener("visibilitychange", handleVisibilityChange);
+        window.addEventListener("scroll", handleScroll, { passive: true });
 
         // Debounced resize handler
-        let resizeTimeout: NodeJS.Timeout;
+        let resizeTimeout: ReturnType<typeof setTimeout> | null = null;
         const handleResize = () => {
-            clearTimeout(resizeTimeout);
+            if (resizeTimeout) clearTimeout(resizeTimeout);
             resizeTimeout = setTimeout(() => {
                 if (!canvas) return;
                 width = canvas.width = window.innerWidth;
@@ -149,13 +169,13 @@ export default function Particles() {
 
         return () => {
             document.removeEventListener("visibilitychange", handleVisibilityChange);
+            window.removeEventListener("scroll", handleScroll);
             window.removeEventListener("resize", handleResize);
-            clearTimeout(resizeTimeout);
-            if (animationFrameId) cancelAnimationFrame(animationFrameId);
+            if (scrollTimeout) clearTimeout(scrollTimeout);
+            if (resizeTimeout) clearTimeout(resizeTimeout);
+            if (animationFrameId !== null) cancelAnimationFrame(animationFrameId);
         };
-    }, [mounted]);
-
-    if (!mounted) return null;
+    }, []);
 
     return (
         <canvas

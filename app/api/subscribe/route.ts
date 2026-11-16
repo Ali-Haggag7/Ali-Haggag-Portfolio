@@ -1,12 +1,69 @@
 import { NextResponse } from "next/server";
 
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+const MAX_EMAIL_LENGTH = 120;
+const SUBSCRIBE_WINDOW_MS = 10 * 60_000;
+const MAX_SUBSCRIBE_PER_WINDOW = 3;
+
+const subscribeIpLog = new Map<string, number[]>();
+
+function isSubscribeRateLimited(ip: string): boolean {
+    const now = Date.now();
+    const recent = (subscribeIpLog.get(ip) ?? []).filter((t) => now - t < SUBSCRIBE_WINDOW_MS);
+    if (recent.length >= MAX_SUBSCRIBE_PER_WINDOW) {
+        subscribeIpLog.set(ip, recent);
+        return true;
+    }
+    recent.push(now);
+    subscribeIpLog.set(ip, recent);
+    return false;
+}
+
+function escapeHtml(input: string): string {
+    return input.replace(/[&<>"']/g, (char) => {
+        switch (char) {
+            case "&":
+                return "&amp;";
+            case "<":
+                return "&lt;";
+            case ">":
+                return "&gt;";
+            case '"':
+                return "&quot;";
+            case "'":
+                return "&#39;";
+            default:
+                return char;
+        }
+    });
+}
+
 export async function POST(request: Request) {
     try {
-        const { email } = await request.json();
+        const forwardedFor = request.headers.get("x-forwarded-for");
+        const clientIp = forwardedFor?.split(",")[0]?.trim() || "anonymous";
 
-        if (!email || !email.includes("@")) {
+        if (isSubscribeRateLimited(clientIp)) {
+            return NextResponse.json(
+                { error: "محاولات كثيرة متتالية، يرجى المحاولة لاحقاً." },
+                { status: 429 }
+            );
+        }
+
+        const body: { email?: unknown } = await request.json();
+        const rawEmail = typeof body?.email === "string" ? body.email.trim() : "";
+
+        if (
+            !rawEmail ||
+            rawEmail.length > MAX_EMAIL_LENGTH ||
+            !EMAIL_REGEX.test(rawEmail) ||
+            /[<>"'\s]/.test(rawEmail)
+        ) {
             return NextResponse.json({ error: "البريد الإلكتروني غير صالح." }, { status: 400 });
         }
+
+        const safeEmail = escapeHtml(rawEmail);
+        const safeMailto = encodeURIComponent(rawEmail);
 
         const apiKey = process.env.RESEND_API_KEY;
         if (!apiKey) {
@@ -33,7 +90,7 @@ export async function POST(request: Request) {
                         <p style="font-size: 16px; line-height: 1.6;">يا بشمهندس علي، فيه حد لسه مشترك في النشرة البريدية بتاعتك من البورتفوليو.</p>
                         <div style="background-color: #1e293b; padding: 15px; border-radius: 8px; margin: 20px 0;">
                             <span style="color: #94a3b8; font-size: 14px; display: block; margin-bottom: 4px;">البريد الإلكتروني للمشترك:</span>
-                            <a href="mailto:${email}" style="color: #3b82f6; font-size: 18px; font-weight: bold; text-decoration: none;">${email}</a>
+                            <a href="mailto:${safeMailto}" style="color: #3b82f6; font-size: 18px; font-weight: bold; text-decoration: none;">${safeEmail}</a>
                         </div>
                         <hr style="border: 0; border-top: 1px solid #1e293b; margin: 25px 0;" />
                         <p style="font-size: 12px; color: #64748b; text-align: center; margin-bottom: 0;">تم إرسال هذا التنبيه تلقائياً من البورتفوليو الخاص بك.</p>
@@ -43,7 +100,7 @@ export async function POST(request: Request) {
         });
 
         if (!response.ok) {
-            const errorData = await response.json();
+            const errorData: { message?: string } = await response.json();
             return NextResponse.json(
                 { error: errorData.message || "فشل إرسال البريد الإلكتروني." },
                 { status: response.status }
@@ -51,10 +108,9 @@ export async function POST(request: Request) {
         }
 
         return NextResponse.json({ success: true });
-    } catch (error: any) {
-        return NextResponse.json(
-            { error: error.message || "حدث خطأ داخلي في الخادم." },
-            { status: 500 }
-        );
+    } catch (error: unknown) {
+        const message = error instanceof Error ? error.message : "حدث خطأ داخلي في الخادم.";
+        return NextResponse.json({ error: message }, { status: 500 });
     }
 }
+

@@ -34,26 +34,36 @@ export const SpotlightCutoutOverlay = memo(function SpotlightCutoutOverlay({
     useEffect(() => {
         if (!step) return;
 
-        const el = document.getElementById(step.targetId);
-        if (!el) {
-            setTargetRect(null);
-            return;
-        }
+        let rafId: number | null = null;
+        let measureTimeout: ReturnType<typeof setTimeout> | null = null;
 
-        // Scroll to center or start of element, then measure after scroll settles
-        el.scrollIntoView({ behavior: "smooth", block: step.targetId === "hero-terminal" ? "start" : "center" });
+        const measureElement = () => {
+            const el = document.getElementById(step.targetId);
+            if (!el) {
+                setTargetRect(null);
+                return;
+            }
 
-        // Immediate measurement
-        setTargetRect(el.getBoundingClientRect());
+            // Scroll to center or start of element, then measure after scroll settles
+            el.scrollIntoView({
+                behavior: "smooth",
+                block: step.targetId === "hero-terminal" ? "start" : "center",
+            });
 
-        // Wait for smooth scroll animation to settle before re-measuring accurately
-        const measureTimeout = setTimeout(() => {
-            const rect = el.getBoundingClientRect();
-            setTargetRect(rect);
-        }, 500);
+            setTargetRect(el.getBoundingClientRect());
+
+            // Wait for smooth scroll animation to settle before re-measuring accurately
+            measureTimeout = setTimeout(() => {
+                const target = document.getElementById(step.targetId);
+                if (target) {
+                    setTargetRect(target.getBoundingClientRect());
+                }
+            }, 500);
+        };
+
+        const initRafId = requestAnimationFrame(measureElement);
 
         // Live tracking on scroll and resize with RAF throttling
-        let rafId: number | null = null;
         const updateRect = () => {
             if (rafId) return;
             rafId = requestAnimationFrame(() => {
@@ -68,7 +78,8 @@ export const SpotlightCutoutOverlay = memo(function SpotlightCutoutOverlay({
         window.addEventListener("resize", updateRect, { passive: true });
 
         return () => {
-            clearTimeout(measureTimeout);
+            cancelAnimationFrame(initRafId);
+            if (measureTimeout) clearTimeout(measureTimeout);
             if (rafId) cancelAnimationFrame(rafId);
             window.removeEventListener("scroll", updateRect);
             window.removeEventListener("resize", updateRect);

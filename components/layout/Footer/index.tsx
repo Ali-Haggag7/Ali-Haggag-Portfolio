@@ -80,7 +80,7 @@ export default function Footer() {
                         <h3 className="text-foreground font-bold mb-3 md:mb-4 text-xs md:text-sm uppercase tracking-wider pl-1 md:pl-0">
                             <DecryptedText text="Explore" speed={30} sequential={true} animateOn="view" />
                         </h3>
-                        <ul className="flex flex-col bg-card/40 md:bg-transparent backdrop-blur-xl md:backdrop-blur-none border border-border/50 md:border-none rounded-[24px] md:rounded-none overflow-hidden space-y-0 md:space-y-1 shadow-sm md:shadow-none">
+                        <ul className="flex flex-col bg-card md:bg-transparent border border-border/50 md:border-none rounded-[24px] md:rounded-none overflow-hidden space-y-0 md:space-y-1 shadow-sm md:shadow-none">
                             {footerLinks.map((link) => (
                                 <li key={link.name} className={cn("border-b border-border/50 md:border-none last:border-b-0")}>
                                     <a
@@ -115,7 +115,7 @@ export default function Footer() {
                                 <DecryptedText text="Diagnostics" speed={30} sequential={true} animateOn="view" />
                             </h3>
                         </div>
-                        <div className="relative overflow-hidden rounded-[24px] md:rounded-2xl border border-border/50 bg-card/40 md:bg-foreground/3 dark:md:bg-white/3 backdrop-blur-xl md:backdrop-blur-none p-5 md:p-4 font-mono text-[12px] md:text-[11px] leading-relaxed shadow-sm md:shadow-inner">
+                        <div className="relative overflow-hidden rounded-[24px] md:rounded-2xl border border-border/50 bg-card md:bg-foreground/3 dark:md:bg-white/3 p-5 md:p-4 font-mono text-[12px] md:text-[11px] leading-relaxed shadow-sm md:shadow-inner">
                             {/* React Bits Border Beam on Diagnostics */}
                             <BorderBeam duration={8} borderWidth={1.5} colorFrom="hsl(var(--accent-emerald))" colorTo="hsl(var(--accent-blue))" />
 
@@ -166,7 +166,7 @@ export default function Footer() {
                                     <button
                                         type="button"
                                         onClick={() => triggerEasterEggDirect("matrix")}
-                                        className="flex-1 min-h-[48px] md:min-h-11 flex flex-col md:flex-row items-center justify-center gap-1 md:gap-1.5 rounded-[16px] md:rounded-xl border border-border/50 md:border-border bg-card/40 md:bg-card backdrop-blur-xl md:backdrop-blur-none text-[11px] md:text-xs font-semibold hover:border-[hsl(var(--accent-blue))]/40 hover:bg-muted/20 dark:hover:bg-white/3 active:scale-95 transition-all cursor-pointer shadow-sm md:shadow-none focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+                                        className="flex-1 min-h-[48px] md:min-h-11 flex flex-col md:flex-row items-center justify-center gap-1 md:gap-1.5 rounded-[16px] md:rounded-xl border border-border/50 md:border-border bg-card text-[11px] md:text-xs font-semibold hover:border-[hsl(var(--accent-blue))]/40 hover:bg-muted/20 dark:hover:bg-white/3 active:scale-95 transition-all cursor-pointer shadow-sm md:shadow-none focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
                                         title="Trigger Matrix Rain"
                                     >
                                         <span className="w-1.5 h-1.5 rounded-full bg-blue-500 shrink-0" />
@@ -175,7 +175,7 @@ export default function Footer() {
                                     <button
                                         type="button"
                                         onClick={() => triggerEasterEggDirect("party")}
-                                        className="flex-1 min-h-[48px] md:min-h-11 flex flex-col md:flex-row items-center justify-center gap-1 md:gap-1.5 rounded-[16px] md:rounded-xl border border-border/50 md:border-border bg-card/40 md:bg-card backdrop-blur-xl md:backdrop-blur-none text-[11px] md:text-xs font-semibold hover:border-[hsl(var(--accent-purple))]/40 hover:bg-muted/20 dark:hover:bg-white/3 active:scale-95 transition-all cursor-pointer shadow-sm md:shadow-none focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+                                        className="flex-1 min-h-[48px] md:min-h-11 flex flex-col md:flex-row items-center justify-center gap-1 md:gap-1.5 rounded-[16px] md:rounded-xl border border-border/50 md:border-border bg-card text-[11px] md:text-xs font-semibold hover:border-[hsl(var(--accent-purple))]/40 hover:bg-muted/20 dark:hover:bg-white/3 active:scale-95 transition-all cursor-pointer shadow-sm md:shadow-none focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
                                         title="Trigger Party Lights"
                                     >
                                         <span className="w-1.5 h-1.5 rounded-full bg-purple-500 animate-pulse shrink-0" />
@@ -184,7 +184,7 @@ export default function Footer() {
                                     <button
                                         type="button"
                                         onClick={() => triggerEasterEggDirect("nuke")}
-                                        className="flex-1 min-h-[48px] md:min-h-11 flex flex-col md:flex-row items-center justify-center gap-1 md:gap-1.5 rounded-[16px] md:rounded-xl border border-border/50 md:border-border bg-card/40 md:bg-card backdrop-blur-xl md:backdrop-blur-none text-[11px] md:text-xs font-semibold hover:border-[hsl(var(--accent-emerald))]/40 hover:bg-muted/20 dark:hover:bg-white/3 active:scale-95 transition-all cursor-pointer shadow-sm md:shadow-none focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+                                        className="flex-1 min-h-[48px] md:min-h-11 flex flex-col md:flex-row items-center justify-center gap-1 md:gap-1.5 rounded-[16px] md:rounded-xl border border-border/50 md:border-border bg-card text-[11px] md:text-xs font-semibold hover:border-[hsl(var(--accent-emerald))]/40 hover:bg-muted/20 dark:hover:bg-white/3 active:scale-95 transition-all cursor-pointer shadow-sm md:shadow-none focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
                                         title="Trigger System Nuke"
                                     >
                                         <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 shrink-0" />
