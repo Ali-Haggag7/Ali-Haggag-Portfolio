@@ -1,7 +1,7 @@
 "use client";
 
 import { memo, useState } from "react";
-import type { ArchitectureMap, SystemNode } from "./architectureData";
+import type { ArchitectureMap } from "./architectureData";
 import {
     CATEGORY_SPECS,
     getUpstreamNodes,
@@ -18,10 +18,7 @@ import {
     ArrowRight,
     ArrowLeft,
     Compass,
-    ChevronRight,
-    CheckCircle2,
     Info,
-    RotateCcw,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -142,24 +139,23 @@ export const MobileSystemForensics = memo(function MobileSystemForensics({
                ═══════════════════════════════════════════════════════════ */}
             {viewMode === "dossier" && (
                 <div className="rounded-2xl border border-border/80 bg-card/90 backdrop-blur-md p-4 sm:p-5 space-y-4 shadow-xl">
-                    {/* Header */}
-                    <div className="space-y-1.5">
-                        <div className="flex items-center gap-2 flex-wrap">
-                            <span
-                                className="text-[10px] font-mono font-bold tracking-wider px-2 py-0.5 rounded-full uppercase border inline-block"
-                                style={{
-                                    color: catSpec.color,
-                                    backgroundColor: `color-mix(in srgb, ${catSpec.color} 12%, transparent)`,
-                                    borderColor: `color-mix(in srgb, ${catSpec.color} 30%, transparent)`,
-                                }}
-                            >
-                                {catSpec.badge}
+                    {/* Integrated Header Register */}
+                    <div className="space-y-1.5 pb-2.5 border-b border-border/60">
+                        <div className="flex items-center justify-between gap-2">
+                            <span className="text-[10px] font-mono tracking-widest uppercase text-muted-foreground/80">
+                                LAYER :: {catSpec.label.toUpperCase()}
                             </span>
-
                             {selectedNode.scarId && (
-                                <span className="flex items-center gap-1 text-[10px] font-mono font-semibold px-2 py-0.5 rounded-full bg-red-500/10 border border-red-500/30 text-red-400">
+                                <span
+                                    className="flex items-center gap-1 text-[10px] font-mono font-semibold px-2 py-0.5 rounded border"
+                                    style={{
+                                        color: "var(--scar-critical)",
+                                        backgroundColor: "color-mix(in srgb, var(--scar-critical) 10%, transparent)",
+                                        borderColor: "color-mix(in srgb, var(--scar-critical) 30%, transparent)",
+                                    }}
+                                >
                                     <ShieldAlert className="w-3 h-3" />
-                                    <span>SCAR: {selectedNode.scarId}</span>
+                                    <span>SCAR #{selectedNode.scarId}</span>
                                 </span>
                             )}
                         </div>
@@ -168,8 +164,10 @@ export const MobileSystemForensics = memo(function MobileSystemForensics({
                             {selectedNode.label}
                         </h3>
 
-                        <div className="text-xs font-mono text-muted-foreground">
-                            Role: <strong className="text-foreground">{selectedNode.role}</strong>
+                        <div className="text-xs font-mono text-muted-foreground flex items-center gap-1.5">
+                            <Activity className="w-3.5 h-3.5 text-foreground/70 shrink-0" />
+                            <span>Role:</span>
+                            <strong className="text-foreground">{selectedNode.role}</strong>
                         </div>
                     </div>
 
@@ -279,9 +277,20 @@ export const MobileSystemForensics = memo(function MobileSystemForensics({
 
                     {/* Historical Engineering Scar (If Present) */}
                     {selectedNode.scarId && (
-                        <div className="space-y-2.5 pt-2 border-t border-red-500/20">
-                            <div className="rounded-xl border border-red-500/30 bg-red-500/5 p-3 space-y-2">
-                                <div className="text-xs font-bold text-red-300">
+                        <div
+                            className="space-y-2.5 pt-2 border-t"
+                            style={{
+                                borderColor: "color-mix(in srgb, var(--scar-critical) 20%, transparent)",
+                            }}
+                        >
+                            <div
+                                className="rounded-xl border p-3 space-y-2"
+                                style={{
+                                    borderColor: "color-mix(in srgb, var(--scar-critical) 30%, transparent)",
+                                    backgroundColor: "color-mix(in srgb, var(--scar-critical) 6%, transparent)",
+                                }}
+                            >
+                                <div className="text-xs font-bold text-[var(--scar-critical)]">
                                     Incident #{selectedNode.scarId}
                                 </div>
                                 {linkedScar && (
@@ -295,7 +304,12 @@ export const MobileSystemForensics = memo(function MobileSystemForensics({
                                 <button
                                     type="button"
                                     onClick={() => handleJumpToScar(selectedNode.scarId!)}
-                                    className="cursor-pointer w-full min-h-[44px] px-3 py-2 rounded-lg border border-red-500/40 bg-red-500/10 active:bg-red-500/20 text-red-300 text-xs font-mono font-medium flex items-center justify-center gap-2 transition-all focus-visible:ring-2 focus-visible:ring-ring outline-none"
+                                    className="cursor-pointer w-full min-h-[44px] px-3 py-2 rounded-lg border text-xs font-mono font-medium flex items-center justify-center gap-2 transition-all active:opacity-85 focus-visible:ring-2 focus-visible:ring-ring outline-none"
+                                    style={{
+                                        color: "var(--scar-critical)",
+                                        borderColor: "color-mix(in srgb, var(--scar-critical) 40%, transparent)",
+                                        backgroundColor: "color-mix(in srgb, var(--scar-critical) 12%, transparent)",
+                                    }}
                                 >
                                     <GitCommit className="w-3.5 h-3.5" />
                                     <span>Inspect Scar Autopsy</span>

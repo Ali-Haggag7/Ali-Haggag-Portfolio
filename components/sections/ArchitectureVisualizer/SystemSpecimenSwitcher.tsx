@@ -49,8 +49,8 @@ export const SystemSpecimenSwitcher = memo(function SystemSpecimenSwitcher({
                             className={cn(
                                 "cursor-pointer group min-h-[48px] px-3.5 py-2.5 rounded-xl border text-left transition-all duration-200 flex items-center justify-between gap-3 focus-visible:ring-2 focus-visible:ring-ring outline-none",
                                 isActive
-                                    ? "bg-foreground text-background font-bold shadow-md border-foreground"
-                                    : "bg-muted/20 border-border/60 hover:bg-muted/40 hover:border-border text-foreground/90"
+                                    ? "bg-card border-foreground/40 text-foreground font-bold shadow-md ring-1 ring-border"
+                                    : "bg-muted/15 border-border/50 hover:bg-muted/30 hover:border-border text-muted-foreground hover:text-foreground"
                             )}
                         >
                             <div className="flex items-center gap-2.5 min-w-0">
@@ -58,8 +58,8 @@ export const SystemSpecimenSwitcher = memo(function SystemSpecimenSwitcher({
                                     className={cn(
                                         "w-7 h-7 rounded-lg flex items-center justify-center p-1 shrink-0 transition-colors",
                                         isActive
-                                            ? "bg-background text-foreground"
-                                            : "bg-card border border-border/80 text-muted-foreground group-hover:text-foreground"
+                                            ? "bg-foreground/10 text-foreground border border-foreground/20"
+                                            : "bg-card border border-border/70 text-muted-foreground group-hover:text-foreground"
                                     )}
                                 >
                                     <Icon className="w-3.5 h-3.5" aria-hidden="true" />
@@ -79,20 +79,24 @@ export const SystemSpecimenSwitcher = memo(function SystemSpecimenSwitcher({
                                     className={cn(
                                         "px-1.5 py-0.5 rounded text-[9px] font-semibold border",
                                         isActive
-                                            ? "bg-background/20 text-background border-background/30"
-                                            : "bg-muted/60 text-muted-foreground border-border/60"
+                                            ? "bg-muted/60 text-foreground border-border"
+                                            : "bg-muted/40 text-muted-foreground border-border/50"
                                     )}
                                 >
                                     {specimen.nodes.length} NODES
                                 </span>
                                 {scarCount > 0 && (
                                     <span
-                                        className={cn(
-                                            "flex items-center gap-0.5 px-1 py-0.5 rounded text-[9px] font-semibold",
-                                            isActive
-                                                ? "bg-red-500/20 text-red-200"
-                                                : "bg-red-500/10 text-red-400"
-                                        )}
+                                        className="flex items-center gap-0.5 px-1.5 py-0.5 rounded text-[9px] font-semibold border"
+                                        style={{
+                                            color: "var(--scar-critical)",
+                                            backgroundColor: isActive
+                                                ? "color-mix(in srgb, var(--scar-critical) 16%, transparent)"
+                                                : "color-mix(in srgb, var(--scar-critical) 10%, transparent)",
+                                            borderColor: isActive
+                                                ? "color-mix(in srgb, var(--scar-critical) 35%, transparent)"
+                                                : "transparent",
+                                        }}
                                         title={`${scarCount} engineering scars documented`}
                                     >
                                         <ShieldAlert className="w-2.5 h-2.5" />

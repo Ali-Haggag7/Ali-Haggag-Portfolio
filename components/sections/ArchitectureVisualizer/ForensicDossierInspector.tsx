@@ -13,13 +13,11 @@ import {
     Activity,
     Cpu,
     ExternalLink,
-    Layers,
     ShieldAlert,
     GitCommit,
     Workflow,
     ArrowRight,
     ArrowLeft,
-    CheckCircle2,
     Info,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -82,23 +80,23 @@ export const ForensicDossierInspector = memo(function ForensicDossierInspector({
 
             {/* Scrollable Dossier Body */}
             <div className="flex-1 overflow-y-auto p-5 space-y-5 custom-scrollbar text-sm">
-                {/* 1. Header: Component Identity & Category */}
-                <div className="space-y-2">
-                    <div className="flex items-center gap-2 flex-wrap">
-                        <span
-                            className="text-[10px] font-mono font-bold tracking-wider px-2 py-0.5 rounded-full uppercase border"
-                            style={{
-                                color: categorySpec.color,
-                                backgroundColor: `color-mix(in srgb, ${categorySpec.color} 12%, transparent)`,
-                                borderColor: `color-mix(in srgb, ${categorySpec.color} 30%, transparent)`,
-                            }}
-                        >
-                            {categorySpec.badge}
+                {/* 1. Header: Component Identity & Architectural Role */}
+                <div className="space-y-1.5 pb-3 border-b border-border/60">
+                    <div className="flex items-center justify-between gap-2">
+                        <span className="text-[10px] font-mono tracking-widest uppercase text-muted-foreground/80">
+                            LAYER :: {categorySpec.label.toUpperCase()}
                         </span>
                         {node.scarId && (
-                            <span className="flex items-center gap-1 text-[10px] font-mono font-semibold px-2 py-0.5 rounded-full bg-red-500/10 border border-red-500/30 text-red-400">
+                            <span
+                                className="flex items-center gap-1 text-[10px] font-mono font-semibold px-2 py-0.5 rounded border"
+                                style={{
+                                    color: "var(--scar-critical)",
+                                    backgroundColor: "color-mix(in srgb, var(--scar-critical) 10%, transparent)",
+                                    borderColor: "color-mix(in srgb, var(--scar-critical) 30%, transparent)",
+                                }}
+                            >
                                 <ShieldAlert className="w-3 h-3" />
-                                <span>SCAR: {node.scarId}</span>
+                                <span>SCAR #{node.scarId}</span>
                             </span>
                         )}
                     </div>
@@ -107,10 +105,10 @@ export const ForensicDossierInspector = memo(function ForensicDossierInspector({
                         {node.label}
                     </h3>
 
-                    <div className="text-xs font-mono text-muted-foreground flex items-center gap-1.5">
-                        <Activity className="w-3.5 h-3.5 text-foreground/70" />
+                    <div className="text-xs font-mono text-muted-foreground flex items-center gap-1.5 pt-0.5">
+                        <Activity className="w-3.5 h-3.5 text-foreground/70 shrink-0" />
                         <span>System Role:</span>
-                        <strong className="text-foreground">{node.role}</strong>
+                        <strong className="text-foreground font-semibold">{node.role}</strong>
                     </div>
                 </div>
 
@@ -261,10 +259,15 @@ export const ForensicDossierInspector = memo(function ForensicDossierInspector({
 
                 {/* 5. Historical Engineering Scar (If Present) */}
                 {node.scarId && (
-                    <div className="space-y-2.5 pt-2 border-t border-red-500/20">
+                    <div
+                        className="space-y-2.5 pt-2 border-t"
+                        style={{
+                            borderColor: "color-mix(in srgb, var(--scar-critical) 20%, transparent)",
+                        }}
+                    >
                         <div className="flex items-center justify-between">
-                            <span className="text-xs font-mono font-bold tracking-wide uppercase text-red-400 flex items-center gap-1.5">
-                                <ShieldAlert className="w-3.5 h-3.5 text-red-500" />
+                            <span className="text-xs font-mono font-bold tracking-wide uppercase text-[var(--scar-critical)] flex items-center gap-1.5">
+                                <ShieldAlert className="w-3.5 h-3.5 text-[var(--scar-critical)]" />
                                 <span>Historical Engineering Scar</span>
                             </span>
                             <span className="text-[10px] font-mono text-muted-foreground">
@@ -272,7 +275,13 @@ export const ForensicDossierInspector = memo(function ForensicDossierInspector({
                             </span>
                         </div>
 
-                        <div className="rounded-xl border border-red-500/30 bg-red-500/5 p-3.5 space-y-2">
+                        <div
+                            className="rounded-xl border p-3.5 space-y-2"
+                            style={{
+                                borderColor: "color-mix(in srgb, var(--scar-critical) 30%, transparent)",
+                                backgroundColor: "color-mix(in srgb, var(--scar-critical) 6%, transparent)",
+                            }}
+                        >
                             <div className="text-xs font-bold text-foreground">
                                 {linkedScar ? linkedScar.title : node.scarId}
                             </div>
@@ -280,13 +289,13 @@ export const ForensicDossierInspector = memo(function ForensicDossierInspector({
                             {linkedScar && (
                                 <div className="space-y-1.5 text-[11px] font-sans text-muted-foreground leading-relaxed">
                                     <div>
-                                        <strong className="text-red-300 font-mono text-[10px] uppercase block">
+                                        <strong className="text-[var(--scar-critical)] font-mono text-[10px] uppercase block">
                                             Symptom:
                                         </strong>
                                         {linkedScar.symptom}
                                     </div>
                                     <div>
-                                        <strong className="text-emerald-300 font-mono text-[10px] uppercase block">
+                                        <strong className="text-[hsl(var(--accent-emerald))] font-mono text-[10px] uppercase block">
                                             Architecture Fix:
                                         </strong>
                                         {linkedScar.solution}
@@ -297,11 +306,16 @@ export const ForensicDossierInspector = memo(function ForensicDossierInspector({
                             <button
                                 type="button"
                                 onClick={() => handleJumpToScar(node.scarId!)}
-                                className="cursor-pointer w-full min-h-[44px] px-3 py-2 rounded-lg border border-red-500/40 bg-red-500/10 hover:bg-red-500/20 text-red-300 hover:text-white text-xs font-mono font-medium flex items-center justify-center gap-2 transition-all focus-visible:ring-2 focus-visible:ring-ring outline-none"
+                                className="cursor-pointer w-full min-h-[44px] px-3 py-2 rounded-lg border text-xs font-mono font-medium flex items-center justify-center gap-2 transition-all hover:opacity-90 focus-visible:ring-2 focus-visible:ring-ring outline-none"
+                                style={{
+                                    color: "var(--scar-critical)",
+                                    borderColor: "color-mix(in srgb, var(--scar-critical) 40%, transparent)",
+                                    backgroundColor: "color-mix(in srgb, var(--scar-critical) 12%, transparent)",
+                                }}
                             >
                                 <GitCommit className="w-3.5 h-3.5" />
                                 <span>Inspect Full Scar Autopsy</span>
-                                <ExternalLink className="w-3 h-3 text-red-400" />
+                                <ExternalLink className="w-3 h-3 text-[var(--scar-critical)]" />
                             </button>
                         </div>
                     </div>
