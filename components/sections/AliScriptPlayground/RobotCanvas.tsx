@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, memo, useState } from "react";
+import { useEffect, useRef, memo } from "react";
 import { useTheme } from "next-themes";
 import { Activity, Zap } from "lucide-react";
 import type { RobotState, TargetState } from "./interpreter";
@@ -134,6 +134,7 @@ function EntityPanel({ label, position, hp, energy, dotColor, icon }: EntityPane
 export const RobotCanvas = memo(function RobotCanvas({ robot, target }: RobotCanvasProps) {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const { resolvedTheme } = useTheme();
+    const isDark = resolvedTheme !== "light";
 
     useEffect(() => {
         const canvas = canvasRef.current;
@@ -144,8 +145,6 @@ export const RobotCanvas = memo(function RobotCanvas({ robot, target }: RobotCan
         const width    = canvas.width;
         const height   = canvas.height;
         const cellSize = width / 8;
-
-        const isDark = typeof document !== "undefined" && document.documentElement.classList.contains("dark");
 
         // ── Background ────────────────────────────────────────────────────────
         ctx.fillStyle = isDark ? "#070b14" : "#f8fafc";
@@ -291,14 +290,17 @@ export const RobotCanvas = memo(function RobotCanvas({ robot, target }: RobotCan
             ctx.stroke();
             ctx.shadowBlur = 0;
         }
-    }, [robot, target, resolvedTheme]);
+    }, [robot, target, isDark]);
 
     const dirNames = ["N", "E", "S", "W"];
 
     return (
         <div className="relative flex flex-col rounded-xl border border-border/80 overflow-hidden bg-card shadow-sm">
             {/* Canvas Arena Header */}
-            <div className="w-full bg-slate-100/90 dark:bg-[#070b14] flex items-center justify-center p-3 border-b border-border/40 shadow-inner transition-colors">
+            <div
+                className="w-full flex items-center justify-center p-3 border-b border-border/40 shadow-inner transition-colors"
+                style={{ backgroundColor: isDark ? "#070b14" : "#f8fafc" }}
+            >
                 <canvas
                     ref={canvasRef}
                     width={340}
